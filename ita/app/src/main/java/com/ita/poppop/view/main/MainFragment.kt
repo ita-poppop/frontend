@@ -24,6 +24,8 @@ class MainFragment: BaseFragment<FragmentMainBinding>(R.layout.fragment_main) {
 
             // BottomNavigationView와 navi 연결
             bnvMainNavi.setupWithNavController(navController)
+
+
         }
 
     }

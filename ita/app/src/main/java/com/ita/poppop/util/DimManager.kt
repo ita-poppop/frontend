@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
+import android.widget.TextView
 import android.widget.ToggleButton
 import androidx.core.view.WindowInsetsControllerCompat
 
@@ -45,6 +46,7 @@ class DimManager(private val window: Window) {
         elevateControlledViews()
         updateToggleButton(isChecked = true)
         addFabTouchAreas()
+        addTextTouchAreas()
 
         isDimActive = true
     }
@@ -81,6 +83,13 @@ class DimManager(private val window: Window) {
      */
     fun addFabButtons(fabButtons: List<View>) {
         visibilityControlledViews.addAll(fabButtons)
+    }
+
+    /**
+     * 여러 FAB 버튼을 가시성 관리 대상에 추가합니다.
+     */
+    fun addFabText(fabTexts: List<View>) {
+        visibilityControlledViews.addAll(fabTexts)
     }
 
     /**
@@ -190,6 +199,13 @@ class DimManager(private val window: Window) {
             addCircularTouchArea(x, y, radius)
         }
     }
+    private fun addTextTouchAreas() {
+        // FAB 버튼들의 터치 영역 추가
+        visibilityControlledViews.takeLast(2).forEach { text ->
+            val (rectF, radius) = calculateRoundRectArea(text)
+            addRoundRectTouchArea(rectF, radius)
+        }
+    }
 
     private fun clearAllTouchAreas() {
         dimView?.clearTouchableAreas()
@@ -239,6 +255,22 @@ class DimManager(private val window: Window) {
 
         return Triple(centerX, centerY, radius)
     }
+
+    private fun calculateRoundRectArea(textView: View): Pair<RectF, Float> {
+        val location = IntArray(2)
+        textView.getLocationInWindow(location)
+
+        val left = location[0].toFloat()
+        val top = location[1].toFloat()
+        val right = left + textView.width
+        val bottom = top + textView.height
+
+        val rectF = RectF(left, top, right, bottom)
+        val cornerRadius = 10 * 3.0f
+
+        return Pair(rectF, cornerRadius)
+    }
+
 
     private fun dpToPx(dp: Float, context: Context): Float {
         return dp * context.resources.displayMetrics.density

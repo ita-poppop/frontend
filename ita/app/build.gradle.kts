@@ -77,7 +77,7 @@ dependencies {
 
     //okhttp
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
-
+    implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
     // 코루틴
     implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
 

@@ -3,7 +3,9 @@ package com.ita.poppop.view.empty.home_upload
 import android.net.Uri
 import android.util.Log
 import android.view.View
+import android.widget.SeekBar
 import androidx.core.os.BundleCompat
+import androidx.databinding.adapters.SeekBarBindingAdapter.setOnSeekBarChangeListener
 import androidx.databinding.adapters.ViewBindingAdapter.setClickListener
 import androidx.fragment.app.setFragmentResult
 import androidx.lifecycle.ViewModelProvider
@@ -33,15 +35,29 @@ class UploadWaitingFragment : BaseFragment<FragmentUploadWaitingBinding>(R.layou
         setFragmentResult()
         setClickListener()
         setViewModel()
-//        binding.pbWaiting.setOnProgressChangeListener { progress ->
-//            binding.tvWaitingCount.text = "${progress?.toInt()}명"
-//            binding.tvWaitingHint.text = when (progress.toInt()) {
-//                in 0..5 -> "매우 적어요! 기다리지 않고 바로 입장 가능해요"
-//                in 6..15 -> "보통이에요. 살짝 기다릴 수 있어요"
-//                in 16..30 -> "조금 많아요. 대기 줄이 있어요"
-//                else -> "매우 많아요. 현재 웨이팅이 많아요, 참고해 주세요"
-//            }
-//        }
+        binding.sbWaiting.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                binding.tvWaitingCount.text = "${progress}명"
+                binding.tvWaitingHint.text = when (progress) {
+                    in 0..5 -> "매우 적어요! 기다리지 않고 바로 입장 가능해요"
+                    in 6..15 -> "보통이에요. 살짝 기다릴 수 있어요"
+                    in 16..30 -> "조금 많아요. 대기 줄이 있어요"
+                    else -> "매우 많아요. 현재 웨이팅이 많아요, 참고해 주세요"
+                }
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {
+                // Called when the user starts dragging the thumb
+                // You can add visual feedback here, e.g., change thumb color
+            }
+
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {
+                // Called when the user stops dragging the thumb
+                // You can finalize the action here
+                uploadWaitingViewModel.setWaiting(seekBar?.progress)
+            }
+        })
+
     }
     private fun setViewModel() {
         uploadViewModel = ViewModelProvider(this)[UploadViewModel::class.java]
@@ -81,7 +97,7 @@ class UploadWaitingFragment : BaseFragment<FragmentUploadWaitingBinding>(R.layou
             showUploadBottomSheet()
         }
         binding.mcvWImgDelete.setOnClickListener {
-            uploadViewModel.removeWaitingImage()
+            uploadWaitingViewModel.removeWaitingImage()
         }
         binding.rvUploadReview.setOnClickListener {
             showUploadBottomSheet()
@@ -114,8 +130,5 @@ class UploadWaitingFragment : BaseFragment<FragmentUploadWaitingBinding>(R.layou
 
     private fun showUploadBottomSheet() {
         UploadBottomSheet(1).show(parentFragmentManager, "upload_sheet")
-    }
-    companion object {
-        private const val UploadBottomSheet = "UploadBottomSheet"
     }
 }

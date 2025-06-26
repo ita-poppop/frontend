@@ -44,8 +44,8 @@ class UpcomingFragment: BaseFragment<FragmentUpcomingBinding>(R.layout.fragment_
             this.adapter = adapter
             addItemDecoration(UpcomingItemDecoration())
 
-            val itemTouchHelper = ItemTouchHelper(SwipeHelper())
-            itemTouchHelper.attachToRecyclerView(this)
+//            val itemTouchHelper = ItemTouchHelper(SwipeHelper())
+//            itemTouchHelper.attachToRecyclerView(this)
         }
     }
 }

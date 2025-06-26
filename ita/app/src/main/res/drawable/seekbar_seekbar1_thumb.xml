@@ -19,7 +19,7 @@
     <!-- 실제 썸 -->
     <item android:left="4dp" android:top="4dp" android:right="4dp" android:bottom="4dp">
         <shape android:shape="oval">
-            <solid android:color="#FF4081"/>
+            <solid android:color="#8DF084"/>
             <stroke android:width="2dp" android:color="#FFFFFF"/>
             <size android:width="24dp" android:height="24dp"/>
         </shape>

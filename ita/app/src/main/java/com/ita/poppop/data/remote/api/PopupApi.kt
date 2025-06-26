@@ -1,6 +1,7 @@
 package com.ita.poppop.data.remote.api
 
-import com.ita.poppop.data.remote.dto.GetPopupResponse
+import com.ita.poppop.data.remote.dto.GetPlannedResponse
+import com.ita.poppop.data.remote.dto.GetTrendResponse
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Header
@@ -34,5 +35,20 @@ interface PopupApi {
     suspend fun getTrends(
         @Query("page") page: Int,
         @Query("size") size: Int
-    ): GetPopupResponse
+    ): Response<GetTrendResponse>
+
+    @GET("/api/v1/popups/planned")
+    suspend fun getPlanned(
+        @Query("page") page: Int,
+        @Query("size") size: Int
+    ): Response<GetPlannedResponse>
+
 }
+
+//interface PopupApi {
+//    @GET("/api/v1/popups/trend")
+//    suspend fun getTrends(
+//        @Query("page") page: Int,
+//        @Query("size") size: Int
+//    ): GetTrendResponse
+//}

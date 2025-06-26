@@ -23,6 +23,18 @@
         <item name="android:textColor">@color/gray_600</item>
     </style>
 
+    <!-- BottomNavi Text Style -->
+    <style name="BottomNavTextActive" parent="TextAppearance.AppCompat.Caption">
+        <item name="android:textSize">13sp</item>
+        <item name="fontFamily">@font/pretendard_semibold</item>
+    </style>
+
+    <style name="BottomNavTextInactive" parent="TextAppearance.AppCompat.Caption">
+        <item name="android:textSize">13sp</item>
+        <item name="fontFamily">@font/pretendard_semibold</item>
+    </style>
+
+
     <!-- map category btn custom style -->
     <!--<style name="MapCategoryBtnStyle">
         <item name="android:minWidth">0dp</item>
