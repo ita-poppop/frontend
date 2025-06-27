@@ -252,14 +252,6 @@ class MapFragment: BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnMa
         // 실내 지도 활성화
         naverMap.isIndoorEnabled = true
 
-        /*// 첫 맵 화면
-        val startPosition = LatLng(37.626265, 127.008627)
-        val cameraUpdate = CameraUpdate
-            .scrollTo(startPosition)
-            .pivot(PointF(0.5f, 0.8f))
-            .animate(CameraAnimation.Easing)
-        naverMap.moveCamera(cameraUpdate)*/
-
         var isInitialCameraState = true
 
         // 재검색 버튼

@@ -3,7 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
     <data>
-
+        <variable
+            name="editReviewViewModel"
+            type="com.ita.poppop.viewmodel.empty.upload.UploadViewModel" />
     </data>
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -11,7 +13,7 @@
         android:background="@color/white">
 
         <com.ita.poppop.util.StatusBarSpaceView
-            android:id="@+id/statusBarSpaceView2"
+            android:id="@+id/statusBarSpaceView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             tools:layout_height="24dp"
@@ -19,179 +21,152 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/cl_edit_review_title"
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/mt_edit"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingVertical="14dp"
+            android:layout_height="@dimen/item_52"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/statusBarSpaceView2">
-
-            <ImageView
-                android:id="@+id/iv_edit_review_back"
-                android:layout_width="22dp"
-                android:layout_height="22dp"
-                android:layout_marginStart="25dp"
-                android:src="@drawable/chevron_left"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@+id/statusBarSpaceView">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="82dp"
-                android:layout_marginEnd="130dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="@dimen/margin_14"
                 android:fontFamily="@font/pretendard_semibold"
                 android:letterSpacing="-0.02"
-                android:lineSpacingExtra="8sp"
+                android:lineSpacingExtra="@dimen/text_8"
                 android:text="리뷰 수정"
                 android:textColor="@color/gray_900"
-                android:textSize="16sp"
-                android:textStyle="normal"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/iv_edit_review_back"
-                app:layout_constraintTop_toTopOf="parent" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                android:textSize="@dimen/text_16" />
 
-        <!-- 리뷰 작성-->
-        <HorizontalScrollView
-            android:id="@+id/hsv_edit_review_img"
+        </com.google.android.material.appbar.MaterialToolbar>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_edit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="@dimen/padding_16"
+            android:clipToPadding="false"
+            android:paddingHorizontal="@dimen/padding_16"
+            android:layout_marginTop="@dimen/margin_12"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/cl_edit_review_title">
+            app:layout_constraintTop_toBottomOf="@+id/mt_edit" />
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/cl_edit_review_img"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rv_edit_review_img"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"/>
-
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/mcv_edit_review_img"
-                    android:layout_width="328dp"
-                    android:layout_height="252dp"
-                    app:cardBackgroundColor="@color/gray_300"
-                    app:cardCornerRadius="10dp"
-                    app:rippleColor="@color/transparent"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/rv_edit_review_img"
-                    app:strokeColor="@color/transparent">
-
-                    <LinearLayout
-                        android:id="@+id/ll_edit_review_img"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:orientation="vertical">
-
-                        <ImageButton
-                            android:id="@+id/ib_upload_img"
-                            android:layout_width="@dimen/item_44"
-                            android:layout_height="@dimen/item_44"
-                            android:layout_gravity="center_horizontal"
-                            android:background="@drawable/shape_fab_background"
-                            android:src="@drawable/_home_fab_button" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_horizontal"
-                            android:layout_marginTop="8dp"
-                            android:fontFamily="@font/pretendard_medium"
-                            android:letterSpacing="-0.02"
-                            android:lineSpacingExtra="8sp"
-                            android:text="사진 업로드"
-                            android:textColor="@color/gray_800"
-                            android:textSize="16sp"
-                            android:textStyle="normal"
-                            app:layout_constraintTop_toBottomOf="@+id/ib_upload_img" />
-                    </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
-            </androidx.constraintlayout.widget.ConstraintLayout>
-        </HorizontalScrollView>
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/textView9"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:paddingHorizontal="16dp"
+            android:layout_marginHorizontal="@dimen/margin_16"
+            android:layout_marginTop="@dimen/margin_24"
+            android:fontFamily="@font/pretendard_semibold"
+            android:letterSpacing="-0.03"
+            android:lineSpacingExtra="7.5sp"
+            android:text="위치"
+            android:textColor="#3c3c3c"
+            android:textSize="15sp"
+            android:textStyle="normal"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/hsv_edit_review_img">
+            app:layout_constraintTop_toBottomOf="@+id/rv_edit" />
 
-            <ImageView
-                android:id="@+id/iv_location"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:src="@drawable/upload_location_icon"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toStartOf="parent"/>
-
-            <TextView
-                android:id="@+id/tv_edit_location"
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/mcv_search_area"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/item_48"
+            app:cardBackgroundColor="@android:color/white"
+            app:cardCornerRadius="10dp"
+            app:strokeColor="@color/gray_600"
+            android:layout_marginHorizontal="@dimen/margin_16"
+            android:layout_marginTop="@dimen/margin_10"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView9" >
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="27dp"
-                android:ellipsize="end"
-                android:fontFamily="@font/pretendard_medium"
-                android:letterSpacing="-0.03"
-                android:lineSpacingExtra="7sp"
-                android:maxLines="2"
-                android:text="TV 애니메이션 【최애의 아이】展 거짓말과 아이 / 빛과 TV 애니메이션 【최애의 아이】展 거짓말"
-                android:textColor="@color/primary_blue"
-                android:textSize="14sp"
-                android:textStyle="normal"
-                app:layout_constraintStart_toEndOf="@+id/iv_location"
-                app:layout_constraintTop_toTopOf="@+id/iv_location" />
+                android:layout_height="match_parent"
+                android:layout_margin="@dimen/margin_12">
 
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/mcv_edit_content"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:minHeight="152dp"
-                android:maxHeight="160dp"
-                android:layout_marginTop="41dp"
-                app:cardBackgroundColor="@android:color/white"
-                app:cardCornerRadius="10dp"
-                app:strokeColor="@color/gray_400"
-                app:layout_constraintTop_toBottomOf="@+id/tv_edit_location"
-                app:layout_constraintStart_toStartOf="parent">
-
-                <EditText
-                    android:id="@+id/edit_review_content"
-                    android:layout_width="match_parent"
+                <TextView
+                    android:id="@+id/tv_edit_location"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:padding="@dimen/padding_12"
-                    android:background="@android:color/transparent"
+                    android:ellipsize="end"
                     android:fontFamily="@font/pretendard_medium"
-                    android:hint="현재 리뷰 내용"
-                    android:gravity="top|start"
-                    android:minLines="2"
-                    android:inputType="textMultiLine"
                     android:letterSpacing="-0.03"
-                    android:lineSpacingExtra="7.5sp"
-                    android:maxLines="20"
-                    android:textColor="@color/black"
-                    android:textColorHint="@color/gray_500"
-                    android:textSize="15sp"
+                    android:lineSpacingExtra="7sp"
+                    android:maxLines="1"
+                    android:text='@{editReviewViewModel.popupItem != null ? editReviewViewModel.popupItem : "팝업스토어 / 전시를 검색하세요"}'
+                    android:textColor="#3c3c3c"
+                    android:textSize="14sp"
                     android:textStyle="normal"
                     app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
-            </com.google.android.material.card.MaterialCardView>
-        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <TextView
+            android:id="@+id/textView10"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/margin_16"
+            android:layout_marginTop="@dimen/margin_16"
+            android:fontFamily="@font/pretendard_semibold"
+            android:letterSpacing="-0.03"
+            android:lineSpacingExtra="7.5sp"
+            android:text="내용"
+            android:textColor="#3c3c3c"
+            android:textSize="15sp"
+            android:textStyle="normal"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/mcv_search_area" />
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/mcv_edit_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_10"
+            android:layout_marginHorizontal="@dimen/margin_16"
+            app:cardBackgroundColor="@android:color/white"
+            app:cardCornerRadius="10dp"
+            app:strokeColor="@color/gray_600"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView10">
+
+            <EditText
+                android:id="@+id/edit_edit_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@android:color/transparent"
+                android:fontFamily="@font/pretendard_medium"
+                android:gravity="top|start"
+                android:hint="실시간 정보를 공유하거나 질문을 해보세요."
+                android:inputType="textMultiLine"
+                android:onTextChanged="@{editReviewViewModel::onReviewTextChanged}"
+                android:text="@{editReviewViewModel.reviewContent}"
+                android:letterSpacing="-0.03"
+                android:lineSpacingExtra="7.5sp"
+                android:maxLines="6"
+                android:minLines="3"
+                android:padding="@dimen/padding_12"
+                android:textColor="@color/black"
+                android:textColorHint="@color/gray_500"
+                android:textSize="15sp"
+                android:textStyle="normal"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </com.google.android.material.card.MaterialCardView>
 
         <!-- 리뷰 수정 버튼 -->
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/cl_edit_review_btn"
+            android:id="@+id/cl_edit_btn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/white"
@@ -205,20 +180,23 @@
                 android:background="@color/gray_300"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/cl_edit_review_btn" />
+                app:layout_constraintTop_toTopOf="@+id/cl_edit_btn" />
 
             <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/acb_edit_review"
-                android:layout_width="328dp"
+                android:id="@+id/bt_edit"
+                android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_marginTop="12dp"
+                android:layout_marginHorizontal="@dimen/margin_16"
                 android:text="수정하기"
                 android:textSize="14sp"
                 android:textColor="@color/white"
                 android:letterSpacing="-0.03"
                 android:lineSpacingExtra="7sp"
                 android:gravity="center"
+                android:enabled="false"
                 android:background="@drawable/info_upload_review_btn_background"
+                app:backgroundTint="@color/button_background_tint"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/view"/>
