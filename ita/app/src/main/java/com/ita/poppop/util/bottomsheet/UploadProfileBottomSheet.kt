@@ -1,6 +1,7 @@
 package com.ita.poppop.util.bottomsheet
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.view.LayoutInflater
@@ -8,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.ita.poppop.R
 import com.ita.poppop.databinding.FragmentUploadProfileBottomSheetBinding
 
 class UploadProfileBottomSheet : BottomSheetDialogFragment() {
@@ -17,8 +19,20 @@ class UploadProfileBottomSheet : BottomSheetDialogFragment() {
 
     private val galleryLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
-    ) {
-        // TODO: 갤러리에서 선택된 이미지 처리
+    ) { result ->
+        val imageUris = mutableListOf<Uri>()
+        result.data?.data?.let { uri ->
+            imageUris.add(uri)
+        }
+        // 결과 전달
+        parentFragmentManager.setFragmentResult(
+            "upload_result",
+            Bundle().apply {
+                putParcelableArrayList("images", ArrayList(imageUris))
+            }
+        )
+
+        dismiss() // 바텀시트 닫기
     }
 
     override fun onCreateView(
@@ -37,7 +51,15 @@ class UploadProfileBottomSheet : BottomSheetDialogFragment() {
 
     private fun setupClickListeners() {
         binding.clDefaultArea.setOnClickListener {
-            // TODO: 기본 이미지 선택 처리
+            val imageUris = mutableListOf<Uri>()
+            imageUris.add(Uri.parse("android.resource://com.ita.poppop/${R.drawable._profile_load_icon}"))
+            parentFragmentManager.setFragmentResult(
+                "upload_result",
+                Bundle().apply {
+                    putParcelableArrayList("images",ArrayList(imageUris))
+                }
+            )
+            dismiss() // 바텀시트 닫기
         }
 
         binding.clGalleryArea.setOnClickListener {

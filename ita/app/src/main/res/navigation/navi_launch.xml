@@ -55,6 +55,9 @@
             app:destination="@id/navi_upload_review"
             app:enterAnim="@anim/slide_up"
             app:popExitAnim="@anim/slide_down" />
+        <action
+            android:id="@+id/action_mainFragment_to_navi_profile_my_review"
+            app:destination="@id/navi_profile_my_review" />
     </fragment>
     <fragment
         android:id="@+id/emptyFragment"
@@ -74,4 +77,5 @@
     <include app:graph="@navigation/navi_home_upcoming" />
     <include app:graph="@navigation/navi_upload_waiting" />
     <include app:graph="@navigation/navi_upload_review" />
+    <include app:graph="@navigation/navi_profile_my_review" />
 </navigation>

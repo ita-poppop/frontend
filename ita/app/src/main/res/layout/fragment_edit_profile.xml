@@ -14,6 +14,7 @@
             android:id="@+id/statusBarSpaceView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            tools:layout_height="24dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -60,16 +61,24 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
-                <ImageView
-                    android:id="@+id/imageView2"
+                <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    app:cardCornerRadius="@dimen/item_36"
+                    app:cardElevation="0dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintVertical_bias="0.046"
-                    app:srcCompat="@drawable/_profile_load_icon" />
+                     >
+
+                    <ImageView
+                        android:id="@+id/iv_profile"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        app:srcCompat="@drawable/_profile_load_icon"/>
+                </androidx.cardview.widget.CardView>
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/mcv_profile_edit"
                     android:layout_width="@dimen/item_24"
@@ -140,6 +149,7 @@
                         android:paddingStart="@dimen/padding_10"
                         android:textColor="@color/gray_900"
                         android:textSize="@dimen/text_16"
+                        android:fontFamily="@font/pretendard_semibold"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
@@ -181,22 +191,6 @@
                     android:layout_gravity="center"/>
 
             </com.google.android.material.card.MaterialCardView>
-
-            <TextView
-                android:id="@+id/textView8"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="TextView"
-                app:layout_constraintTop_toBottomOf="@+id/cl_search_area"
-                tools:layout_editor_absoluteX="180dp" />
-
-            <ImageView
-                android:id="@+id/imageView8"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@+id/textView8"
-                tools:layout_editor_absoluteX="185dp"
-                tools:srcCompat="@tools:sample/avatars" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
