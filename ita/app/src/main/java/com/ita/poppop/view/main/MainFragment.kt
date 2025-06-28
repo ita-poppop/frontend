@@ -6,6 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
@@ -24,7 +26,15 @@ class MainFragment: BaseFragment<FragmentMainBinding>(R.layout.fragment_main) {
 
             // BottomNavigationView와 navi 연결
             bnvMainNavi.setupWithNavController(navController)
+            ViewCompat.setOnApplyWindowInsetsListener(bnvMainNavi) { view, insets ->
+                val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
 
+                val layoutParams = view.layoutParams as ViewGroup.MarginLayoutParams
+                layoutParams.bottomMargin = systemBars.bottom
+                view.layoutParams = layoutParams
+
+                insets
+            }
 
         }
 
