@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "404830119522",
+    "project_id": "poppop-6d345",
+    "storage_bucket": "poppop-6d345.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:404830119522:android:ac51585654fe18c28b133b",
+        "android_client_info": {
+          "package_name": "com.ita.poppop"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBscfNnd1m6DTCm9labIGo21cza9Pgd2To"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

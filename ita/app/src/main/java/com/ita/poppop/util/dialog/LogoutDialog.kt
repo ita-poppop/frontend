@@ -5,8 +5,10 @@ import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import com.ita.poppop.databinding.DialogLogoutBinding
+import com.kakao.sdk.user.UserApiClient
 
 class LogoutDialog(context: Context) : Dialog(context) {
 
@@ -38,6 +40,15 @@ class LogoutDialog(context: Context) : Dialog(context) {
 
         binding.btnConfirm.setOnClickListener {
             itemClickListener?.onClick("logout_dialog")
+            UserApiClient.instance.logout { error ->
+                if (error != null) {
+                    Log.e("checkLogin", "로그아웃 실패. SDK에서 토큰 폐기됨", error)
+                }
+                else {
+                    Log.i("checkLogin", "로그아웃 성공. SDK에서 토큰 폐기됨")
+                }
+            }
+
             dismiss()
         }
     }
