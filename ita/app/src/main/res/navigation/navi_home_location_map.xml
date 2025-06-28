@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/navi_home_location_map"
+    app:startDestination="@id/locationMapFragment">
+
+    <fragment
+        android:id="@+id/locationMapFragment"
+        android:name="com.ita.poppop.view.empty.loaction.LocationMapFragment"
+        android:label="LocationMapFragment" >
+        <argument
+            android:name="location"
+            app:argType="string" />
+        <argument
+            android:name="longitude"
+            app:argType="float" />
+        <argument
+            android:name="latitude"
+            app:argType="float" />
+    </fragment>
+</navigation>

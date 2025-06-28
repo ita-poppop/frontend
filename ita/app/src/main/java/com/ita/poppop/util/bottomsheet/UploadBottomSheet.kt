@@ -116,13 +116,20 @@ class UploadBottomSheet(var maxImages : Int = 5) : BottomSheetDialogFragment() {
     }
 
     private fun openGallery() {
-        val intent = Intent(Intent.ACTION_GET_CONTENT).apply {
-            type = "image/*"
-            putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
-            // 일부 갤러리 앱에서 지원하는 최대 선택 개수 제한
-            putExtra("android.intent.extra.MAX_NUM", 5)
+        if (maxImages > 1){
+            val intent = Intent(Intent.ACTION_GET_CONTENT).apply {
+                type = "image/*"
+                putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
+                // 일부 갤러리 앱에서 지원하는 최대 선택 개수 제한
+                putExtra("android.intent.extra.MAX_NUM", maxImages)
+            }
+            requestGalleryLauncher.launch(intent)
+        }else{
+            val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+            intent.type = "image/*"
+            requestGalleryLauncher.launch(intent)
+
         }
-        requestGalleryLauncher.launch(intent)
     }
 
     private fun openCamera() {

@@ -1,16 +1,22 @@
 package com.ita.poppop.view.main.home
 
+import android.util.Log
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
+import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavDirections
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ita.poppop.R
 import com.ita.poppop.base.BaseFragment
+import com.ita.poppop.data.remote.repository.popup.TrendRepository
+import com.ita.poppop.data.remote.repository.popup.TrendRepositoryImpl
 import com.ita.poppop.databinding.FragmentHomeBinding
 import com.ita.poppop.util.DimManager
+import com.ita.poppop.util.remote.RetrofitClient
 import com.ita.poppop.view.main.MainFragmentDirections
 import com.ita.poppop.view.main.home.direction.HomeDirectionAdapter
 import com.ita.poppop.view.main.home.direction.HomeDirectionItemDecoration
@@ -20,6 +26,10 @@ import com.ita.poppop.view.main.home.upcoming.HomeUpcomingAdapter
 import com.ita.poppop.view.main.home.upcoming.HomeUpcomingItemDecoration
 import com.ita.poppop.view.main.home.waiting.HomeWaitingAdapter
 import com.ita.poppop.view.main.home.waiting.HomeWaitingItemDecoration
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import retrofit2.HttpException
 
 class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
 
@@ -27,7 +37,9 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
     private lateinit var fabClose: Animation
     private lateinit var dimManager: DimManager
 
+//    private val repository: TrendRepository = TrendRepositoryImpl(RetrofitClient.popupApi)
 
+    private val repository: TrendRepository = TrendRepositoryImpl(RetrofitClient.popupApi)
 
 
     override fun initView() {
@@ -52,6 +64,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
 
     private fun setupDimFab() = with(binding) {
         dimManager.addFabButtons(listOf(fab1, fab2))
+        dimManager.addFabText(listOf(txFab1, txFab2))
         dimManager.bindToggleButton(ibFab)
 
         ibFab.setOnCheckedChangeListener { _, isChecked ->
@@ -62,15 +75,65 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
 
     private fun setupTrendRecycler() = with(binding.rvTrend) {
 
-        //fetchTrends()
+        fetchTrends()
         val trendList = mutableListOf(1, 2, 3, 4, 5, 6)
         adapter = HomeTrendAdapter(trendList)
         layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         addItemDecoration(HomeTrendItemDecoration())
     }
 
+//    private fun fetchTrends() {
+//        lifecycleScope.launch {
+//            try {
+//                val result = withContext(Dispatchers.IO) {
+//                    repository.getTrendPopups(1, 10)
+//                }
+//
+//                if (result.isSuccessful) {
+//                    showToast("첫 번째 팝업: ${result}")
+//                }
+//            } catch (e: HttpException) {
+//                // HTTP 에러 상세 정보
+//                showToast("HTTP 에러: ${e.code()} - ${e.message()}")
+//                Log.e("API_ERROR", "HTTP ${e.code()}: ${e.response()?.errorBody()?.string()}")
+//            } catch (e: Exception) {
+//                showToast("에러 발생: ${e.localizedMessage ?: "알 수 없는 오류"}")
+//                Log.e("API_ERROR", "Exception: ${e.message}", e)
+//            }
+//        }
+//    }
+
+    private fun fetchTrends() {
+        lifecycleScope.launch {
+            try {
+                val result = withContext(Dispatchers.IO) {
+                    repository.getPlannedPopups(0,20)
+                }
+
+                if (result.isSuccessful) {
+                    showToast("첫 번째 팝업: ${result}")
+                }
+            } catch (e: HttpException) {
+                // HTTP 에러 상세 정보
+                showToast("HTTP 에러: ${e.code()} - ${e.message()}")
+                Log.e("API_ERROR", "HTTP ${e.code()}: ${e.response()?.errorBody()?.string()}")
+            } catch (e: Exception) {
+                showToast("에러 발생: ${e.localizedMessage ?: "알 수 없는 오류"}")
+                Log.e("API_ERROR", "Exception: ${e.message}", e)
+            }
+        }
+    }
+
+    private fun showToast(message: String) {
+        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+    }
+
     private fun setupDirectionRecycler() = with(binding.rvDirection) {
-        adapter = HomeDirectionAdapter()
+        adapter = HomeDirectionAdapter(
+            onClick = { location,latitude,longitude ->
+                navigateTo(MainFragmentDirections.actionMainFragmentToNaviHomeLocationMap(location,latitude,longitude))
+            }
+        )
         layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         addItemDecoration(HomeDirectionItemDecoration())
     }
@@ -90,6 +153,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
     }
 
     private fun setupClickListeners() = with(binding) {
+
         tvWaitingTitle.setOnClickListener {
             navigateTo(MainFragmentDirections.actionMainFragmentToNaviHomeStory())
         }

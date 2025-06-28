@@ -1,20 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-<!-- seekbar 배경 1 -->
-<item android:id="@android:id/background">
-    <!-- 선 : 길이 -->
-    <shape android:shape="line">
-        <stroke android:width="5dp" android:color="@color/gray_500" />
-    </shape>
-</item>
-
-<!-- seekbar 프로그래스 바 -->
-<item android:id="@android:id/progress" >
-    <clip>
-        <shape android:shape="line">
-            <stroke android:width="6dp" android:color="@color/primary_blue_700" />
+    <!-- 배경 -->
+    <item android:id="@android:id/background"
+        android:top="20dp"
+        android:bottom="20dp">
+        <shape android:shape="rectangle">
+            <gradient
+                android:startColor="#E8E8E8"
+                android:endColor="#CCCCCC"
+                android:angle="0" />
+            <corners android:radius="2dp" />
+            <size android:height="4dp" />
         </shape>
-    </clip>
-</item>
+    </item>
 
+    <!-- 진행 부분 -->
+    <item android:id="@android:id/progress"
+        android:top="20dp"
+        android:bottom="20dp">
+        <clip>
+            <shape android:shape="rectangle">
+                <gradient
+                    android:startColor="#8DF084"
+                    android:centerColor="#E6CF3A"
+                    android:endColor="#9D0D0C"
+                    android:angle="0" />
+                <corners android:radius="2dp" />
+                <size android:height="4dp" />
+            </shape>
+        </clip>
+    </item>
 </layer-list>

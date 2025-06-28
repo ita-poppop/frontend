@@ -176,13 +176,12 @@
                 android:layout_gravity="center"
                 android:orientation="vertical">
 
-                <ImageButton
+                <ImageView
                     android:id="@+id/ib_upload_img"
                     android:layout_width="@dimen/item_44"
                     android:layout_height="@dimen/item_44"
                     android:layout_gravity="center_horizontal"
-                    android:background="@drawable/shape_fab_background"
-                    android:src="@drawable/_home_fab_button" />
+                    android:src="@drawable/icon_fab_state_checked" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -246,13 +245,13 @@
                     android:textSize="14sp"
                     android:textStyle="normal"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/ib_search_location"
+                    app:layout_constraintEnd_toStartOf="@+id/iv_search_location"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
 
-                <ImageButton
-                    android:id="@+id/ib_search_location"
+                <ImageView
+                    android:id="@+id/iv_search_location"
                     android:layout_width="@dimen/item_24"
                     android:layout_height="@dimen/item_24"
                     android:background="@color/transparent"
@@ -326,7 +325,7 @@
             </com.google.android.material.card.MaterialCardView>
 
             <SeekBar
-                android:id="@+id/pb_waiting"
+                android:id="@+id/sb_waiting"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:thumb="@drawable/seekbar_seekbar1_thumb"
@@ -334,6 +333,7 @@
                 android:layout_marginHorizontal="@dimen/margin_24"
                 android:layout_marginTop="@dimen/margin_16"
                 android:splitTrack="false"
+                android:max="50"
                 android:progress="@{uploadWaitingViewModel.waitingCount}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -355,7 +355,7 @@
                 android:layout_marginTop="@dimen/margin_16"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/pb_waiting" />
+                app:layout_constraintTop_toBottomOf="@+id/sb_waiting" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
