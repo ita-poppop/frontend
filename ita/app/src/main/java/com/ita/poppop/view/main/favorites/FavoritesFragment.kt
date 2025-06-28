@@ -56,6 +56,8 @@ class FavoritesFragment: BaseFragment<FragmentFavoritesBinding>(R.layout.fragmen
 
             favoritesRVAdapter.setFavoritesItemClickListener(object : FavoritesRVAdapter.FavoritesItemClickListener{
                 override fun onItemClick(position: Int) {
+                    //val popupId = 1
+
                     val parentNavController = requireActivity().findNavController(R.id.fcv_main_activity_container)
                     val action = MainFragmentDirections.actionMainFragmentToNaviInfo()
                     parentNavController.navigate(action)
@@ -67,7 +69,7 @@ class FavoritesFragment: BaseFragment<FragmentFavoritesBinding>(R.layout.fragmen
                     // toast message 띄우기
                     val removedItem = favoritesRVAdapter.currentList.getOrNull(position)?.title
                     val toastBinding = ToastMessageBinding.inflate(layoutInflater)
-                    toastBinding.tvToastMessage.text = "${removedItem}이(가) 즐겨찾기에 삭제되었습니다."
+                    toastBinding.tvToastMessage.text = "즐겨찾기에서 삭제되었습니다."
 
                     Toast(requireContext()).apply {
                         duration = Toast.LENGTH_LONG

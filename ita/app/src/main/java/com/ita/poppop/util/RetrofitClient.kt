@@ -14,7 +14,8 @@ object RetrofitClient {
             .build()
     }
 
-    val trendApi: PopupApi by lazy {
+    val popupApi: PopupApi by lazy {
         retrofit.create(PopupApi::class.java)
     }
+
 }
