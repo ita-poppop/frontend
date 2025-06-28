@@ -5,12 +5,17 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ita.poppop.R
 import com.ita.poppop.base.BaseFragment
+import com.ita.poppop.data.remote.api.PopupApi
+import com.ita.poppop.data.remote.repository.popup.PopupDetailRepositoryImpl
 import com.ita.poppop.databinding.FragmentInfoDetailBinding
+import com.ita.poppop.util.RetrofitClient
 import com.ita.poppop.view.empty.info.recommend.InfoRecommendRVAdapter
 import com.ita.poppop.view.empty.info.recommend.InfoRecommendViewModel
 import com.ita.poppop.view.empty.info.review.comment.InfoReviewCommentViewModel
 
 class InfoDetailFragment: BaseFragment<FragmentInfoDetailBinding>(R.layout.fragment_info_detail) {
+
+    private lateinit var infoDetailViewModel: InfoDetailViewModel
 
     private lateinit var infoRecommendViewModel: InfoRecommendViewModel
 
@@ -20,6 +25,20 @@ class InfoDetailFragment: BaseFragment<FragmentInfoDetailBinding>(R.layout.fragm
 
     override fun initView() {
         binding.apply {
+
+            //val popupId = arguments?.getInt("popupId") ?: return
+            val popupId = 1
+
+            val repository = PopupDetailRepositoryImpl(RetrofitClient.popupApi)
+            infoDetailViewModel = InfoDetailViewModel(repository)
+
+            infoDetailViewModel.getInfoDetail(popupId)
+
+            infoDetailViewModel.infoDetail.observe(viewLifecycleOwner) { response ->
+                tvInfoDetail.text = response.detail
+                //tvInfoDetailComment.text = response.comment
+            }
+
             infoRecommendViewModel = ViewModelProvider(this@InfoDetailFragment).get(InfoRecommendViewModel::class.java)
 
             // 추천

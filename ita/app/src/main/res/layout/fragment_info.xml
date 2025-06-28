@@ -83,6 +83,7 @@
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <ImageView
+                        android:id="@+id/iv_info_image"
                         android:layout_width="match_parent"
                         android:layout_height="343dp"
                         android:contentDescription="info_img"

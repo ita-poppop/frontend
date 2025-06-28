@@ -1,5 +1,6 @@
 package com.ita.poppop.data.remote.api
 
+import com.ita.poppop.data.remote.dto.GetPopupDetailResponse
 import com.ita.poppop.data.remote.dto.GetPopupResponse
 import retrofit2.Response
 import retrofit2.http.GET
@@ -35,4 +36,9 @@ interface PopupApi {
         @Query("page") page: Int,
         @Query("size") size: Int
     ): GetPopupResponse
+
+    @GET("/api/v1/popups/{popupId}")
+    suspend fun getPopupDetail(
+        @Query("popupId") popupId: Int
+    ): Response<GetPopupDetailResponse>
 }

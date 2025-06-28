@@ -1,5 +1,6 @@
 package com.ita.poppop.view.main.home
 
+import android.os.Bundle
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -7,10 +8,14 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
 import com.google.android.material.tabs.TabLayout
 import com.ita.poppop.R
 import com.ita.poppop.base.BaseFragment
+import com.ita.poppop.data.remote.repository.popup.PopupDetailRepositoryImpl
 import com.ita.poppop.databinding.FragmentInfoBinding
+import com.ita.poppop.util.RetrofitClient
+import com.ita.poppop.view.empty.info.InfoViewModel
 import com.ita.poppop.view.empty.info.detail.InfoDetailFragment
 import com.ita.poppop.view.empty.info.review.InfoReviewFragment
 import com.ita.poppop.view.empty.info.story.InfoStoryRVAdapter
@@ -19,6 +24,8 @@ import com.ita.poppop.view.main.hide
 
 
 class InfoFragment: BaseFragment<FragmentInfoBinding>(R.layout.fragment_info) {
+
+    private lateinit var infoViewModel: InfoViewModel
 
     private lateinit var infoStoryViewModel: InfoStoryViewModel
 
@@ -65,6 +72,25 @@ class InfoFragment: BaseFragment<FragmentInfoBinding>(R.layout.fragment_info) {
                 parentNavController.navigate(action)
             }
 
+            //val popupId = arguments?.getInt("popupId") ?: return
+            val popupId = 1
+
+            val repository = PopupDetailRepositoryImpl(RetrofitClient.popupApi)
+            infoViewModel = InfoViewModel(repository)
+
+            infoViewModel.getInfo(popupId)
+
+            infoViewModel.infoData.observe(viewLifecycleOwner, Observer { response ->
+                tvInfoTitle.text = response.title
+                tvInfoLocation.text = response.location
+                tvInfoDate.text = response.date
+                Glide.with(this@InfoFragment)
+                    .load(response.imageUrl)
+                    .placeholder(R.drawable.app_logo)
+                    .centerCrop()
+                    .into(ivInfoImage)
+            })
+
             infoStoryViewModel = ViewModelProvider(this@InfoFragment).get(InfoStoryViewModel::class.java)
 
             // 스토리
@@ -80,12 +106,12 @@ class InfoFragment: BaseFragment<FragmentInfoBinding>(R.layout.fragment_info) {
             })
 
             // 탭 화면
-            loadFragment(InfoDetailFragment())
+            loadFragment(InfoDetailFragment(), popupId)
             icInfoTablayout.tlInfo.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
                 override fun onTabSelected(tab: TabLayout.Tab?) {
                     when (tab?.position) {
-                        0 -> {loadFragment(InfoDetailFragment())}
-                        else -> {loadFragment(InfoReviewFragment())}
+                        0 -> {loadFragment(InfoDetailFragment(), popupId)}
+                        else -> {loadFragment(InfoReviewFragment(), popupId)}
                     }
                 }
                 override fun onTabReselected(tab: TabLayout.Tab?) {
@@ -107,7 +133,10 @@ class InfoFragment: BaseFragment<FragmentInfoBinding>(R.layout.fragment_info) {
         }
 
     }
-    private fun loadFragment(fragment: Fragment): Boolean {
+    private fun loadFragment(fragment: Fragment, popupId: Int): Boolean {
+        fragment.arguments = Bundle().apply {
+            putInt("popupId", popupId)
+        }
         childFragmentManager.beginTransaction()
             .replace(R.id.fl_info_tab, fragment)
             .commit()
