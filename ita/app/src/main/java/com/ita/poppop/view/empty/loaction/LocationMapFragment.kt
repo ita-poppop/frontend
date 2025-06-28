@@ -16,6 +16,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.NavHostFragment.Companion.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
@@ -90,9 +91,22 @@ class LocationMapFragment: BaseFragment<FragmentLocationMapBinding>(R.layout.fra
         setupMapListeners()
         setupMapUI()
         handleExistingMapData()
+
+    }
+
+    fun setclick(){
+        binding.ibCancel.setOnClickListener {
+            Toast.makeText(requireContext(),"click",Toast.LENGTH_SHORT).show()
+            if (childFragmentManager.backStackEntryCount > 0) {
+                childFragmentManager.popBackStack()
+            } else {
+                findNavController(requireParentFragment()).popBackStack()
+            }
+        }
     }
 
     override fun initView() {
+        setclick()
         val location = args.location
         val latitude = args.latitude
         val longitude = args.longitude
