@@ -69,6 +69,11 @@
                 android:name="latitude"
                 app:argType="float" />
         </action>
+
+        <action
+            android:id="@+id/action_mainFragment_to_navi_profile_my_review"
+            app:destination="@id/navi_profile_my_review" />
+
     </fragment>
     <fragment
         android:id="@+id/emptyFragment"
@@ -89,4 +94,5 @@
     <include app:graph="@navigation/navi_upload_waiting" />
     <include app:graph="@navigation/navi_upload_review" />
     <include app:graph="@navigation/navi_home_location_map" />
+    <include app:graph="@navigation/navi_profile_my_review" />
 </navigation>

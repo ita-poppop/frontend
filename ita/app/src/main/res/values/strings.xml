@@ -35,6 +35,8 @@
     <!-- HomeNotificationFragment -->
     <string name="home_notification_frag_title">알림</string>
 
+    <!-- MyReviewFragment -->
+    <string name="my_review_frag_title">내가 쓴 리뷰</string>
 
     <!-- EditProfileFragment -->
     <string name="edit_profile_frag_title">내 정보 수정</string>

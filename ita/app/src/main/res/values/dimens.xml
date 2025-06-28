@@ -115,6 +115,7 @@
     <dimen name="item_168">168dp</dimen>
     <dimen name="item_200">200dp</dimen>
     <dimen name="item_280">280dp</dimen>
+    <dimen name="item_288">288dp</dimen>
     <dimen name="item_324">324dp</dimen>
 
     <!--    Text Size(sp)-->

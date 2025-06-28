@@ -20,7 +20,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/mt_home_search"
+            android:id="@+id/mt_my_review"
             android:layout_width="match_parent"
             android:layout_height="@dimen/item_52"
             android:background="@drawable/background_line_1"
@@ -37,25 +37,23 @@
                 android:fontFamily="@font/pretendard_semibold"
                 android:letterSpacing="-0.02"
                 android:lineSpacingExtra="@dimen/text_8"
-                android:text="@string/upcoming_frag_title"
+                android:text="@string/my_review_frag_title"
                 android:textColor="@color/gray_900"
                 android:textSize="@dimen/text_16" />
 
         </com.google.android.material.appbar.MaterialToolbar>
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_upcoming"
+            android:id="@+id/rv_my_review"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:clipToPadding="false"
-            android:overScrollMode="never"
             android:paddingHorizontal="@dimen/padding_16"
             android:paddingTop="@dimen/padding_12"
             android:scrollbars="none"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/mt_home_search" />
+            app:layout_constraintTop_toBottomOf="@+id/mt_my_review" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

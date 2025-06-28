@@ -1,7 +1,9 @@
 package com.ita.poppop.util.bottomsheet
 
+import android.Manifest
 import android.app.Activity
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
@@ -12,6 +14,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.ita.poppop.databinding.FragmentUploadBottomSheetBinding
@@ -28,6 +31,7 @@ class UploadBottomSheet(var maxImages : Int = 5) : BottomSheetDialogFragment() {
     private var photoFile: File? = null
     private var photoUri: Uri? = null
 
+    // 갤러리 결과 처리
     private val requestGalleryLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
@@ -81,18 +85,33 @@ class UploadBottomSheet(var maxImages : Int = 5) : BottomSheetDialogFragment() {
         }
     }
 
+    // 카메라 결과 처리
     private val requestCameraLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
-    ) {
-        if (it.resultCode == android.app.Activity.RESULT_OK) {
+    ) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
             parentFragmentManager.setFragmentResult(
                 "upload_result",
                 Bundle().apply {
                     putParcelableArrayList("images", arrayListOf(photoUri!!))
                 }
             )
-
             dismiss() // 바텀시트 닫기
+        }
+    }
+
+    // 카메라 권한 요청 처리
+    private val cameraPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        if (isGranted) {
+            launchCamera() // 권한 허용 시 카메라 실행
+        } else {
+            Toast.makeText(
+                requireContext(),
+                "카메라 권한이 필요합니다. 설정에서 권한을 허용해주세요.",
+                Toast.LENGTH_LONG
+            ).show()
         }
     }
 
@@ -133,6 +152,33 @@ class UploadBottomSheet(var maxImages : Int = 5) : BottomSheetDialogFragment() {
     }
 
     private fun openCamera() {
+        // 카메라 권한 확인
+        when {
+            ContextCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.CAMERA
+            ) == PackageManager.PERMISSION_GRANTED -> {
+                // 권한이 있으면 바로 카메라 실행
+                launchCamera()
+            }
+            shouldShowRequestPermissionRationale(Manifest.permission.CAMERA) -> {
+                // 권한 설명이 필요한 경우
+                Toast.makeText(
+                    requireContext(),
+                    "사진 촬영을 위해 카메라 권한이 필요합니다.",
+                    Toast.LENGTH_LONG
+                ).show()
+                // 권한 요청
+                cameraPermissionLauncher.launch(Manifest.permission.CAMERA)
+            }
+            else -> {
+                // 권한 요청
+                cameraPermissionLauncher.launch(Manifest.permission.CAMERA)
+            }
+        }
+    }
+
+    private fun launchCamera() {
         val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         val canResolve = intent.resolveActivity(requireActivity().packageManager) != null
 
@@ -150,10 +196,19 @@ class UploadBottomSheet(var maxImages : Int = 5) : BottomSheetDialogFragment() {
                 requestCameraLauncher.launch(intent)
             } catch (e: Exception) {
                 Log.e(TAG, "카메라 파일 생성 실패", e)
+                Toast.makeText(
+                    requireContext(),
+                    "카메라 파일 생성에 실패했습니다.",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         } else {
             Log.e(TAG, "카메라 앱이 없습니다")
-            // TODO: 사용자에게 카메라 앱 없음 알림
+            Toast.makeText(
+                requireContext(),
+                "카메라 앱을 찾을 수 없습니다.",
+                Toast.LENGTH_SHORT
+            ).show()
         }
     }
 
