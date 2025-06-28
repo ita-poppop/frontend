@@ -77,7 +77,10 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
 
     private fun setupWaitingRecycler() = with(binding.rvWaiting) {
         val waitingList = mutableListOf(1, 2, 3, 4, 5, 6)
-        adapter = HomeWaitingAdapter(waitingList)
+        adapter = HomeWaitingAdapter(
+            onclick = { position ->
+                navigateTo(MainFragmentDirections.actionMainFragmentToNaviHomeStory())
+            },waitingList)
         layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         addItemDecoration(HomeWaitingItemDecoration())
     }
@@ -90,9 +93,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
     }
 
     private fun setupClickListeners() = with(binding) {
-        tvWaitingTitle.setOnClickListener {
-            navigateTo(MainFragmentDirections.actionMainFragmentToNaviHomeStory())
-        }
         clSearchArea.setOnClickListener {
             navigateTo(MainFragmentDirections.actionMainFragmentToNaviHomeSearch())
         }
@@ -113,7 +113,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
         }
 
     }
-
 
 
 
