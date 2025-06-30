@@ -5,6 +5,7 @@ import com.ita.poppop.data.remote.dto.GetPlannedResponse
 import com.ita.poppop.data.remote.dto.GetTrendResponse
 import retrofit2.Response
 import retrofit2.http.GET
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 
@@ -37,7 +38,7 @@ interface PopupApi {
 
     @GET("/api/v1/popups/{popupId}")
     suspend fun getPopupDetail(
-        @Query("popupId") popupId: Int
+        @Path("popupId") popupId: Int
     ): Response<GetPopupDetailResponse>
 
 

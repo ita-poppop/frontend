@@ -6,5 +6,5 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 data class InfoReviewImageRVItem(
     var itemId: Int,
-    var imageUrl: Int
+    var imageUrl: String
 ) : Parcelable

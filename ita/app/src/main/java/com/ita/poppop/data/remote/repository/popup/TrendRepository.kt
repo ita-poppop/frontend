@@ -1,9 +1,11 @@
 package com.ita.poppop.data.remote.repository.popup
 
 import com.ita.poppop.data.remote.dto.GetPlannedResponse
+import com.ita.poppop.data.remote.dto.GetPopupDetailResponse
 import com.ita.poppop.data.remote.dto.GetTrendResponse
 import retrofit2.Response
 import retrofit2.http.GET
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 
@@ -19,6 +21,11 @@ interface TrendRepository {
         @Query("page") page: Int,
         @Query("size") size: Int
     ): Response<GetPlannedResponse>
+
+    @GET("/api/v1/popups/{popupId}")
+    suspend fun getPopupDetail(
+        @Path("popupId") popupId: Int
+    ): Response<GetPopupDetailResponse>
 }
 
 //interface PopupRepository {

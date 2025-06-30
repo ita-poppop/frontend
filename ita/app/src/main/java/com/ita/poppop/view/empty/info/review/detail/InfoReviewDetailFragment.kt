@@ -8,6 +8,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
 import com.ita.poppop.R
 import com.ita.poppop.base.BaseFragment
 import com.ita.poppop.databinding.FragmentInfoReviewDetailBinding
@@ -61,7 +62,12 @@ class InfoReviewDetailFragment : BaseFragment<FragmentInfoReviewDetailBinding>(R
                 tvReviewDetailHeart.text = review.hearts.toString()
                 tvReviewDetailComment.text = review.comments.toString()
                 infoReviewImageRVAdapter.submitList(review.reviewImage)
-                ivReviewDetailProfile.setImageResource(review.profileImage)
+                Glide.with(ivReviewDetailProfile.context)
+                    .load(review.profileImage)      // String URL
+                    .placeholder(R.drawable._profile_load_icon)  // 로딩 중 기본 이미지
+                    .error(R.drawable._profile_load_icon)        // 에러 시 기본 이미지
+                    .circleCrop()                  // 원형 크롭 (필요시)
+                    .into(ivReviewDetailProfile)
 
                 // 기존 개수 전달
                 infoReviewDetailViewModel.firstHeartCount(review.hearts)

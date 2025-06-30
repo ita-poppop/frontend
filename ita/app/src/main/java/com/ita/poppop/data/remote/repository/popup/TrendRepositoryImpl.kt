@@ -2,7 +2,9 @@ package com.ita.poppop.data.remote.repository.popup
 
 import com.ita.poppop.data.remote.api.PopupApi
 import com.ita.poppop.data.remote.dto.GetPlannedResponse
+import com.ita.poppop.data.remote.dto.GetPopupDetailResponse
 import com.ita.poppop.data.remote.dto.GetTrendResponse
+import com.ita.poppop.data.remote.dto.PopupDetailData
 import com.ita.poppop.util.remote.RetrofitClient
 import okhttp3.Response
 import retrofit2.HttpException
@@ -70,6 +72,25 @@ class TrendRepositoryImpl(
     ): retrofit2.Response<GetPlannedResponse> {
         try {
             val response = api.getPlanned(page, size)
+
+            if (response.code() == 200) {
+                return response
+            } else {
+                throw Exception("API 응답 오류: ${response.message()} (코드: ${response.code()})")
+            }
+        } catch (e: HttpException) {
+            // HTTP 500 에러 등을 명확하게 전달
+            throw Exception("HTTP ${e.code()}: ${e.message()}")
+        } catch (e: Exception) {
+            throw e
+        }
+    }
+
+    override suspend fun getPopupDetail(
+        popupId: Int
+    ): retrofit2.Response<GetPopupDetailResponse> {
+        try {
+            val response = api.getPopupDetail(popupId)
 
             if (response.code() == 200) {
                 return response
