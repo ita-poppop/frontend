@@ -32,7 +32,7 @@ class InfoReviewViewModel(
                     response.body()?.let { body ->
                         val reviewItems = body.data.map { reviewListDtoToAdapterItem(it) }.toMutableList()
                         _inforeviewList.value = reviewItems
-                        Log.d("ReviewApi_SUCCESS", "Reviews loaded: $reviewItems")
+                        Log.d("ReviewApi_SUCCESS", "ReviewList: $reviewItems")
                     }
                 } else {
                     Log.e("ReviewApi_ERROR", "API error: ${response.message()} (${response.code()})")

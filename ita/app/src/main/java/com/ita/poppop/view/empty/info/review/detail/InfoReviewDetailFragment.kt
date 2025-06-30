@@ -11,7 +11,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.ita.poppop.R
 import com.ita.poppop.base.BaseFragment
+import com.ita.poppop.data.remote.repository.popup.ReviewRepositoryImpl
 import com.ita.poppop.databinding.FragmentInfoReviewDetailBinding
+import com.ita.poppop.util.ViewModelFactory
+import com.ita.poppop.util.remote.RetrofitClient
 import com.ita.poppop.view.empty.info.review.comment.InfoReviewCommentDeleteBottomSheet
 import com.ita.poppop.view.empty.info.review.comment.InfoReviewCommentRVAdapter
 import com.ita.poppop.view.empty.info.review.comment.InfoReviewCommentViewModel
@@ -22,6 +25,7 @@ class InfoReviewDetailFragment : BaseFragment<FragmentInfoReviewDetailBinding>(R
     private val infoReviewDetailArgs: InfoReviewDetailFragmentArgs by navArgs()
 
     private lateinit var infoReviewDetailViewModel: InfoReviewDetailViewModel
+    private lateinit var infoReviewDetailViewHolder: InfoReviewDetailViewHolder
 
     private val infoReviewImageRVAdapter by lazy {
         InfoReviewImageRVAdapter()
@@ -45,38 +49,32 @@ class InfoReviewDetailFragment : BaseFragment<FragmentInfoReviewDetailBinding>(R
                 findNavController().popBackStack()
             }
 
+
+            //infoReviewDetailViewModel = ViewModelProvider(this@InfoReviewDetailFragment).get(InfoReviewDetailViewModel::class.java)
+            //infoReviewDetailViewModel.getInfoReviewDetail(infoReviewDetailArgs.review.itemId)
             // 리뷰 상세
-            infoReviewDetailViewModel = ViewModelProvider(this@InfoReviewDetailFragment).get(InfoReviewDetailViewModel::class.java)
+            val repository = ReviewRepositoryImpl(RetrofitClient.reviewApi)
+            val factory = ViewModelFactory { InfoReviewDetailViewModel(repository) }
+            infoReviewDetailViewModel = ViewModelProvider(this@InfoReviewDetailFragment, factory)[InfoReviewDetailViewModel::class.java]
+            infoReviewDetailViewHolder = InfoReviewDetailViewHolder(binding, infoReviewImageRVAdapter)
+
+            // 리뷰 상세 요청
             infoReviewDetailViewModel.getInfoReviewDetail(infoReviewDetailArgs.review.itemId)
 
-            // 이미지 가져오기
+            // 이미지 리사이클러뷰 설정
             rvReviewDetailImage.apply {
                 adapter = infoReviewImageRVAdapter
                 layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
             }
-
             infoReviewDetailViewModel.review.observe(viewLifecycleOwner) { review ->
-                tvReviewDetailContent.text = review.content
-                tvReviewDetailUsername.text = review.username
-                tvReviewDetailTime.text = review.time
-                tvReviewDetailHeart.text = review.hearts.toString()
-                tvReviewDetailComment.text = review.comments.toString()
-                infoReviewImageRVAdapter.submitList(review.reviewImage)
-                Glide.with(ivReviewDetailProfile.context)
-                    .load(review.profileImage)      // String URL
-                    .placeholder(R.drawable._profile_load_icon)  // 로딩 중 기본 이미지
-                    .error(R.drawable._profile_load_icon)        // 에러 시 기본 이미지
-                    .circleCrop()                  // 원형 크롭 (필요시)
-                    .into(ivReviewDetailProfile)
-
-                // 기존 개수 전달
-                infoReviewDetailViewModel.firstHeartCount(review.hearts)
+                infoReviewDetailViewHolder.bind(review, infoReviewDetailViewModel)
             }
 
             // 하트 상태 변화
             infoReviewDetailViewModel.heartCount.observe(viewLifecycleOwner) { count ->
                 tvReviewDetailHeart.text = count.toString()
             }
+
             infoReviewDetailViewModel.isHeartClicked.observe(viewLifecycleOwner) { clicked ->
                 if (clicked) {
                     ivReviewDetailHeart.setImageResource(R.drawable.info_review_heart_icon_filled)

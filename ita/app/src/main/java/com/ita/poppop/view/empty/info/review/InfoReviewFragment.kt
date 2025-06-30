@@ -1,7 +1,5 @@
 package com.ita.poppop.view.empty.info.review
 
-import android.util.Log
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -9,11 +7,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.ita.poppop.R
 import com.ita.poppop.base.BaseFragment
 import com.ita.poppop.data.remote.repository.popup.ReviewRepositoryImpl
-import com.ita.poppop.data.remote.repository.popup.TrendRepositoryImpl
 import com.ita.poppop.databinding.FragmentInfoReviewBinding
-import com.ita.poppop.util.RetrofitClient
+import com.ita.poppop.util.remote.RetrofitClient
 import com.ita.poppop.util.ViewModelFactory
-import com.ita.poppop.view.empty.info.detail.InfoDetailViewModel
 import com.ita.poppop.view.main.home.InfoFragmentDirections
 
 class InfoReviewFragment: BaseFragment<FragmentInfoReviewBinding>(R.layout.fragment_info_review) {

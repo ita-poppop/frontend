@@ -5,13 +5,11 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ita.poppop.R
 import com.ita.poppop.base.BaseFragment
-import com.ita.poppop.data.remote.api.PopupApi
 import com.ita.poppop.data.remote.repository.popup.TrendRepositoryImpl
 import com.ita.poppop.databinding.FragmentInfoDetailBinding
-import com.ita.poppop.util.RetrofitClient
+import com.ita.poppop.util.remote.RetrofitClient
 import com.ita.poppop.view.empty.info.recommend.InfoRecommendRVAdapter
 import com.ita.poppop.view.empty.info.recommend.InfoRecommendViewModel
-import com.ita.poppop.view.empty.info.review.comment.InfoReviewCommentViewModel
 
 class InfoDetailFragment: BaseFragment<FragmentInfoDetailBinding>(R.layout.fragment_info_detail) {
 

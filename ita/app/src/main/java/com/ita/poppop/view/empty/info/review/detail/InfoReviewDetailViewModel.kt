@@ -1,14 +1,27 @@
 package com.ita.poppop.view.empty.info.review.detail
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.ita.poppop.R
+import com.ita.poppop.data.remote.dto.ReviewData
+import com.ita.poppop.data.remote.dto.ReviewListData
+import com.ita.poppop.data.remote.repository.popup.ReviewRepository
 import com.ita.poppop.view.empty.info.review.InfoReviewRVItem
 import com.ita.poppop.view.empty.info.review.image.InfoReviewImageRVItem
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.time.LocalDateTime
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
+import java.time.temporal.ChronoUnit
 
-class InfoReviewDetailViewModel : ViewModel() {
-
+class InfoReviewDetailViewModel(
+    private val repository: ReviewRepository
+) : ViewModel() {
     private val _inforeviewdetailList = MutableLiveData<InfoReviewRVItem>()
     val review: LiveData<InfoReviewRVItem> = _inforeviewdetailList
 
@@ -38,41 +51,71 @@ class InfoReviewDetailViewModel : ViewModel() {
     }
 
     fun getInfoReviewDetail(reviewId: Int) {
-        val list = when (reviewId) {
-            1 -> InfoReviewRVItem(
-                1,
-                "R.drawable.main_btn_favorites_icon",
-                "wild_zeal",
-                "2시간 전",
-                listOf(InfoReviewImageRVItem(1, "R.drawable.main_btn_favorites_icon")),
-                13,
-                4,
-                "전시가 애니 속 장면들을 잘 살려놔서 보는 내내 몰입감 장난 아니었어요."
-            )
-            2 -> InfoReviewRVItem(
-                2,
-                "R.drawable.main_btn_favorites_icon",
-                "wild_zeal",
-                "2시간 전",
-                listOf(InfoReviewImageRVItem(1, "R.drawable.main_btn_favorites_icon"),
-                    InfoReviewImageRVItem(2, "R.drawable.main_btn_home_icon"),
-                    InfoReviewImageRVItem(3, "R.drawable.main_btn_home_icon"),
-                    InfoReviewImageRVItem(4, "R.drawable.main_btn_home_icon")),
-                12,
-                4,
-                "전시가 애니 속 장면들을 잘 살려놔서 보는 내내 몰입감 장난 아니었어요.'거짓말과 아이', '빛과 그림자' 같은 테마도 은근 생각하게 만들더라구요."
-            )
-            else -> InfoReviewRVItem(
-                3,
-                "R.drawable.main_btn_favorites_icon",
-                "wild_zeal",
-                "2시간 전",
-                emptyList(),
-                12,
-                4,
-                "전시가 애니 속 장면들을 잘 살려놔서 보는 내내 몰입감 장난 아니었어요.'거짓말과 아이', '빛과 그림자' 같은 테마도 은근 생각하게 만들더라구요."
-            )
+        viewModelScope.launch {
+            try {
+                val response = withContext(Dispatchers.IO) {
+                    repository.getReview(1325, reviewId)
+                }
+                if (response.isSuccessful) {
+                    response.body()?.let { responseBody ->
+                        val data: ReviewData = responseBody.data
+                        val result = reviewDtoToAdapterItem(data)
+                        _inforeviewdetailList.value = result
+                        Log.d("ReviewDetailApi_SUCCESS", "Review: $result")
+                    }
+                } else {
+                    Log.e("ReviewDetailApi_ERROR", "API error: ${response.message()} (${response.code()})")
+                }
+            } catch (e: Exception) {
+                Log.e("ReviewDetailApi_ERROR", "Exception: ${e.message}", e)
+            }
         }
-        _inforeviewdetailList.value = list
+    }
+
+    // 데이터 변환
+    private fun reviewDtoToAdapterItem(data: ReviewData): InfoReviewRVItem {
+        val profileImage = "R.drawable._profile_load_icon" // 기본 이미지
+
+        val relativeTime = convertTimeString(data.createdAt) // 시간 변환
+
+        val reviewImages = data.imageUrls.mapIndexed { index, url ->
+            InfoReviewImageRVItem(index, url)
+        }
+
+        return InfoReviewRVItem(
+            itemId = data.reviewId,
+            profileImage = profileImage, // API X -> 일단 기본이미지로
+            username = data.writerName,
+            time = relativeTime,
+            hearts = data.likeCount,
+            comments = data.commentCount,
+            content = data.content,
+            reviewImage = reviewImages
+        )
+    }
+
+    // 날짜 데이터 변환
+    private fun convertTimeString(isoString: String): String {
+        try {
+            val formatter = DateTimeFormatter.ISO_DATE_TIME
+            val createdTime = LocalDateTime.parse(isoString, formatter)
+            val now = LocalDateTime.now(ZoneId.systemDefault())
+
+            val minutes = ChronoUnit.MINUTES.between(createdTime, now)
+            if (minutes < 1) return "방금 전"
+            if (minutes < 60) return "${minutes}분 전"
+
+            val hours = ChronoUnit.HOURS.between(createdTime, now)
+            if (hours < 24) return "${hours}시간 전"
+
+            val days = ChronoUnit.DAYS.between(createdTime, now)
+            if (days < 7) return "${days}일 전"
+
+            // 일주일 이상 경과 -> 날짜 출력
+            return createdTime.format(DateTimeFormatter.ofPattern("MM/dd"))
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        return ""
     }
 }
