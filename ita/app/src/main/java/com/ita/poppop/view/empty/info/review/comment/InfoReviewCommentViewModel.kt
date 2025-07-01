@@ -1,5 +1,6 @@
 package com.ita.poppop.view.empty.info.review.comment
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -9,15 +10,33 @@ class InfoReviewCommentViewModel :ViewModel() {
 
     private val _inforeviewcommentList = MutableLiveData<MutableList<InfoReviewCommentRVItem>>()
     val inforeviewcommentList: LiveData<MutableList<InfoReviewCommentRVItem>> = _inforeviewcommentList
+
+    // 리뷰 상세 화면에서 댓글 추가
+    fun addComment(content: String) {
+        val currentList = _inforeviewcommentList.value ?: mutableListOf()
+        val newId = (currentList.maxOfOrNull { it.itemId } ?: 0) + 1
+        val newComment = InfoReviewCommentRVItem(
+            itemId = newId,
+            username = "hello",
+            profileImage = R.drawable._profile_load_icon,
+            content = content,
+            time = "방금 전",
+            reply = 0
+        )
+        val updatedList = currentList.toMutableList()
+        updatedList.add(newComment)
+        _inforeviewcommentList.value = updatedList
+
+    }
     
     // 리뷰 상세 화면에서 댓글 삭제
     fun deleteComment(commentItemId: Int) {
-        val currentList = _inforeviewcommentList.value?.toMutableList() ?: return
-        val index = currentList.indexOfFirst { it.itemId == commentItemId }
-        if (index != -1) {
-            currentList.removeAt(index)
-            _inforeviewcommentList.value = currentList
-        }
+        val currentList = _inforeviewcommentList.value ?: return
+        Log.d("DeleteComment", "Deleting id: $commentItemId")
+        Log.d("DeleteComment", "Before delete: ${currentList.map { it.itemId }}")
+        val updatedList = currentList.filterNot { it.itemId == commentItemId }.toMutableList()
+        Log.d("DeleteComment", "After delete: ${updatedList.map { it.itemId }}")
+        _inforeviewcommentList.value = updatedList
     }
 
     fun getInfoReviewComment(){

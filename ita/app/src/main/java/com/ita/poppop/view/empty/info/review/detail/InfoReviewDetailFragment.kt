@@ -17,6 +17,7 @@ import com.ita.poppop.util.ViewModelFactory
 import com.ita.poppop.util.remote.RetrofitClient
 import com.ita.poppop.view.empty.info.review.comment.InfoReviewCommentDeleteBottomSheet
 import com.ita.poppop.view.empty.info.review.comment.InfoReviewCommentRVAdapter
+import com.ita.poppop.view.empty.info.review.comment.InfoReviewCommentRVItem
 import com.ita.poppop.view.empty.info.review.comment.InfoReviewCommentViewModel
 import com.ita.poppop.view.empty.info.review.image.InfoReviewImageRVAdapter
 
@@ -49,7 +50,6 @@ class InfoReviewDetailFragment : BaseFragment<FragmentInfoReviewDetailBinding>(R
                 findNavController().popBackStack()
             }
 
-
             //infoReviewDetailViewModel = ViewModelProvider(this@InfoReviewDetailFragment).get(InfoReviewDetailViewModel::class.java)
             //infoReviewDetailViewModel.getInfoReviewDetail(infoReviewDetailArgs.review.itemId)
             // 리뷰 상세
@@ -71,17 +71,8 @@ class InfoReviewDetailFragment : BaseFragment<FragmentInfoReviewDetailBinding>(R
             }
 
             // 하트 상태 변화
-            infoReviewDetailViewModel.heartCount.observe(viewLifecycleOwner) { count ->
-                tvReviewDetailHeart.text = count.toString()
-            }
+            reviewHeartClicked()
 
-            infoReviewDetailViewModel.isHeartClicked.observe(viewLifecycleOwner) { clicked ->
-                if (clicked) {
-                    ivReviewDetailHeart.setImageResource(R.drawable.info_review_heart_icon_filled)
-                } else {
-                    ivReviewDetailHeart.setImageResource(R.drawable.info_review_heart_icon_outlined)
-                }
-            }
             ivReviewDetailHeart.setOnClickListener {
                 infoReviewDetailViewModel.clickHeart()
             }
@@ -115,6 +106,19 @@ class InfoReviewDetailFragment : BaseFragment<FragmentInfoReviewDetailBinding>(R
 
             })
 
+            tvUploadComment.setOnClickListener {
+                val content = editUploadComment.text.toString().trim()
+                if (content.isNotEmpty()) {
+                    infoReviewCommentViewModel.addComment(content)
+
+                    editUploadComment.text?.clear()
+
+                    val keyboard = requireContext().getSystemService(android.content.Context.INPUT_METHOD_SERVICE) as android.view.inputmethod.InputMethodManager
+                    keyboard.hideSoftInputFromWindow(editUploadComment.windowToken, 0)
+                    editUploadComment.clearFocus()
+                }
+            }
+
             infoReviewCommentRVAdapter.setInfoReviewCommentItemClickListener(object : InfoReviewCommentRVAdapter.InfoReviewCommentItemClickListener{
                 // 답글 화살표 클릭 시
                 override fun onArrowClick(position: Int) {
@@ -146,21 +150,51 @@ class InfoReviewDetailFragment : BaseFragment<FragmentInfoReviewDetailBinding>(R
         InfoReviewDeleteBottomSheet().show(parentFragmentManager, "delete review")
     }
 
+    private fun reviewHeartClicked() {
+        binding.apply {
+            infoReviewDetailViewModel.heartCount.observe(viewLifecycleOwner) { count ->
+                tvReviewDetailHeart.text = count.toString()
+            }
+
+            infoReviewDetailViewModel.isHeartClicked.observe(viewLifecycleOwner) { clicked ->
+                if (clicked) {
+                    ivReviewDetailHeart.setImageResource(R.drawable.info_review_heart_icon_filled)
+                } else {
+                    ivReviewDetailHeart.setImageResource(R.drawable.info_review_heart_icon_outlined)
+                }
+            }
+        }
+    }
+
     // 댓글 게시 입력창 위치 조정
     private fun handleCommentUploadArea() {
-        val rootView = binding.root
-        rootView.viewTreeObserver.addOnGlobalLayoutListener {
-            val rect = Rect()
-            rootView.getWindowVisibleDisplayFrame(rect)
-            val screenHeight = rootView.rootView.height
-            val keypadHeight = screenHeight - rect.bottom
+        binding.apply {
+            root.viewTreeObserver.addOnGlobalLayoutListener {
+                val rect = Rect()
+                root.getWindowVisibleDisplayFrame(rect)
+                val screenHeight = root.rootView.height
+                val keypadHeight = screenHeight - rect.bottom
 
-            val isKeyboardVisible = keypadHeight > screenHeight * 0.15
+                val isKeyboardVisible = keypadHeight > screenHeight * 0.15
 
-            binding.clInfoReviewUploadComment.translationY = if (isKeyboardVisible) {
-                -keypadHeight.toFloat()
-            } else {
-                0f
+                clInfoReviewUploadComment.translationY = if (isKeyboardVisible) {
+                    -keypadHeight.toFloat()
+                } else {
+                    0f
+                }
+
+                rvReviewComment.setPadding(
+                    rvReviewComment.paddingLeft,
+                    rvReviewComment.paddingTop,
+                    rvReviewComment.paddingRight,
+                    if (isKeyboardVisible) keypadHeight else 0
+                )
+
+                if (isKeyboardVisible) {
+                    rvReviewComment.post {
+                        rvReviewComment.scrollToPosition(infoReviewCommentRVAdapter.itemCount - 1)
+                    }
+                }
             }
         }
     }

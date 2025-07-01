@@ -44,7 +44,6 @@ class FavoritesFragment: BaseFragment<FragmentFavoritesBinding>(R.layout.fragmen
 
                 val itemTouchHelper = ItemTouchHelper(SwipeHelper())
                 itemTouchHelper.attachToRecyclerView(this)
-                itemAnimator = null
             }
 
             favoritesViewModel.getFavorites()

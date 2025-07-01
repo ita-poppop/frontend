@@ -57,6 +57,19 @@ class InfoReviewDetailReplyFragment : BaseFragment<FragmentInfoReviewDetailReply
                 keyboard.showSoftInput(editUploadCommentReply, android.view.inputmethod.InputMethodManager.SHOW_IMPLICIT)
             }
 
+            tvUploadCommentReply.setOnClickListener {
+                val reply = editUploadCommentReply.text.toString().trim()
+                if (reply.isNotEmpty()) {
+                    infoReviewDetailReplyViewModel.addReply(reply)
+
+                    editUploadCommentReply.text?.clear()
+
+                    val keyboard = requireContext().getSystemService(android.content.Context.INPUT_METHOD_SERVICE) as android.view.inputmethod.InputMethodManager
+                    keyboard.hideSoftInputFromWindow(editUploadCommentReply.windowToken, 0)
+                    editUploadCommentReply.clearFocus()
+                }
+            }
+
             infoReviewDetailReplyRVAdapter.setInfoReviewDetailReplyItemClickListener(object : InfoReviewDetailReplyRVAdapter.InfoReviewDetailReplyItemClickListener{
                 // 답글 점 클릭 시
                 override fun onDotClick(position: Int) {
