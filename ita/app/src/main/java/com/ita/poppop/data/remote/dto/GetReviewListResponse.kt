@@ -12,5 +12,7 @@ data class ReviewListData(
     val imageUrls: List<String>,
     val writerName: String,
     val createdAt: String,
-    val updatedAt: String
+    val updatedAt: String,
+    val likeCount: Int,
+    val commentCount: Int
 )

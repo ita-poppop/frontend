@@ -26,7 +26,7 @@ class InfoReviewViewModel(
         viewModelScope.launch {
             try {
                 val response = withContext(Dispatchers.IO) {
-                    repository.getReviewList(1325, 0, 5)
+                    repository.getReviewList(1325, 1, 5)
                 }
                 if (response.isSuccessful) {
                     response.body()?.let { body ->
@@ -58,8 +58,8 @@ class InfoReviewViewModel(
             profileImage = profileImage, // API X -> 일단 기본이미지로
             username = data.writerName,
             time = relativeTime,
-            hearts = 0,       // API X
-            comments = 0,     // API X
+            hearts = data.likeCount,
+            comments = data.commentCount,
             content = data.content,
             reviewImage = reviewImages
         )
