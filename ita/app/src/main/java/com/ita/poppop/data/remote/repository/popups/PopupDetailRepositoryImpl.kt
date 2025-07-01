@@ -1,7 +1,7 @@
-package com.ita.poppop.data.remote.repository.popup
+package com.ita.poppop.data.remote.repository.popups
 
 import com.ita.poppop.data.remote.api.PopupApi
-import com.ita.poppop.data.remote.dto.PopupDetailData
+import com.ita.poppop.data.remote.dto.popups.PopupDetailData
 import retrofit2.HttpException
 
 class PopupDetailRepositoryImpl(

@@ -5,8 +5,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ita.poppop.data.remote.dto.PopupDetailData
-import com.ita.poppop.data.remote.repository.popup.PopupDetailRepository
+import com.ita.poppop.data.remote.dto.popups.PopupDetailData
+import com.ita.poppop.data.remote.repository.popups.PopupDetailRepository
 import kotlinx.coroutines.launch
 
 class InfoDetailViewModel(

@@ -3,14 +3,30 @@ package com.ita.poppop.view.empty.search.holder
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.ita.poppop.data.remote.dto.popups.SearchData
 import com.ita.poppop.databinding.ItemHomeSearchLayoutBinding
 
 
 class HomeSearchAdapter(
-    private var items : MutableList<Int>,
+    private var items : List<SearchData>,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     init {
         setHasStableIds(true)
+    }
+
+    inner class HomeSearchViewHolder(
+        private val binding: ItemHomeSearchLayoutBinding,
+    ) : RecyclerView.ViewHolder(binding.root) {
+        fun bind(item : SearchData) {
+            Glide.with(binding.root)
+                .load(item.image)
+                .centerCrop()
+                .into(binding.ivSearchPoster)
+
+            binding.tvSearchTitle.text = item.title
+            binding.tvSearchLocation.text = item.location
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -19,12 +35,12 @@ class HomeSearchAdapter(
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        (holder as HomeSearchViewHolder).bind()
+        (holder as HomeSearchViewHolder).bind(items[position])
     }
 
 
     // 아이템 반환 메서드
-    private fun getItem(position: Int): Int {
+    private fun getItem(position: Int): SearchData {
         return items[position]
     }
 

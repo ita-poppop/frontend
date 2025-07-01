@@ -12,7 +12,7 @@ import com.bumptech.glide.Glide
 import com.google.android.material.tabs.TabLayout
 import com.ita.poppop.R
 import com.ita.poppop.base.BaseFragment
-import com.ita.poppop.data.remote.repository.popup.PopupDetailRepositoryImpl
+import com.ita.poppop.data.remote.repository.popups.PopupDetailRepositoryImpl
 import com.ita.poppop.databinding.FragmentInfoBinding
 import com.ita.poppop.util.RetrofitClient
 import com.ita.poppop.view.empty.info.InfoViewModel
@@ -20,7 +20,6 @@ import com.ita.poppop.view.empty.info.detail.InfoDetailFragment
 import com.ita.poppop.view.empty.info.review.InfoReviewFragment
 import com.ita.poppop.view.empty.info.story.InfoStoryRVAdapter
 import com.ita.poppop.view.empty.info.story.InfoStoryViewModel
-import com.ita.poppop.view.main.hide
 
 
 class InfoFragment: BaseFragment<FragmentInfoBinding>(R.layout.fragment_info) {

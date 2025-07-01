@@ -1,8 +1,8 @@
-package com.ita.poppop.data.remote.dto
+package com.ita.poppop.data.remote.dto.popups
 
 import com.google.gson.annotations.SerializedName
 
-data class GetPlannedResponse(
+data class GetSearchResponse(
     @SerializedName("code")
     val code: String,
 
@@ -10,22 +10,19 @@ data class GetPlannedResponse(
     val message: String,
 
     @SerializedName("data")
-    val data: List<PlannedData>
+    val data: List<SearchData>
 )
 
-data class PlannedData(
+data class SearchData(
     @SerializedName("id")
     val id: Int,
-
-    @SerializedName("title")
-    val title: String,
 
     @SerializedName("image")
     val image: String,
 
-    @SerializedName("location")
-    val location: String,
+    @SerializedName("title")
+    val title: String,
 
-    @SerializedName("dday")
-    val dday: String
+    @SerializedName("location")
+    val location: String
 )

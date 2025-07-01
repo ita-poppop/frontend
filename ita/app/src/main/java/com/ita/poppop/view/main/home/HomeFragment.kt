@@ -12,8 +12,9 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ita.poppop.R
 import com.ita.poppop.base.BaseFragment
-import com.ita.poppop.data.remote.repository.popup.TrendRepository
-import com.ita.poppop.data.remote.repository.popup.TrendRepositoryImpl
+import com.ita.poppop.data.remote.dto.popups.TrendData
+import com.ita.poppop.data.remote.repository.popups.PopupsRepository
+import com.ita.poppop.data.remote.repository.popups.PopupsRepositoryImpl
 import com.ita.poppop.databinding.FragmentHomeBinding
 import com.ita.poppop.util.DimManager
 import com.ita.poppop.util.remote.RetrofitClient
@@ -37,9 +38,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
     private lateinit var fabClose: Animation
     private lateinit var dimManager: DimManager
 
-//    private val repository: TrendRepository = TrendRepositoryImpl(RetrofitClient.popupApi)
 
-    private val repository: TrendRepository = TrendRepositoryImpl(RetrofitClient.popupApi)
+    private val repository: PopupsRepository = PopupsRepositoryImpl(RetrofitClient.popupApi)
 
 
     override fun initView() {
@@ -74,12 +74,29 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
     }
 
     private fun setupTrendRecycler() = with(binding.rvTrend) {
+        var trendList = listOf<TrendData>()
+        lifecycleScope.launch {
+            try {
+                val result = withContext(Dispatchers.IO) {
+                    repository.getTrendPopups(1, 40)
+                }
 
-        fetchTrends()
-        val trendList = mutableListOf(1, 2, 3, 4, 5, 6)
-        adapter = HomeTrendAdapter(trendList)
-        layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-        addItemDecoration(HomeTrendItemDecoration())
+                if (result.isSuccessful) {
+                    trendList = result.body()?.data!!
+                    val filteredList = trendList.filter { it.imageUrl.startsWith("https://") }
+                    adapter = HomeTrendAdapter(filteredList)
+                    layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+                    addItemDecoration(HomeTrendItemDecoration())
+                }
+            } catch (e: HttpException) {
+                // HTTP 에러 상세 정보
+                showToast("HTTP 에러: ${e.code()} - ${e.message()}")
+                Log.e("API_ERROR", "HTTP ${e.code()}: ${e.response()?.errorBody()?.string()}")
+            } catch (e: Exception) {
+                showToast("에러 발생: ${e.localizedMessage ?: "알 수 없는 오류"}")
+                Log.e("API_ERROR", "Exception: ${e.message}", e)
+            }
+        }
     }
 
 //    private fun fetchTrends() {
@@ -103,26 +120,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
 //        }
 //    }
 
-    private fun fetchTrends() {
-        lifecycleScope.launch {
-            try {
-                val result = withContext(Dispatchers.IO) {
-                    repository.getPlannedPopups(0,20)
-                }
 
-                if (result.isSuccessful) {
-                    showToast("첫 번째 팝업: ${result}")
-                }
-            } catch (e: HttpException) {
-                // HTTP 에러 상세 정보
-                showToast("HTTP 에러: ${e.code()} - ${e.message()}")
-                Log.e("API_ERROR", "HTTP ${e.code()}: ${e.response()?.errorBody()?.string()}")
-            } catch (e: Exception) {
-                showToast("에러 발생: ${e.localizedMessage ?: "알 수 없는 오류"}")
-                Log.e("API_ERROR", "Exception: ${e.message}", e)
-            }
-        }
-    }
 
     private fun showToast(message: String) {
         Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
@@ -149,10 +147,32 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
     }
 
     private fun setupUpcomingRecycler() = with(binding.rvUpcoming) {
-        val upcomingList = mutableListOf(0, 1, 2, 3)
-        adapter = HomeUpcomingAdapter(upcomingList)
-        layoutManager = GridLayoutManager(context, 2)
-        addItemDecoration(HomeUpcomingItemDecoration())
+        var upcomingList = listOf<TrendData>()
+        lifecycleScope.launch {
+            try {
+                val result = withContext(Dispatchers.IO) {
+                    repository.getTrendPopups(3, 20)
+                }
+
+                if (result.isSuccessful) {
+                    upcomingList = result.body()?.data!!
+                    val filteredList = upcomingList.filter { it.imageUrl.startsWith("https://") }
+                    adapter = HomeUpcomingAdapter(filteredList.takeLast(4))
+                    layoutManager = GridLayoutManager(context, 2)
+                    addItemDecoration(HomeUpcomingItemDecoration())
+
+                }
+            } catch (e: HttpException) {
+                // HTTP 에러 상세 정보
+                showToast("HTTP 에러: ${e.code()} - ${e.message()}")
+                Log.e("API_ERROR", "HTTP ${e.code()}: ${e.response()?.errorBody()?.string()}")
+            } catch (e: Exception) {
+                showToast("에러 발생: ${e.localizedMessage ?: "알 수 없는 오류"}")
+                Log.e("API_ERROR", "Exception: ${e.message}", e)
+            }
+        }
+
+
     }
 
     private fun setupClickListeners() = with(binding) {

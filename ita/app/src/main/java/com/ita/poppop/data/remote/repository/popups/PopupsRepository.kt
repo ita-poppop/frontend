@@ -1,37 +1,38 @@
-package com.ita.poppop.data.remote.api
+package com.ita.poppop.data.remote.repository.popups
 
-import com.ita.poppop.data.remote.dto.popups.GetPopupDetailResponse
 import com.ita.poppop.data.remote.dto.popups.GetPlannedResponse
+import com.ita.poppop.data.remote.dto.popups.GetPopupDetailResponse
 import com.ita.poppop.data.remote.dto.popups.GetSearchResponse
 import com.ita.poppop.data.remote.dto.popups.GetTrendResponse
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
 
-interface PopupApi {
+
+interface PopupsRepository {
     @GET("/api/v1/popups/{popupId}")
-    suspend fun getPopupDetail(
+    suspend fun getDetailPopups(
         @Query("popupId") popupId: Int
     ): Response<GetPopupDetailResponse>
 
     @GET("/api/v1/popups/trend")
-    suspend fun getTrends(
+    suspend fun getTrendPopups(
         @Query("page") page: Int,
         @Query("size") size: Int
     ): Response<GetTrendResponse>
 
     @GET("/api/v1/popups/search")
-    suspend fun getSearch(
+    suspend fun getSearchPopups(
         @Query("title") title: String,
         @Query("page") page: Int,
         @Query("size") size: Int
     ): Response<GetSearchResponse>
 
-
     @GET("/api/v1/popups/planned")
-    suspend fun getPlanned(
+    suspend fun getPlannedPopups(
         @Query("page") page: Int,
         @Query("size") size: Int
     ): Response<GetPlannedResponse>
+
 
 }
