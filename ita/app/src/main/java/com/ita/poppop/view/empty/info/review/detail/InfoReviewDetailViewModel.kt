@@ -76,7 +76,11 @@ class InfoReviewDetailViewModel(
     private fun reviewDtoToAdapterItem(data: ReviewData): InfoReviewRVItem {
         val profileImage = "R.drawable._profile_load_icon" // 기본 이미지
 
-        val relativeTime = convertTimeString(data.createdAt) // 시간 변환
+        val relativeTime = if (data.createdAt != data.updatedAt) {
+            "${convertTimeString(data.createdAt)} (수정됨)"
+        } else {
+            convertTimeString(data.createdAt)
+        }
 
         val reviewImages = data.imageUrls.mapIndexed { index, url ->
             InfoReviewImageRVItem(index, url)
@@ -111,7 +115,13 @@ class InfoReviewDetailViewModel(
             val days = ChronoUnit.DAYS.between(createdTime, now)
             if (days < 7) return "${days}일 전"
 
-            // 일주일 이상 경과 -> 날짜 출력
+            val weeks = ChronoUnit.WEEKS.between(createdTime, now)
+            if (weeks < 4) return "${weeks}주 전"
+
+            val months = ChronoUnit.MONTHS.between(createdTime, now)
+            if (months < 12) return "${months}개월 전"
+
+            // 1년 이상 경과 -> 날짜 출력
             return createdTime.format(DateTimeFormatter.ofPattern("MM/dd"))
         } catch (e: Exception) {
             e.printStackTrace()
