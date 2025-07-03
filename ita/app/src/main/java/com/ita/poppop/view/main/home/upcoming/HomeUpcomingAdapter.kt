@@ -4,11 +4,12 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.ita.poppop.data.remote.dto.popups.PlannedData
 import com.ita.poppop.data.remote.dto.popups.TrendData
 import com.ita.poppop.databinding.ItemHomeUpcomingLayoutBinding
 
 class HomeUpcomingAdapter(
-    private var items : List<TrendData>,
+    private var items : List<PlannedData>,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     init {
         setHasStableIds(true)
@@ -17,9 +18,9 @@ class HomeUpcomingAdapter(
     inner class HomeUpcomingViewHolder(
         private val binding: ItemHomeUpcomingLayoutBinding,
     ) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(item : TrendData) {
+        fun bind(item : PlannedData) {
             Glide.with(binding.root)
-                .load(item.imageUrl)
+                .load(item.image)
                 .centerCrop()
                 .into(binding.ivUpcomingPoster)
 
@@ -40,7 +41,7 @@ class HomeUpcomingAdapter(
 
 
     // 아이템 반환 메서드
-    private fun getItem(position: Int): TrendData {
+    private fun getItem(position: Int): PlannedData {
         return items[position]
     }
 

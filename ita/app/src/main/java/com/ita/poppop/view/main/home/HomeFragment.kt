@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ita.poppop.R
 import com.ita.poppop.base.BaseFragment
+import com.ita.poppop.data.remote.dto.popups.PlannedData
 import com.ita.poppop.data.remote.dto.popups.TrendData
 import com.ita.poppop.data.remote.repository.popups.PopupsRepository
 import com.ita.poppop.data.remote.repository.popups.PopupsRepositoryImpl
@@ -78,13 +79,12 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
         lifecycleScope.launch {
             try {
                 val result = withContext(Dispatchers.IO) {
-                    repository.getTrendPopups(1, 40)
+                    repository.getTrendPopups(1, 10)
                 }
 
                 if (result.isSuccessful) {
                     trendList = result.body()?.data!!
-                    val filteredList = trendList.filter { it.imageUrl.startsWith("https://") }
-                    adapter = HomeTrendAdapter(filteredList)
+                    adapter = HomeTrendAdapter(trendList)
                     layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
                     addItemDecoration(HomeTrendItemDecoration())
                 }
@@ -147,17 +147,16 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
     }
 
     private fun setupUpcomingRecycler() = with(binding.rvUpcoming) {
-        var upcomingList = listOf<TrendData>()
+        var upcomingList = listOf<PlannedData>()
         lifecycleScope.launch {
             try {
                 val result = withContext(Dispatchers.IO) {
-                    repository.getTrendPopups(3, 20)
+                    repository.getPlannedPopups(1, 4)
                 }
 
                 if (result.isSuccessful) {
                     upcomingList = result.body()?.data!!
-                    val filteredList = upcomingList.filter { it.imageUrl.startsWith("https://") }
-                    adapter = HomeUpcomingAdapter(filteredList.takeLast(4))
+                    adapter = HomeUpcomingAdapter(upcomingList)
                     layoutManager = GridLayoutManager(context, 2)
                     addItemDecoration(HomeUpcomingItemDecoration())
 
