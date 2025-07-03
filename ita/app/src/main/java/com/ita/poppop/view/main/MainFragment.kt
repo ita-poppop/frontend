@@ -1,6 +1,7 @@
 package com.ita.poppop.view.main
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -15,6 +16,10 @@ import com.ita.poppop.databinding.FragmentMainBinding
 
 class MainFragment: BaseFragment<FragmentMainBinding>(R.layout.fragment_main) {
     override fun initView() {
+        Log.e("checkStartFlow", "MainFragment")
+
+
+
         binding.apply {
             // FragmentContainerView에 동적으로 navi 연결
             val navHostFragment = childFragmentManager

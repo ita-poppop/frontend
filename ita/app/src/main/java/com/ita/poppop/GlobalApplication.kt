@@ -11,6 +11,8 @@ import com.kakao.sdk.user.UserApiClient
 class GlobalApplication : Application() {
     override fun onCreate() {
         super.onCreate()
+        Log.e("checkStartFlow", "GlobalApplication")
+
         // Kakao SDK 초기화
         KakaoSdk.init(this, "dba46fac2339b736d14fbb068a3831cd")
 
