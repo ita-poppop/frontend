@@ -37,7 +37,7 @@ class WaitingDialog(context: Context) : Dialog(context) {
         }
 
         binding.btnConfirm.setOnClickListener {
-            itemClickListener?.onClick("waiting_dialog")
+            itemClickListener?.onClick()
             dismiss()
         }
     }
@@ -47,6 +47,6 @@ class WaitingDialog(context: Context) : Dialog(context) {
     }
 
     interface ItemClickListener {
-        fun onClick(message: String)
+        fun onClick()
     }
 }

@@ -10,6 +10,7 @@ import androidx.credentials.GetCredentialResponse
 import androidx.credentials.exceptions.GetCredentialCancellationException
 import androidx.credentials.exceptions.GetCredentialException
 import androidx.credentials.exceptions.NoCredentialException
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption
@@ -20,6 +21,7 @@ import com.google.firebase.auth.GoogleAuthProvider
 import com.ita.poppop.R
 import com.ita.poppop.base.BaseFragment
 import com.ita.poppop.databinding.FragmentLoginBinding
+import com.ita.poppop.viewmodel.MainAViewModel
 import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.common.model.ClientError
 import com.kakao.sdk.common.model.ClientErrorCause
@@ -27,54 +29,16 @@ import com.kakao.sdk.user.UserApiClient
 import kotlinx.coroutines.launch
 
 class LoginFragment: BaseFragment<FragmentLoginBinding>(R.layout.fragment_login) {
+    private lateinit var mainAViewModel: MainAViewModel
+
     private lateinit var credentialManager: CredentialManager
     private lateinit var auth: FirebaseAuth
-
-    // 앱 -> 서버 : 프리퍼런스에 저장된 세션ID를 통해 서버측에 전달
-    // 서버 -> 앱 : 서버측에서 해당 세션ID의 유효성 전달
-        // 앱 : 유효 : MainFragment로 이동
-        // 앱 : 무효 : LoginFragment로 이동
-            // 앱 -> 카카오(구글) :  로그인 요청
-            // 카카오(구글) -> 앱 : 로그인 화면 요청
-            // 앱 -> 카카오(구글) : 로그인 확인
-            // 카카오(구글) -> 앱 : 카카오(구글) 토큰 발급
-            // 앱  -> 서버 : 카카오(구글) 토큰 전달
-            // 서버 -> 카카오(구글) : 카카오(구글) 토큰으로 카카오(구글)에 사용자 정보 조회
-            // 카카오(구글) -> 서버 : 사용자 정보 제공
-            // 서버 : 사용자DB에 사용자 생성 및 갱신(세션ID,카카오(구글)토큰{유효성})
-            // 서버 -> 앱 : 세션 ID 제공
-            // 앱 : 세션ID를 프리퍼런스에 저장
-            // 앱 : MainFragment로 이동
-
-
-
-//    [1] (android)앱 : 시작 시 SharedPreferences에 저장된 토큰 조회
-//
-//    [2] (android)앱 : 해당 토큰 유효성 확인
-//
-//      ✅ 유효: 바로 MainFragment로 이동
-//
-//      ❌ 무효: LoginFragment로 이동
-//
-//      [3] 앱 → 카카오 SDK로 로그인 요청
-//
-//      [4] 카카오 SDK가 앱 내에서 로그인 UI를 띄움
-//
-//      [5] 토큰(access token) 발급받음 → 서버에 전달
-//
-//      [6] 서버가 access token을 바탕으로 사용자 정보 조회
-//
-//      [7] 서버에서 access token으로 카카오 서버에서 사용자 정보 요청후 사용자 DB 생성
-//
-//      [8] 사용자 DB 생성 완료 생성한 사용자 정보 앱에 전달
-//
-//      [9] 앱에서 완료 메시지 받은 후 MainFragment로 이동 맟 액세스 토큰 및 리프레스 토큰 프리퍼런스에 저장
 
     override fun initView() {
         Log.e("checkStartFlow", "LoginFragment")
         credentialManager = CredentialManager.create(requireContext())
         auth = FirebaseAuth.getInstance()
-
+        mainAViewModel = ViewModelProvider(requireActivity())[MainAViewModel::class.java]
         setupWindowInsets()
         binding.apply {
             // 카카오계정으로 로그인 공통 callback 구성
@@ -83,9 +47,9 @@ class LoginFragment: BaseFragment<FragmentLoginBinding>(R.layout.fragment_login)
                     Log.d("checkLogin", "카카오계정으로 로그인 실패")
                 } else if (token != null) {
                     Log.d("checkLogin", "카카오계정으로 로그인 성공 ${token.accessToken}")
-
+                    mainAViewModel.onLoginSuccess()
+                    getGoogleUserInfo() 
 //                    saveSessionIdToPrefs(token.accessToken)
-                    findNavController().navigate(R.id.action_loginFragment_to_mainFragment)
                 }
             }
 
@@ -106,7 +70,8 @@ class LoginFragment: BaseFragment<FragmentLoginBinding>(R.layout.fragment_login)
                             UserApiClient.instance.loginWithKakaoAccount(requireContext(), callback = callback)
                         } else if (token != null) {
                             Log.d("checkLogin", "카카오톡으로 로그인 성공 ${token.accessToken}")
-                            findNavController().navigate(R.id.action_loginFragment_to_mainFragment)
+                            mainAViewModel.onLoginSuccess()
+//                            findNavController().navigate(R.id.action_loginFragment_to_mainFragment)
                         }
                     }
                 } else {
@@ -194,6 +159,7 @@ class LoginFragment: BaseFragment<FragmentLoginBinding>(R.layout.fragment_login)
             }
     }
 
+
     private fun handleFailure(e: GetCredentialException) {
         Log.d("checkLogin", "GetCredential failed", e)
         when (e) {
@@ -217,12 +183,44 @@ class LoginFragment: BaseFragment<FragmentLoginBinding>(R.layout.fragment_login)
             val message = "환영합니다, ${it.displayName ?: "사용자"}님!"
             Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
             Log.d("checkLogin", "Login successful for user: ${it.uid}")
-
+            mainAViewModel.onLoginSuccess()
+            Log.d("LoginLOG", "googleLogin ID: ${user.uid}")
+            Log.d("LoginLOG", "googleLogin 닉네임: ${user.displayName}")
+            Log.d("LoginLOG", "googleLogin 이메일: ${user.email}")
+            Log.d("LoginLOG", "googleLogin 프로필 이미지: ${user.photoUrl}")
             // 메인 화면으로 이동
-            findNavController().navigate(R.id.action_loginFragment_to_mainFragment)
+//            findNavController().navigate(R.id.action_loginFragment_to_mainFragment)
         }
     }
+    private fun getKakaoUserInfo(user: FirebaseUser?) {
+        // 사용자 정보 요청 (기본)
+        user?.let {
+            mainAViewModel.onLoginSuccess()
+            Log.d("LoginLOG", "googleLogin ID: ${user.uid}")
+            Log.d("LoginLOG", "googleLogin 닉네임: ${user.displayName}")
+            Log.d("LoginLOG", "googleLogin 이메일: ${user.email}")
+            Log.d("LoginLOG", "googleLogin 프로필 이미지: ${user.photoUrl}")
+            // 메인 화면으로 이동
+//            findNavController().navigate(R.id.action_loginFragment_to_mainFragment)
+        }
+    }
+    private fun getGoogleUserInfo() {
+        // 사용자 정보 요청 (기본)
+        UserApiClient.instance.me { user, error ->
+            if (error != null) {
+                Log.e("LoginLOG", "사용자 정보 요청 실패", error)
+            } else if (user != null) {
+                Log.i("LoginLOG", "사용자 정보 요청 성공")
 
+                // 사용자 정보 활용
+
+                Log.d("LoginLOG", "KakaoLogin ID: ${user.id}")
+                Log.d("LoginLOG", "KakaoLogin 닉네임: ${user.kakaoAccount?.profile?.nickname}")
+                Log.d("LoginLOG", "KakaoLogin 프로필 이미지: ${user.kakaoAccount?.profile?.profileImageUrl}")
+
+            }
+        }
+    }
     private fun showSignInError(message: String) {
         Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show()
         Log.e(TAG, "Sign-in error: $message")

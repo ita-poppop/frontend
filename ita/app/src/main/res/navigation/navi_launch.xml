@@ -55,9 +55,6 @@
             app:destination="@id/navi_upload_review"
             app:enterAnim="@anim/slide_up"
             app:popExitAnim="@anim/slide_down" />
-        <action
-            android:id="@+id/action_mainFragment_to_loginFragment"
-            app:destination="@id/loginFragment" />
     </fragment>
     <fragment
         android:id="@+id/emptyFragment"

@@ -2,18 +2,26 @@ package com.ita.poppop.view.empty.setting.sub
 
 import android.os.Bundle
 import android.view.View
+import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.NavController
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.findNavController
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import com.ita.poppop.R
 import com.ita.poppop.util.dialog.LogoutDialog
 import com.ita.poppop.util.dialog.WithdrawDialog
 import com.ita.poppop.view.empty.setting.SettingFragment
+import com.ita.poppop.viewmodel.MainAViewModel
 
 class MainSettingFragment : PreferenceFragmentCompat() {
-
+    private lateinit var mainAViewModel: MainAViewModel
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.setting, rootKey)
         setupPreferenceClickListeners()
+
+
+        mainAViewModel = ViewModelProvider(requireActivity())[MainAViewModel::class.java]
     }
 
     private fun setupPreferenceClickListeners() {
@@ -44,8 +52,8 @@ class MainSettingFragment : PreferenceFragmentCompat() {
     private fun showLogoutDialog() {
         val dialog = LogoutDialog(requireContext())
         dialog.setItemClickListener(object : LogoutDialog.ItemClickListener {
-            override fun onClick(tel: String) {
-                // TODO: 로그아웃 처리
+            override fun onClick() {
+                mainAViewModel.logout()
             }
         })
         dialog.show()
@@ -54,8 +62,9 @@ class MainSettingFragment : PreferenceFragmentCompat() {
     private fun showWithdrawDialog() {
         val dialog = WithdrawDialog(requireContext())
         dialog.setItemClickListener(object : WithdrawDialog.ItemClickListener {
-            override fun onClick(tel: String) {
-                // TODO: 탈퇴 처리
+            override fun onClick() {
+                mainAViewModel.unlink()
+                //TODO 서버 사용자 DB애서 사용자 제거
             }
         })
         dialog.show()

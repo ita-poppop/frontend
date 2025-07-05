@@ -38,7 +38,6 @@ class WithdrawDialog(context: Context) : Dialog(context) {
         }
 
         binding.btnConfirm.setOnClickListener {
-            itemClickListener?.onClick("withdraw_dialog")
             dismiss()
         }
     }
@@ -48,6 +47,6 @@ class WithdrawDialog(context: Context) : Dialog(context) {
     }
 
     interface ItemClickListener {
-        fun onClick(message: String)
+        fun onClick()
     }
 }

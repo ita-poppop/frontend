@@ -19,14 +19,20 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.core.view.updateLayoutParams
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import com.google.firebase.auth.FirebaseAuth
 import com.ita.poppop.R
 import com.ita.poppop.base.BaseActivity
 import com.ita.poppop.databinding.ActivityMainBinding
+import com.ita.poppop.util.LoginManager
+import com.ita.poppop.viewmodel.MainAViewModel
+import com.ita.poppop.viewmodel.empty.upload.UploadViewModel
 import com.kakao.sdk.auth.AuthApiClient
 import com.kakao.sdk.common.model.KakaoSdkError
 import com.kakao.sdk.common.util.Utility
@@ -37,9 +43,15 @@ import kotlinx.coroutines.launch
 class MainActivity: BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
     private lateinit var navGraph: NavGraph
     private lateinit var navController: NavController
+    private lateinit var mainAViewModel: MainAViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.e("checkStartFlow", "MainActivity")
+        mainAViewModel = ViewModelProvider(this)[MainAViewModel::class.java]
+
+
+
         binding.apply {
             // 확장된 화면 대응
             var keyHash = Utility.getKeyHash(this@MainActivity)
@@ -58,49 +70,43 @@ class MainActivity: BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
 
             val navInflater = navController.navInflater
             navGraph = navInflater.inflate(R.navigation.navi_launch)
-            if (AuthApiClient.instance.hasToken()) {
-                UserApiClient.instance.accessTokenInfo { _, error ->
-                    if (error != null) {
-                        if (error is KakaoSdkError && error.isInvalidTokenError() == true) {
-                            //로그인 필요
-                            moveToLogin()
-                        }
-                        else {
-                            //기타 에러
-                            moveToLogin()
-                        }
+//            checkLoginAndNavigate()
+            mainAViewModel.loginState.observe(this@MainActivity, Observer { state ->
+                when (state) {
+                    is MainAViewModel.LoginState.Loading -> {
+                        // 로딩 UI 표시
+//                    showLoading()
                     }
-                    else {
-                        //토큰 유효성 체크 성공(필요 시 토큰 갱신됨)
+                    is MainAViewModel.LoginState.LoggedIn -> {
+                        // 메인 화면으로 이동
                         moveToMain()
+                        Toast.makeText(this@MainActivity,"moveToMain",Toast.LENGTH_SHORT).show()
+                    }
+                    is MainAViewModel.LoginState.LoggedOut -> {
+                        // 로그인 화면으로 이동
+                        moveToLogin()
+                        Toast.makeText(this@MainActivity,"moveToLogin",Toast.LENGTH_SHORT).show()
+                    }
+                    is MainAViewModel.LoginState.Error -> {
+                        // 에러 처리
+//                    showError(state.message)
                     }
                 }
-
-            }
-            else {
-                //로그인 필요
-                moveToLogin()
-            }
-//            val user = FirebaseAuth.getInstance().currentUser
-//            if (user != null) {
-//                // 자동 로그인 → 메인 액티비티
-//                goToMain()
-//            } else {
-//                // 로그인 필요 → 로그인 액티비티
-//                goToLogin()
-//            }
-
+            })
         }
     }
 
     private fun moveToMain() {
         navGraph.setStartDestination(R.id.mainFragment)
         navController.graph = navGraph
+        navController.navigate(R.id.mainFragment)
 
     }
 
     private fun moveToLogin() {
         navGraph.setStartDestination(R.id.loginFragment)
         navController.graph = navGraph
+        navController.navigate(R.id.loginFragment)
+
     }
 }
