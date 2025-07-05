@@ -72,8 +72,6 @@ class InfoReviewDetailViewModel(
 
     // 데이터 변환
     private fun reviewDtoToAdapterItem(data: ReviewData): InfoReviewRVItem {
-        val profileImage = "R.drawable._profile_load_icon" // 기본 이미지
-
         val convertTimeUtil = ConvertTimeUtil()
 
         val relativeTime = if (data.createdAt != data.updatedAt) {
@@ -88,7 +86,7 @@ class InfoReviewDetailViewModel(
 
         return InfoReviewRVItem(
             itemId = data.reviewId,
-            profileImage = profileImage, // API X -> 일단 기본이미지로
+            profileImage = data.writerProfileUrl,
             username = data.writerName,
             time = relativeTime,
             hearts = data.likeCount,

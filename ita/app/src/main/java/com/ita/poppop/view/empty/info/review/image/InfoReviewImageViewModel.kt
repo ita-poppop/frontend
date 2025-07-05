@@ -3,7 +3,6 @@ package com.ita.poppop.view.empty.info.review.image
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.ita.poppop.R
 
 class InfoReviewImageViewModel: ViewModel() { // 삭제 가능
     private val _inforeviewimageList = MutableLiveData<MutableList<InfoReviewImageRVItem>>()

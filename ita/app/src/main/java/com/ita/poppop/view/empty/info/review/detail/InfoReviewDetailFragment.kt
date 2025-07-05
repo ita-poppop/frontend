@@ -82,29 +82,18 @@ class InfoReviewDetailFragment : BaseFragment<FragmentInfoReviewDetailBinding>(R
             val repository2 = CommentRepositoryImpl(RetrofitClient.commentApi)
             val factory2 = ViewModelFactory { InfoReviewCommentViewModel(repository2) }
             infoReviewCommentViewModel = ViewModelProvider(this@InfoReviewDetailFragment, factory2)[InfoReviewCommentViewModel::class.java]
+            infoReviewCommentViewModel.getInfoReviewCommentList(infoReviewDetailArgs.review.itemId)
+            infoReviewCommentViewModel.inforeviewcommentList.observe(viewLifecycleOwner) { commentList ->
+                infoReviewCommentRVAdapter.submitList(commentList.toList())
+            }
             rvReviewComment.apply {
-                infoReviewCommentViewModel.getInfoReviewCommentList(infoReviewDetailArgs.review.itemId)
-
                 val layoutmanager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
                 layoutManager = layoutmanager
                 adapter = infoReviewCommentRVAdapter
 
                 val dividerItemDecoration = DividerItemDecoration(context, layoutmanager.orientation)
                 addItemDecoration(dividerItemDecoration)
-
-                infoReviewCommentViewModel.inforeviewcommentList.observe(viewLifecycleOwner) { commentList ->
-                    infoReviewCommentRVAdapter.submitList(commentList.toList())
-                }
             }
-                /*if (response.reply.isNullOrEmpty()) {
-                    rvReviewComment.cl_info_review_comment_reply.visibility = View.GONE
-                } else {
-                    rvReviewComment.cl_info_review_comment_reply.visibility = View.VISIBLE
-                }
-
-                rvReviewComment.visibility = View.VISIBLE // RecyclerView 자체는 항상 보이게
-                infoReviewCommentRVAdapter.submitList(response)*/
-
 
             tvUploadComment.setOnClickListener {
                 val content = editUploadComment.text.toString().trim()

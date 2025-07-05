@@ -54,15 +54,14 @@ class InfoReviewDetailReplyFragment : BaseFragment<FragmentInfoReviewDetailReply
             infoReviewCommentDetailViewHolder = InfoReviewCommentDetailViewHolder(binding)
 
             // 댓글 상세 요청
-            infoReviewDetailReplyViewModel.getInfoCommentDetail(infoReviewDetailReplyArgs.comment.itemId, infoReviewDetailReplyArgs.comment.itemId)
+            val commentId = infoReviewDetailReplyArgs.comment.itemId
+            infoReviewDetailReplyViewModel.getInfoCommentDetail(commentId, commentId)
             infoReviewDetailReplyViewModel.infocommentdetail.observe(viewLifecycleOwner) { comment ->
                 infoReviewCommentDetailViewHolder.bind(comment)
             }
 
             // 리뷰 대댓글
             rvReviewReply.apply {
-                infoReviewDetailReplyViewModel.getInfoCommentDetail(infoReviewDetailReplyArgs.comment.itemId, infoReviewDetailReplyArgs.comment.itemId)
-
                 val layoutmanager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
                 layoutManager = layoutmanager
                 adapter = infoReviewDetailReplyRVAdapter
