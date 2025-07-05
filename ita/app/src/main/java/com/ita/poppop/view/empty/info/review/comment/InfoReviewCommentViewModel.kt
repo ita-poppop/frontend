@@ -4,10 +4,20 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.ita.poppop.R
+import androidx.lifecycle.viewModelScope
+import com.ita.poppop.data.remote.dto.CommentListData
+import com.ita.poppop.data.remote.repository.popup.CommentRepository
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.time.LocalDateTime
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
+import java.time.temporal.ChronoUnit
 
-class InfoReviewCommentViewModel :ViewModel() {
-
+class InfoReviewCommentViewModel(
+    private val repository: CommentRepository
+) : ViewModel() {
     private val _inforeviewcommentList = MutableLiveData<MutableList<InfoReviewCommentRVItem>>()
     val inforeviewcommentList: LiveData<MutableList<InfoReviewCommentRVItem>> = _inforeviewcommentList
 
@@ -18,7 +28,7 @@ class InfoReviewCommentViewModel :ViewModel() {
         val newComment = InfoReviewCommentRVItem(
             itemId = newId,
             username = "hello",
-            profileImage = R.drawable._profile_load_icon,
+            profileImage = "R.drawable._profile_load_icon",
             content = content,
             time = "방금 전",
             reply = 0
@@ -39,40 +49,74 @@ class InfoReviewCommentViewModel :ViewModel() {
         _inforeviewcommentList.value = updatedList
     }
 
-    fun getInfoReviewComment(){
-        val list = mutableListOf<InfoReviewCommentRVItem>()
-        /*list.clear()*/
-        list.add(
-            InfoReviewCommentRVItem(
-                1,
-                R.drawable.main_btn_favorites_icon,
-                "wild_zeal",
-                "6일 전",
-                "헉 ㅠㅠ 너무 가고 싶어요ㅠ",
-                4
-            )
-        )
-        list.add(
-            InfoReviewCommentRVItem(
-                2,
-                R.drawable.main_btn_favorites_icon,
-                "skyline_7",
-                "6일 전",
-                "전시가 애니 속 장면들을 잘 살려놔서 보는 내내 몰입감 장난 아니었어요.'거짓말과 아이', '빛과 그림자' 같은 테마도 은근 생각하게 만들더라구요.",
-                null
-            )
-        )
-        list.add(
-            InfoReviewCommentRVItem(
-                3,
-                R.drawable.main_btn_favorites_icon,
-                "wild_zeal",
-                "6일 전",
-                "전시가 애니 속 장면들을 잘 살려놔서 보는 내내 몰입감 장난 아니었어요.'거짓말과 아이', '빛과 그림자' 같은 테마도 은근 생각하게 만들더라구요.",
-                3
-            )
-        )
+    fun getInfoReviewCommentList(reviewId: Int) {
+        viewModelScope.launch {
+            try {
+                val response = withContext(Dispatchers.IO) {
+                    repository.getCommentList(reviewId,1,5)
+                }
+                if (response.isSuccessful) {
+                    response.body()?.let { body ->
+                        val commentItems = body.data.map { commentListDtoToAdapterItem(it) }.toMutableList()
+                        _inforeviewcommentList.value = commentItems
+                        Log.d("CommentApi_SUCCESS", "ReviewList: $commentItems")
+                    }
+                } else {
+                    Log.e("CommentApi_ERROR", "API error: ${response.message()} (${response.code()})")
+                }
+            } catch (e: Exception) {
+                Log.e("CommentApi_ERROR", "Exception: ${e.message}", e)
+            }
+        }
+    }
 
-        _inforeviewcommentList.value = list
+    // 데이터 변환
+    private fun commentListDtoToAdapterItem(data: CommentListData): InfoReviewCommentRVItem {
+
+        val relativeTime = if (data.createdAt != data.updatedAt) {
+            "${convertTimeString(data.createdAt)} (수정됨)"
+        } else {
+            convertTimeString(data.createdAt)
+        }
+
+        return InfoReviewCommentRVItem(
+            itemId = data.commentId,
+            profileImage = data.writerProfileUrl,
+            username = data.writerName,
+            time = relativeTime,
+            reply = data.replyCount,
+            content = data.content
+        )
+    }
+
+    // 날짜 데이터 변환
+    private fun convertTimeString(isoString: String): String {
+        try {
+            val formatter = DateTimeFormatter.ISO_DATE_TIME
+            val createdTime = LocalDateTime.parse(isoString, formatter)
+            val now = LocalDateTime.now(ZoneId.systemDefault())
+
+            val minutes = ChronoUnit.MINUTES.between(createdTime, now)
+            if (minutes < 1) return "방금 전"
+            if (minutes < 60) return "${minutes}분 전"
+
+            val hours = ChronoUnit.HOURS.between(createdTime, now)
+            if (hours < 24) return "${hours}시간 전"
+
+            val days = ChronoUnit.DAYS.between(createdTime, now)
+            if (days < 7) return "${days}일 전"
+
+            val weeks = ChronoUnit.WEEKS.between(createdTime, now)
+            if (weeks < 4) return "${weeks}주 전"
+
+            val months = ChronoUnit.MONTHS.between(createdTime, now)
+            if (months < 12) return "${months}개월 전"
+
+            // 1년 이상 경과 -> 날짜 출력
+            return createdTime.format(DateTimeFormatter.ofPattern("MM/dd"))
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        return ""
     }
 }

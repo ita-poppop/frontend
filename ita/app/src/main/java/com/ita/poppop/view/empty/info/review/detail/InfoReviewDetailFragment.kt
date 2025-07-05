@@ -1,23 +1,20 @@
 package com.ita.poppop.view.empty.info.review.detail
 
 import android.graphics.Rect
-import android.util.Log
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.bumptech.glide.Glide
 import com.ita.poppop.R
 import com.ita.poppop.base.BaseFragment
+import com.ita.poppop.data.remote.repository.popup.CommentRepositoryImpl
 import com.ita.poppop.data.remote.repository.popup.ReviewRepositoryImpl
 import com.ita.poppop.databinding.FragmentInfoReviewDetailBinding
 import com.ita.poppop.util.ViewModelFactory
 import com.ita.poppop.util.remote.RetrofitClient
 import com.ita.poppop.view.empty.info.review.comment.InfoReviewCommentDeleteBottomSheet
 import com.ita.poppop.view.empty.info.review.comment.InfoReviewCommentRVAdapter
-import com.ita.poppop.view.empty.info.review.comment.InfoReviewCommentRVItem
 import com.ita.poppop.view.empty.info.review.comment.InfoReviewCommentViewModel
 import com.ita.poppop.view.empty.info.review.image.InfoReviewImageRVAdapter
 
@@ -82,19 +79,23 @@ class InfoReviewDetailFragment : BaseFragment<FragmentInfoReviewDetailBinding>(R
             }
 
             // 리뷰 댓글
-            infoReviewCommentViewModel = ViewModelProvider(this@InfoReviewDetailFragment).get(InfoReviewCommentViewModel::class.java)
-
+            val repository2 = CommentRepositoryImpl(RetrofitClient.commentApi)
+            val factory2 = ViewModelFactory { InfoReviewCommentViewModel(repository2) }
+            infoReviewCommentViewModel = ViewModelProvider(this@InfoReviewDetailFragment, factory2)[InfoReviewCommentViewModel::class.java]
             rvReviewComment.apply {
+                infoReviewCommentViewModel.getInfoReviewCommentList(infoReviewDetailArgs.review.itemId)
+
                 val layoutmanager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
                 layoutManager = layoutmanager
                 adapter = infoReviewCommentRVAdapter
 
                 val dividerItemDecoration = DividerItemDecoration(context, layoutmanager.orientation)
                 addItemDecoration(dividerItemDecoration)
+
+                infoReviewCommentViewModel.inforeviewcommentList.observe(viewLifecycleOwner) { commentList ->
+                    infoReviewCommentRVAdapter.submitList(commentList.toList())
+                }
             }
-            infoReviewCommentViewModel.getInfoReviewComment()
-            infoReviewCommentViewModel.inforeviewcommentList.observe(viewLifecycleOwner, Observer { response ->
-                infoReviewCommentRVAdapter.submitList(response)
                 /*if (response.reply.isNullOrEmpty()) {
                     rvReviewComment.cl_info_review_comment_reply.visibility = View.GONE
                 } else {
@@ -104,7 +105,6 @@ class InfoReviewDetailFragment : BaseFragment<FragmentInfoReviewDetailBinding>(R
                 rvReviewComment.visibility = View.VISIBLE // RecyclerView 자체는 항상 보이게
                 infoReviewCommentRVAdapter.submitList(response)*/
 
-            })
 
             tvUploadComment.setOnClickListener {
                 val content = editUploadComment.text.toString().trim()

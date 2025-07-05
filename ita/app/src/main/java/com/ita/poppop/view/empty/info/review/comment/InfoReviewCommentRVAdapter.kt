@@ -4,18 +4,11 @@ import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.ita.poppop.databinding.ItemInfoReviewBinding
+import com.bumptech.glide.Glide
 import com.ita.poppop.databinding.ItemInfoReviewCommentBinding
-import com.ita.poppop.view.empty.info.review.InfoReviewRVAdapter
-import com.ita.poppop.view.empty.info.review.InfoReviewRVItem
-import com.ita.poppop.view.empty.info.review.detail.InfoReviewDeleteBottomSheet
-import com.ita.poppop.view.empty.info.review.image.InfoReviewImageRVAdapter
-import com.ita.poppop.view.main.home.InfoFragmentDirections
 
 class InfoReviewCommentRVAdapter: ListAdapter<InfoReviewCommentRVItem, InfoReviewCommentRVAdapter.InfoReviewCommentViewHolder>(
     InfoReviewCommentDiffutillCallback()
@@ -34,7 +27,9 @@ class InfoReviewCommentRVAdapter: ListAdapter<InfoReviewCommentRVItem, InfoRevie
     class InfoReviewCommentViewHolder(val binding: ItemInfoReviewCommentBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: InfoReviewCommentRVItem) {
             binding.apply {
-                ivCommentProfile.setImageResource(item.profileImage)
+                Glide.with(itemView.context)
+                    .load(item.profileImage)
+                    .into(ivCommentProfile)
                 tvCommentUsername.text = item.username
                 tvCommentTime.text = item.time
                 tvCommentContent.text = item.content

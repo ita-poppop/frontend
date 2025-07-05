@@ -1,15 +1,32 @@
 package com.ita.poppop.view.empty.info.review.detail.reply
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.ita.poppop.R
+import com.ita.poppop.data.remote.dto.CommentData
+import com.ita.poppop.data.remote.dto.ReviewData
+import com.ita.poppop.data.remote.repository.popup.CommentRepository
 import com.ita.poppop.view.empty.info.review.InfoReviewDetailReplyRVItem
 import com.ita.poppop.view.empty.info.review.InfoReviewRVItem
 import com.ita.poppop.view.empty.info.review.comment.InfoReviewCommentRVItem
 import com.ita.poppop.view.empty.info.review.image.InfoReviewImageRVItem
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.time.LocalDateTime
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
+import java.time.temporal.ChronoUnit
 
-class InfoReviewDetailReplyViewModel : ViewModel() {
+class InfoReviewDetailReplyViewModel(
+    private val repository: CommentRepository
+) : ViewModel(){
+    private val _infocommentdetail = MutableLiveData<InfoReviewCommentRVItem>()
+    val infocommentdetail: LiveData<InfoReviewCommentRVItem> = _infocommentdetail
+
     private val _inforeviewdetailreplyList =
         MutableLiveData<MutableList<InfoReviewDetailReplyRVItem>>()
     val inforeviewdetailreplyList: LiveData<MutableList<InfoReviewDetailReplyRVItem>> =
@@ -22,7 +39,7 @@ class InfoReviewDetailReplyViewModel : ViewModel() {
         val newReply = InfoReviewDetailReplyRVItem(
             itemId = newId,
             username = "hello",
-            profileImage = R.drawable._profile_load_icon,
+            profileImage = "R.drawable._profile_load_icon",
             reply = reply,
             time = "방금 전"
         )
@@ -39,28 +56,87 @@ class InfoReviewDetailReplyViewModel : ViewModel() {
         _inforeviewdetailreplyList.value = updatedList
     }
 
-    fun getInfoReviewDetailReply() {
-        val list = mutableListOf<InfoReviewDetailReplyRVItem>()
-        /*list.clear()*/
-        list.add(
-            InfoReviewDetailReplyRVItem(
-                1,
-                R.drawable.main_btn_favorites_icon,
-                "wild_zeal",
-                "2시간 전",
-                "한번 방문해보세요."
-            )
-        )
-        list.add(
-            InfoReviewDetailReplyRVItem(
-                2,
-                R.drawable.main_btn_favorites_icon,
-                "wild_zeal",
-                "6일전",
-                "몇시쯤에 가셨어요?"
-            )
-        )
+    fun getInfoCommentDetail(reviewId: Int, commentId: Int) {
+        viewModelScope.launch {
+            try {
+                val response = withContext(Dispatchers.IO) {
+                    repository.getComment(reviewId, commentId)
+                }
+                if (response.isSuccessful) {
+                    response.body()?.let { responseBody ->
+                        val data: CommentData = responseBody.data
+                        val result = commentDtoToAdapterItem(data)
+                        _infocommentdetail.value = result
+                        Log.d("CommentDetailApi_SUCCESS", "Review: $result")
 
-        _inforeviewdetailreplyList.value = list
+                        val replies = data.children.map {
+                            InfoReviewDetailReplyRVItem(
+                                itemId = it.commentId,
+                                username = it.writerName,
+                                profileImage = it.writerProfileUrl,
+                                reply = it.content,
+                                time = convertTimeString(it.createdAt)
+                            )
+                        }.toMutableList()
+
+                        _inforeviewdetailreplyList.value = replies
+                    }
+                } else {
+                    Log.e("CommentDetailApi_ERROR", "API error: ${response.message()} (${response.code()})")
+                }
+            } catch (e: Exception) {
+                Log.e("CommentDetailApi_ERROR", "Exception: ${e.message}", e)
+            }
+        }
+    }
+
+    // 데이터 변환
+    private fun commentDtoToAdapterItem(data: CommentData): InfoReviewCommentRVItem {
+
+        val relativeTime = if (data.createdAt != data.updatedAt) {
+            "${convertTimeString(data.createdAt)} (수정됨)"
+        } else {
+            convertTimeString(data.createdAt)
+        }
+
+        return InfoReviewCommentRVItem(
+            itemId = data.commentId,
+            profileImage = data.writerProfileUrl,
+            username = data.writerName,
+            time = relativeTime,
+            content = data.content,
+            reply = data.children.size
+        )
+    }
+
+    // 날짜 데이터 변환
+    private fun convertTimeString(isoString: String): String {
+        try {
+            val formatter = DateTimeFormatter.ISO_DATE_TIME
+            val createdTime = LocalDateTime.parse(isoString, formatter)
+            val now = LocalDateTime.now(ZoneId.systemDefault())
+
+            val minutes = ChronoUnit.MINUTES.between(createdTime, now)
+            if (minutes < 1) return "방금 전"
+            if (minutes < 60) return "${minutes}분 전"
+
+            val hours = ChronoUnit.HOURS.between(createdTime, now)
+            if (hours < 24) return "${hours}시간 전"
+
+            val days = ChronoUnit.DAYS.between(createdTime, now)
+            if (days < 7) return "${days}일 전"
+
+            val weeks = ChronoUnit.WEEKS.between(createdTime, now)
+            if (weeks < 4) return "${weeks}주 전"
+
+            val months = ChronoUnit.MONTHS.between(createdTime, now)
+            if (months < 12) return "${months}개월 전"
+
+            // 1년 이상 경과 -> 날짜 출력
+            return createdTime.format(DateTimeFormatter.ofPattern("MM/dd"))
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        return ""
     }
 }
