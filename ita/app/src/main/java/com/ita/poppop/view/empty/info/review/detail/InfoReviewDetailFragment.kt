@@ -1,8 +1,6 @@
 package com.ita.poppop.view.empty.info.review.detail
 
 import android.graphics.Rect
-import android.util.Log
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -10,7 +8,11 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ita.poppop.R
 import com.ita.poppop.base.BaseFragment
+import com.ita.poppop.data.remote.repository.popup.CommentRepositoryImpl
+import com.ita.poppop.data.remote.repository.popup.ReviewRepositoryImpl
 import com.ita.poppop.databinding.FragmentInfoReviewDetailBinding
+import com.ita.poppop.util.ViewModelFactory
+import com.ita.poppop.util.remote.RetrofitClient
 import com.ita.poppop.view.empty.info.review.comment.InfoReviewCommentDeleteBottomSheet
 import com.ita.poppop.view.empty.info.review.comment.InfoReviewCommentRVAdapter
 import com.ita.poppop.view.empty.info.review.comment.InfoReviewCommentViewModel
@@ -21,6 +23,7 @@ class InfoReviewDetailFragment : BaseFragment<FragmentInfoReviewDetailBinding>(R
     private val infoReviewDetailArgs: InfoReviewDetailFragmentArgs by navArgs()
 
     private lateinit var infoReviewDetailViewModel: InfoReviewDetailViewModel
+    private lateinit var infoReviewDetailViewHolder: InfoReviewDetailViewHolder
 
     private val infoReviewImageRVAdapter by lazy {
         InfoReviewImageRVAdapter()
@@ -44,40 +47,29 @@ class InfoReviewDetailFragment : BaseFragment<FragmentInfoReviewDetailBinding>(R
                 findNavController().popBackStack()
             }
 
+            //infoReviewDetailViewModel = ViewModelProvider(this@InfoReviewDetailFragment).get(InfoReviewDetailViewModel::class.java)
+            //infoReviewDetailViewModel.getInfoReviewDetail(infoReviewDetailArgs.review.itemId)
             // 리뷰 상세
-            infoReviewDetailViewModel = ViewModelProvider(this@InfoReviewDetailFragment).get(InfoReviewDetailViewModel::class.java)
+            val repository = ReviewRepositoryImpl(RetrofitClient.reviewApi)
+            val factory = ViewModelFactory { InfoReviewDetailViewModel(repository) }
+            infoReviewDetailViewModel = ViewModelProvider(this@InfoReviewDetailFragment, factory)[InfoReviewDetailViewModel::class.java]
+            infoReviewDetailViewHolder = InfoReviewDetailViewHolder(binding, infoReviewImageRVAdapter)
+
+            // 리뷰 상세 요청
             infoReviewDetailViewModel.getInfoReviewDetail(infoReviewDetailArgs.review.itemId)
 
-            // 이미지 가져오기
+            // 이미지 리사이클러뷰 설정
             rvReviewDetailImage.apply {
                 adapter = infoReviewImageRVAdapter
                 layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
             }
-
             infoReviewDetailViewModel.review.observe(viewLifecycleOwner) { review ->
-                tvReviewDetailContent.text = review.content
-                tvReviewDetailUsername.text = review.username
-                tvReviewDetailTime.text = review.time
-                tvReviewDetailHeart.text = review.hearts.toString()
-                tvReviewDetailComment.text = review.comments.toString()
-                infoReviewImageRVAdapter.submitList(review.reviewImage)
-                ivReviewDetailProfile.setImageResource(review.profileImage)
-
-                // 기존 개수 전달
-                infoReviewDetailViewModel.firstHeartCount(review.hearts)
+                infoReviewDetailViewHolder.bind(review, infoReviewDetailViewModel)
             }
 
             // 하트 상태 변화
-            infoReviewDetailViewModel.heartCount.observe(viewLifecycleOwner) { count ->
-                tvReviewDetailHeart.text = count.toString()
-            }
-            infoReviewDetailViewModel.isHeartClicked.observe(viewLifecycleOwner) { clicked ->
-                if (clicked) {
-                    ivReviewDetailHeart.setImageResource(R.drawable.info_review_heart_icon_filled)
-                } else {
-                    ivReviewDetailHeart.setImageResource(R.drawable.info_review_heart_icon_outlined)
-                }
-            }
+            reviewHeartClicked()
+
             ivReviewDetailHeart.setOnClickListener {
                 infoReviewDetailViewModel.clickHeart()
             }
@@ -87,8 +79,13 @@ class InfoReviewDetailFragment : BaseFragment<FragmentInfoReviewDetailBinding>(R
             }
 
             // 리뷰 댓글
-            infoReviewCommentViewModel = ViewModelProvider(this@InfoReviewDetailFragment).get(InfoReviewCommentViewModel::class.java)
-
+            val repository2 = CommentRepositoryImpl(RetrofitClient.commentApi)
+            val factory2 = ViewModelFactory { InfoReviewCommentViewModel(repository2) }
+            infoReviewCommentViewModel = ViewModelProvider(this@InfoReviewDetailFragment, factory2)[InfoReviewCommentViewModel::class.java]
+            infoReviewCommentViewModel.getInfoReviewCommentList(infoReviewDetailArgs.review.itemId)
+            infoReviewCommentViewModel.inforeviewcommentList.observe(viewLifecycleOwner) { commentList ->
+                infoReviewCommentRVAdapter.submitList(commentList.toList())
+            }
             rvReviewComment.apply {
                 val layoutmanager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
                 layoutManager = layoutmanager
@@ -97,19 +94,19 @@ class InfoReviewDetailFragment : BaseFragment<FragmentInfoReviewDetailBinding>(R
                 val dividerItemDecoration = DividerItemDecoration(context, layoutmanager.orientation)
                 addItemDecoration(dividerItemDecoration)
             }
-            infoReviewCommentViewModel.getInfoReviewComment()
-            infoReviewCommentViewModel.inforeviewcommentList.observe(viewLifecycleOwner, Observer { response ->
-                infoReviewCommentRVAdapter.submitList(response)
-                /*if (response.reply.isNullOrEmpty()) {
-                    rvReviewComment.cl_info_review_comment_reply.visibility = View.GONE
-                } else {
-                    rvReviewComment.cl_info_review_comment_reply.visibility = View.VISIBLE
+
+            tvUploadComment.setOnClickListener {
+                val content = editUploadComment.text.toString().trim()
+                if (content.isNotEmpty()) {
+                    infoReviewCommentViewModel.addComment(content)
+
+                    editUploadComment.text?.clear()
+
+                    val keyboard = requireContext().getSystemService(android.content.Context.INPUT_METHOD_SERVICE) as android.view.inputmethod.InputMethodManager
+                    keyboard.hideSoftInputFromWindow(editUploadComment.windowToken, 0)
+                    editUploadComment.clearFocus()
                 }
-
-                rvReviewComment.visibility = View.VISIBLE // RecyclerView 자체는 항상 보이게
-                infoReviewCommentRVAdapter.submitList(response)*/
-
-            })
+            }
 
             infoReviewCommentRVAdapter.setInfoReviewCommentItemClickListener(object : InfoReviewCommentRVAdapter.InfoReviewCommentItemClickListener{
                 // 답글 화살표 클릭 시
@@ -142,21 +139,51 @@ class InfoReviewDetailFragment : BaseFragment<FragmentInfoReviewDetailBinding>(R
         InfoReviewDeleteBottomSheet().show(parentFragmentManager, "delete review")
     }
 
+    private fun reviewHeartClicked() {
+        binding.apply {
+            infoReviewDetailViewModel.heartCount.observe(viewLifecycleOwner) { count ->
+                tvReviewDetailHeart.text = count.toString()
+            }
+
+            infoReviewDetailViewModel.isHeartClicked.observe(viewLifecycleOwner) { clicked ->
+                if (clicked) {
+                    ivReviewDetailHeart.setImageResource(R.drawable.info_review_heart_icon_filled)
+                } else {
+                    ivReviewDetailHeart.setImageResource(R.drawable.info_review_heart_icon_outlined)
+                }
+            }
+        }
+    }
+
     // 댓글 게시 입력창 위치 조정
     private fun handleCommentUploadArea() {
-        val rootView = binding.root
-        rootView.viewTreeObserver.addOnGlobalLayoutListener {
-            val rect = Rect()
-            rootView.getWindowVisibleDisplayFrame(rect)
-            val screenHeight = rootView.rootView.height
-            val keypadHeight = screenHeight - rect.bottom
+        binding.apply {
+            root.viewTreeObserver.addOnGlobalLayoutListener {
+                val rect = Rect()
+                root.getWindowVisibleDisplayFrame(rect)
+                val screenHeight = root.rootView.height
+                val keypadHeight = screenHeight - rect.bottom
 
-            val isKeyboardVisible = keypadHeight > screenHeight * 0.15
+                val isKeyboardVisible = keypadHeight > screenHeight * 0.15
 
-            binding.clInfoReviewUploadComment.translationY = if (isKeyboardVisible) {
-                -keypadHeight.toFloat()
-            } else {
-                0f
+                clInfoReviewUploadComment.translationY = if (isKeyboardVisible) {
+                    -keypadHeight.toFloat()
+                } else {
+                    0f
+                }
+
+                rvReviewComment.setPadding(
+                    rvReviewComment.paddingLeft,
+                    rvReviewComment.paddingTop,
+                    rvReviewComment.paddingRight,
+                    if (isKeyboardVisible) keypadHeight else 0
+                )
+
+                if (isKeyboardVisible) {
+                    rvReviewComment.post {
+                        rvReviewComment.scrollToPosition(infoReviewCommentRVAdapter.itemCount - 1)
+                    }
+                }
             }
         }
     }

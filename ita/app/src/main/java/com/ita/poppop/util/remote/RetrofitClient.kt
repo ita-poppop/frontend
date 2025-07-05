@@ -1,7 +1,8 @@
 package com.ita.poppop.util.remote
 
+import com.ita.poppop.data.remote.api.CommentApi
 import com.ita.poppop.data.remote.api.PopupApi
-import okhttp3.Interceptor
+import com.ita.poppop.data.remote.api.ReviewApi
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -64,5 +65,11 @@ object RetrofitClient {
 
     val popupApi: PopupApi by lazy {
         retrofit.create(PopupApi::class.java)
+    }
+    val reviewApi: ReviewApi by lazy {
+        retrofit.create(ReviewApi::class.java)
+    }
+    val commentApi: CommentApi by lazy {
+        retrofit.create(CommentApi::class.java)
     }
 }

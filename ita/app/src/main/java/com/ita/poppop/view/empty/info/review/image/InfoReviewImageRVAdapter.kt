@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.ita.poppop.databinding.ItemInfoReviewImageBinding
 
 class InfoReviewImageRVAdapter: ListAdapter<InfoReviewImageRVItem, InfoReviewImageRVAdapter.InfoReviewImageViewHolder>(
@@ -14,7 +15,9 @@ class InfoReviewImageRVAdapter: ListAdapter<InfoReviewImageRVItem, InfoReviewIma
     class InfoReviewImageViewHolder(val binding: ItemInfoReviewImageBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: InfoReviewImageRVItem) {
             binding.apply {
-                ivReviewImage.setImageResource(item.imageUrl)
+                Glide.with(itemView.context)
+                    .load(item.imageUrl)
+                    .into(ivReviewImage)
             }
         }
     }

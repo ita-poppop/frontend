@@ -2,11 +2,14 @@ package com.ita.poppop.view.empty.info.review
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.ita.poppop.R
 import com.ita.poppop.databinding.ItemInfoReviewBinding
 import com.ita.poppop.view.empty.info.review.image.InfoReviewImageRVAdapter
 
@@ -26,7 +29,13 @@ InfoReviewDiffutillCallback()
     class InfoReviewViewHolder(val binding: ItemInfoReviewBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: InfoReviewRVItem) {
             binding.apply {
-                ivReviewProfile.setImageResource(item.profileImage)
+                Glide.with(ivReviewProfile.context)
+                    .load(item.profileImage)
+                    .placeholder(R.drawable._profile_load_icon)
+                    .error(R.drawable._profile_load_icon)
+                    .circleCrop()
+                    .into(ivReviewProfile)
+
                 tvReviewUsername.text = item.username
                 tvReviewTime.text = item.time
                 tvReviewHeart.text = item.hearts.toString()
@@ -34,13 +43,17 @@ InfoReviewDiffutillCallback()
                 tvReviewContent.text = item.content
 
                 // rvadapter 연결
-                val imgAdapter = InfoReviewImageRVAdapter()
-
-                imgAdapter.submitList(item.reviewImage)
-
-                rvReviewImage.apply {
-                    layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-                    adapter = imgAdapter
+                // 이미지 리스트 비어 있을시 hide
+                if (item.reviewImage.isNullOrEmpty()) {
+                    rvReviewImage.visibility = View.GONE
+                } else {
+                    rvReviewImage.visibility = View.VISIBLE
+                    val imgAdapter = InfoReviewImageRVAdapter()
+                    imgAdapter.submitList(item.reviewImage)
+                    rvReviewImage.apply {
+                        layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+                        adapter = imgAdapter
+                    }
                 }
             }
         }

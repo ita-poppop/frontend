@@ -14,6 +14,7 @@
             android:id="@+id/sbsv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            tools:layout_height="24dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -34,13 +35,22 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/sbsv" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_favorites"
+        
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_rv_favorites"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:paddingTop="@dimen/padding_12"
-            app:layout_constraintTop_toBottomOf="@+id/tv_favorites_top" />
+            app:layout_constraintTop_toBottomOf="@+id/tv_favorites_top">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_favorites"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <include
             android:id="@+id/empty_state_layout"

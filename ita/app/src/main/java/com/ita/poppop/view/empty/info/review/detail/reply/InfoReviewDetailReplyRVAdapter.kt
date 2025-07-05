@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.ita.poppop.databinding.ItemInfoReviewDetailReplyBinding
 import com.ita.poppop.view.empty.info.review.InfoReviewDetailReplyRVItem
 import com.ita.poppop.view.empty.info.review.comment.InfoReviewCommentDeleteBottomSheet
@@ -28,14 +29,12 @@ class InfoReviewDetailReplyRVAdapter: ListAdapter<InfoReviewDetailReplyRVItem, I
     class InfoReviewDetailReplyViewHolder(val binding: ItemInfoReviewDetailReplyBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: InfoReviewDetailReplyRVItem) {
             binding.apply {
-                ivReplyProfile.setImageResource(item.profileImage)
+                Glide.with(itemView.context)
+                    .load(item.profileImage)
+                    .into(ivReplyProfile)
                 tvReplyUsername.text = item.username
                 tvReplyTime.text = item.time
                 tvReplyContent.text = item.reply
-
-                ivInfoReviewReplyDot.setOnClickListener{
-                    //InfoReviewCommentDeleteBottomSheet()
-                }
             }
         }
     }
@@ -64,7 +63,10 @@ class InfoReviewDetailReplyRVAdapter: ListAdapter<InfoReviewDetailReplyRVItem, I
         val item = getItem(position)
         holder.bind(item)
         holder.binding.ivInfoReviewReplyDot.setOnClickListener {
-            infoReviewDetailReplyItemClickListener.onDotClick(position)
+            val pos = holder.adapterPosition
+            if (pos != RecyclerView.NO_POSITION) {
+                infoReviewDetailReplyItemClickListener.onDotClick(pos)
+            }
         }
     }
 }
