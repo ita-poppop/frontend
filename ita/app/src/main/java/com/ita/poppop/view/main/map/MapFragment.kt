@@ -13,10 +13,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewTreeObserver
 import android.view.inputmethod.InputMethodManager
-import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
@@ -24,12 +24,11 @@ import com.bumptech.glide.request.transition.Transition
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.snackbar.Snackbar
 import com.ita.poppop.R
 import com.ita.poppop.base.BaseFragment
 import com.ita.poppop.databinding.FragmentMapBinding
 import com.ita.poppop.databinding.ItemMapCustomMarkerBinding
-import com.ita.poppop.databinding.ToastMessageBinding
+import com.ita.poppop.view.main.MainFragmentDirections
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.CameraAnimation
 import com.naver.maps.map.CameraPosition
@@ -82,6 +81,16 @@ class MapFragment: BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnMa
 
                 }
             })
+
+            mapRVAdapter.setMapItemClickListener(object : MapRVAdapter.MapItemClickListener{
+                override fun onItemClick(position: Int) {
+                    //val popupId = 1
+
+                    val parentNavController = requireActivity().findNavController(R.id.fcv_main_activity_container)
+                    val action = MainFragmentDirections.actionMainFragmentToNaviInfo()
+                    parentNavController.navigate(action)
+                }
+            })
             
             locationSource = FusedLocationSource(
                 requireActivity(),
@@ -93,6 +102,12 @@ class MapFragment: BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnMa
             
             // 바텀 시트
             setBottomSheet()
+
+            /*ivSearchIcon.setOnClickListener {
+                val navController = requireActivity().findNavController(R.id.fcv_main_activity_container)
+                navController.navigate(MainFragmentDirections.actionMainFragmentToNaviMap())
+            }*/
+
 
             // 검색 주소 위경도 변환 후 카메라 이동
             editSearch.setOnKeyListener(View.OnKeyListener { v, keyCode, event ->

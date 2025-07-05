@@ -11,6 +11,15 @@ import com.ita.poppop.databinding.ItemMapBinding
 
 class MapRVAdapter: ListAdapter<MapRVItem, MapRVAdapter.MapViewHolder>(MapDiffutillCallback()) {
 
+    interface MapItemClickListener{
+        fun onItemClick(position: Int)
+    }
+    private lateinit var mapItemClickListener : MapItemClickListener
+
+    fun setMapItemClickListener(itemClickListener: MapItemClickListener){
+        mapItemClickListener = itemClickListener
+    }
+
     class MapViewHolder(val binding: ItemMapBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: MapRVItem) {
             binding.apply {
@@ -19,11 +28,18 @@ class MapRVAdapter: ListAdapter<MapRVItem, MapRVAdapter.MapViewHolder>(MapDiffut
                 tvMapPeriod.text = item.period
             }
         }
+        fun bindClickListeners(
+            onItemClick: (Int) -> Unit
+        ) {
+            binding.cvItemMap.setOnClickListener {
+                onItemClick(adapterPosition)
+            }
+        }
     }
 
     class MapDiffutillCallback: DiffUtil.ItemCallback<MapRVItem>() {
         override fun areItemsTheSame(oldItem: MapRVItem, newItem: MapRVItem): Boolean {
-            return oldItem == newItem
+            return oldItem.itemId == newItem.itemId
         }
 
         @SuppressLint("DiffUtilEquals")
@@ -31,7 +47,7 @@ class MapRVAdapter: ListAdapter<MapRVItem, MapRVAdapter.MapViewHolder>(MapDiffut
             oldItem: MapRVItem,
             newItem: MapRVItem
         ): Boolean {
-            return oldItem === newItem
+            return oldItem == newItem
         }
 
     }
@@ -44,5 +60,8 @@ class MapRVAdapter: ListAdapter<MapRVItem, MapRVAdapter.MapViewHolder>(MapDiffut
     override fun onBindViewHolder(holder: MapViewHolder, position: Int) {
         val item = getItem(position)
         holder.bind(item)
+        holder.bindClickListeners(
+            onItemClick = { mapItemClickListener.onItemClick(it) }
+        )
     }
 }
