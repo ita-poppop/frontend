@@ -3,6 +3,7 @@ package com.ita.poppop.view.empty.setting.sub
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
@@ -65,7 +66,7 @@ class MainSettingFragment : PreferenceFragmentCompat() {
         dialog.setItemClickListener(object : WithdrawDialog.ItemClickListener {
             override fun onClick() {
                 mainAViewModel.unlink()
-                //TODO 서버 사용자 DB애서 사용자 제거
+                //TODO 서버 사용자 DB애서 사용자 제거 후 프리퍼런스에 서버에서 받아온 토큰 저장
             }
         })
         dialog.show()

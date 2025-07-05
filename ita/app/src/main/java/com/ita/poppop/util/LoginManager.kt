@@ -1,14 +1,10 @@
 package com.ita.poppop.util
 
-import android.content.ContentValues.TAG
+
 import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
-import com.kakao.sdk.auth.model.OAuthToken
-import com.kakao.sdk.common.model.ClientError
-import com.kakao.sdk.common.model.ClientErrorCause
 import com.kakao.sdk.user.UserApiClient
 import com.kakao.sdk.auth.AuthApiClient
-import com.kakao.sdk.common.KakaoSdk
 import com.kakao.sdk.common.model.KakaoSdkError
 
 /**
@@ -31,6 +27,8 @@ class LoginManager {
         // 구글 로그인 상태 확인
         val googleUser = FirebaseAuth.getInstance().currentUser
         if(googleUser!=null){
+
+            // TODO server
             Log.d("checkLoginState","자동 login for 구글")
             // 서버 사용자 계정 갱신
         }
@@ -60,9 +58,11 @@ class LoginManager {
                     }
                 } else {
                     // 토큰 유효성 체크 성공(필요 시 토큰 갱신됨)
-                    callback(true)
+
+                    // TODO server
                     Log.d("checkLoginState","자동 login for 카카오")
                     // 서버 사용자 계정 갱신
+                    callback(true)
                 }
             }
         } else {

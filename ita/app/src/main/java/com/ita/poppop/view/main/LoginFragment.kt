@@ -188,12 +188,18 @@ class LoginFragment: BaseFragment<FragmentLoginBinding>(R.layout.fragment_login)
     }
 
     private fun showGoogleSignInSuccess(user: FirebaseUser?) {
-        mainAViewModel.onLoginSuccess()
+
         getGoogleUserInfo(user)
+
+        // TODO server
+        mainAViewModel.onLoginSuccess()
     }
     private fun showKakoaSignInSuccess() {
-        mainAViewModel.onLoginSuccess()
+
         getKakaoUserInfo()
+
+        // TODO server
+        mainAViewModel.onLoginSuccess()
     }
 
     private fun getGoogleUserInfo(user: FirebaseUser?) {
