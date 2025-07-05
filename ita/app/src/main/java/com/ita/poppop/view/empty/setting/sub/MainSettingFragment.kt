@@ -1,6 +1,7 @@
 package com.ita.poppop.view.empty.setting.sub
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController

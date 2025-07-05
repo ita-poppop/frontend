@@ -36,7 +36,7 @@ class WaitingBottomSheet : BottomSheetDialogFragment() {
     private fun showWaitingDialog() {
         WaitingDialog(requireContext()).apply {
             setItemClickListener(object : WaitingDialog.ItemClickListener {
-                override fun onClick(tel: String) {
+                override fun onClick() {
                     // TODO: 전화번호 혹은 액션 처리
                 }
             })

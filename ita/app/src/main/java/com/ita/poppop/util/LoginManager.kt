@@ -30,6 +30,10 @@ class LoginManager {
     fun checkLoginStatus(callback: LoginStatusCallback) {
         // 구글 로그인 상태 확인
         val googleUser = FirebaseAuth.getInstance().currentUser
+        if(googleUser!=null){
+            Log.d("checkLoginState","자동 login for 구글")
+            // 서버 사용자 계정 갱신
+        }
         val isGoogleLoggedIn = googleUser != null
 
         // 카카오 로그인 상태 확인
@@ -57,20 +61,14 @@ class LoginManager {
                 } else {
                     // 토큰 유효성 체크 성공(필요 시 토큰 갱신됨)
                     callback(true)
+                    Log.d("checkLoginState","자동 login for 카카오")
+                    // 서버 사용자 계정 갱신
                 }
             }
         } else {
             // 로그인 필요
             callback(false)
         }
-    }
-
-    /**
-     * 구글 로그인 상태만 확인하는 메서드
-     */
-    fun checkGoogleLoginStatus(): Boolean {
-        val user = FirebaseAuth.getInstance().currentUser
-        return user != null
     }
 
     /**
@@ -84,26 +82,13 @@ class LoginManager {
             callback()
         }
     }
-
     /**
-     * 카카오 로그아웃만 수행
+     * 전체 계정 삭제 (카카오 + 구글)
      */
-    fun logoutKakao(callback: (Boolean) -> Unit) {
-        UserApiClient.instance.logout { error ->
-            callback(error == null)
-        }
-    }
-
-    /**
-     * 구글 로그아웃만 수행
-     */
-    fun logoutGoogle() {
-        FirebaseAuth.getInstance().signOut()
-    }
-
     fun unlink(callback: () -> Unit){
+        // 카카오 계정 삭제
         UserApiClient.instance.unlink { error ->
-            // 구글 로그아웃
+            // 구글 계정 삭제
             FirebaseAuth.getInstance().currentUser?.delete()
                 ?.addOnCompleteListener { task ->
                     if (task.isSuccessful) {
@@ -116,20 +101,6 @@ class LoginManager {
         }
     }
 
-    fun unlinkKakao(){
-        UserApiClient.instance.unlink { error ->
-            if (error != null) {
-                Log.e(TAG, "연결 끊기 실패", error)
-            }
-            else {
-                Log.i(TAG, "연결 끊기 성공. SDK에서 토큰 폐기 됨")
-            }
-        }
-    }
-
-    fun unlinkGoogle(){
-
-    }
     companion object {
         @Volatile
         private var INSTANCE: LoginManager? = null

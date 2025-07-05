@@ -38,6 +38,7 @@ class WithdrawDialog(context: Context) : Dialog(context) {
         }
 
         binding.btnConfirm.setOnClickListener {
+            itemClickListener?.onClick()
             dismiss()
         }
     }
