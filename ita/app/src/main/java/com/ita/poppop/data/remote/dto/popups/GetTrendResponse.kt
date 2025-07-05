@@ -1,4 +1,4 @@
-package com.ita.poppop.data.remote.dto
+package com.ita.poppop.data.remote.dto.popups
 
 import com.google.gson.annotations.SerializedName
 

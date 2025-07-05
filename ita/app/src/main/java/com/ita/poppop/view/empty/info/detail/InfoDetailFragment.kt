@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ita.poppop.R
 import com.ita.poppop.base.BaseFragment
+
 import com.ita.poppop.data.remote.repository.popup.TrendRepositoryImpl
 import com.ita.poppop.databinding.FragmentInfoDetailBinding
 import com.ita.poppop.util.remote.RetrofitClient

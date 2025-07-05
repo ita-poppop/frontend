@@ -5,9 +5,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ita.poppop.data.remote.dto.PopupDetailData
 import com.ita.poppop.data.remote.repository.popup.TrendRepository
 import kotlinx.coroutines.Dispatchers
+import com.ita.poppop.data.remote.dto.popups.PopupDetailData
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import retrofit2.HttpException

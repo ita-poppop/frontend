@@ -1,10 +1,9 @@
 package com.ita.poppop.data.remote.repository.popup
 
 import com.ita.poppop.data.remote.api.PopupApi
-import com.ita.poppop.data.remote.dto.GetPlannedResponse
-import com.ita.poppop.data.remote.dto.GetPopupDetailResponse
-import com.ita.poppop.data.remote.dto.GetTrendResponse
-import com.ita.poppop.data.remote.dto.PopupDetailData
+import com.ita.poppop.data.remote.dto.popups.GetPlannedResponse
+import com.ita.poppop.data.remote.dto.popups.GetPopupDetailResponse
+import com.ita.poppop.data.remote.dto.popups.GetTrendResponse
 import com.ita.poppop.util.remote.RetrofitClient
 import okhttp3.Response
 import retrofit2.HttpException

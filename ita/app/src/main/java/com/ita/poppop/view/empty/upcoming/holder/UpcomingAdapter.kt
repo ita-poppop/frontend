@@ -3,9 +3,7 @@ package com.ita.poppop.view.empty.upcoming.holder
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.ita.poppop.databinding.ItemHomeSearchLayoutBinding
 import com.ita.poppop.databinding.ItemUpcomingLayoutBinding
-import com.ita.poppop.view.empty.search.holder.HomeSearchViewHolder
 
 
 class UpcomingAdapter(

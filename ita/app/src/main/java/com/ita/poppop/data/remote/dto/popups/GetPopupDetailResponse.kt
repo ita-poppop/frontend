@@ -1,4 +1,4 @@
-package com.ita.poppop.data.remote.dto
+package com.ita.poppop.data.remote.dto.popups
 
 data class GetPopupDetailResponse(
     val code: String,

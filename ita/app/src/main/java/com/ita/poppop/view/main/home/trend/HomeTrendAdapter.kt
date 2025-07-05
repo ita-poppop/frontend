@@ -3,14 +3,30 @@ package com.ita.poppop.view.main.home.trend
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.ita.poppop.data.remote.dto.popups.TrendData
 import com.ita.poppop.databinding.ItemHomeTrendLayoutBinding
 
 
 class HomeTrendAdapter(
-    private var items : MutableList<Int>,
+    private var items :  List<TrendData>,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     init {
         setHasStableIds(true)
+    }
+
+    inner class HomeTrendViewHolder(
+        private val binding: ItemHomeTrendLayoutBinding,
+    ) : RecyclerView.ViewHolder(binding.root) {
+        fun bind(item : TrendData) {
+            Glide.with(binding.root)
+                .load(item.imageUrl)
+                .centerCrop()
+                .into(binding.ivTrendPoster)
+
+            binding.tvTrendTitle.text = item.title
+            binding.tvTrendLocation.text = item.location
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -19,12 +35,12 @@ class HomeTrendAdapter(
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        (holder as HomeTrendViewHolder).bind()
+        (holder as HomeTrendViewHolder).bind(items[position])
     }
 
 
     // 아이템 반환 메서드
-    private fun getItem(position: Int): Int {
+    private fun getItem(position: Int): TrendData {
         return items[position]
     }
 

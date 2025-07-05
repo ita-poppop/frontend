@@ -1,8 +1,9 @@
 package com.ita.poppop.data.remote.repository.popup
 
-import com.ita.poppop.data.remote.dto.GetPlannedResponse
-import com.ita.poppop.data.remote.dto.GetPopupDetailResponse
-import com.ita.poppop.data.remote.dto.GetTrendResponse
+
+import com.ita.poppop.data.remote.dto.popups.GetPlannedResponse
+import com.ita.poppop.data.remote.dto.popups.GetPopupDetailResponse
+import com.ita.poppop.data.remote.dto.popups.GetTrendResponse
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path
