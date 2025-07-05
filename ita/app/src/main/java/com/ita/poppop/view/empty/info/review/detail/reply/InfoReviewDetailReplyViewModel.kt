@@ -9,6 +9,7 @@ import com.ita.poppop.R
 import com.ita.poppop.data.remote.dto.CommentData
 import com.ita.poppop.data.remote.dto.ReviewData
 import com.ita.poppop.data.remote.repository.popup.CommentRepository
+import com.ita.poppop.util.ConvertTimeUtil
 import com.ita.poppop.view.empty.info.review.InfoReviewDetailReplyRVItem
 import com.ita.poppop.view.empty.info.review.InfoReviewRVItem
 import com.ita.poppop.view.empty.info.review.comment.InfoReviewCommentRVItem
@@ -31,6 +32,8 @@ class InfoReviewDetailReplyViewModel(
         MutableLiveData<MutableList<InfoReviewDetailReplyRVItem>>()
     val inforeviewdetailreplyList: LiveData<MutableList<InfoReviewDetailReplyRVItem>> =
         _inforeviewdetailreplyList
+
+    private val convertTimeUtil = ConvertTimeUtil()
 
     // 댓글 화면에서 대댓글 추가
     fun addReply(reply: String) {
@@ -75,7 +78,7 @@ class InfoReviewDetailReplyViewModel(
                                 username = it.writerName,
                                 profileImage = it.writerProfileUrl,
                                 reply = it.content,
-                                time = convertTimeString(it.createdAt)
+                                time = convertTimeUtil.convertRelativeTime(it.createdAt)
                             )
                         }.toMutableList()
 
@@ -94,9 +97,9 @@ class InfoReviewDetailReplyViewModel(
     private fun commentDtoToAdapterItem(data: CommentData): InfoReviewCommentRVItem {
 
         val relativeTime = if (data.createdAt != data.updatedAt) {
-            "${convertTimeString(data.createdAt)} (수정됨)"
+            "${convertTimeUtil.convertRelativeTime(data.createdAt)} (수정됨)"
         } else {
-            convertTimeString(data.createdAt)
+            convertTimeUtil.convertRelativeTime(data.createdAt)
         }
 
         return InfoReviewCommentRVItem(
@@ -107,36 +110,5 @@ class InfoReviewDetailReplyViewModel(
             content = data.content,
             reply = data.children.size
         )
-    }
-
-    // 날짜 데이터 변환
-    private fun convertTimeString(isoString: String): String {
-        try {
-            val formatter = DateTimeFormatter.ISO_DATE_TIME
-            val createdTime = LocalDateTime.parse(isoString, formatter)
-            val now = LocalDateTime.now(ZoneId.systemDefault())
-
-            val minutes = ChronoUnit.MINUTES.between(createdTime, now)
-            if (minutes < 1) return "방금 전"
-            if (minutes < 60) return "${minutes}분 전"
-
-            val hours = ChronoUnit.HOURS.between(createdTime, now)
-            if (hours < 24) return "${hours}시간 전"
-
-            val days = ChronoUnit.DAYS.between(createdTime, now)
-            if (days < 7) return "${days}일 전"
-
-            val weeks = ChronoUnit.WEEKS.between(createdTime, now)
-            if (weeks < 4) return "${weeks}주 전"
-
-            val months = ChronoUnit.MONTHS.between(createdTime, now)
-            if (months < 12) return "${months}개월 전"
-
-            // 1년 이상 경과 -> 날짜 출력
-            return createdTime.format(DateTimeFormatter.ofPattern("MM/dd"))
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-        return ""
     }
 }

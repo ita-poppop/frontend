@@ -7,14 +7,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ita.poppop.data.remote.dto.ReviewListData
 import com.ita.poppop.data.remote.repository.popup.ReviewRepository
+import com.ita.poppop.util.ConvertTimeUtil
 import com.ita.poppop.view.empty.info.review.image.InfoReviewImageRVItem
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.time.LocalDateTime
-import java.time.ZoneId
-import java.time.format.DateTimeFormatter
-import java.time.temporal.ChronoUnit
 
 class InfoReviewViewModel(
     private val repository: ReviewRepository
@@ -47,10 +44,12 @@ class InfoReviewViewModel(
     private fun reviewListDtoToAdapterItem(data: ReviewListData): InfoReviewRVItem {
         val profileImage = "R.drawable._profile_load_icon" // 기본 이미지
 
+        val convertTimeUtil = ConvertTimeUtil()
+
         val relativeTime = if (data.createdAt != data.updatedAt) {
-            "${convertTimeString(data.createdAt)} (수정됨)"
+            "${convertTimeUtil.convertRelativeTime(data.createdAt)} (수정됨)"
         } else {
-            convertTimeString(data.createdAt)
+            convertTimeUtil.convertRelativeTime(data.createdAt)
         }
 
         val reviewImages = data.imageUrls.mapIndexed { index, url ->
@@ -67,36 +66,5 @@ class InfoReviewViewModel(
             content = data.content,
             reviewImage = reviewImages
         )
-    }
-    
-    // 날짜 데이터 변환
-    private fun convertTimeString(isoString: String): String {
-        try {
-            val formatter = DateTimeFormatter.ISO_DATE_TIME
-            val createdTime = LocalDateTime.parse(isoString, formatter)
-            val now = LocalDateTime.now(ZoneId.systemDefault())
-
-            val minutes = ChronoUnit.MINUTES.between(createdTime, now)
-            if (minutes < 1) return "방금 전"
-            if (minutes < 60) return "${minutes}분 전"
-
-            val hours = ChronoUnit.HOURS.between(createdTime, now)
-            if (hours < 24) return "${hours}시간 전"
-
-            val days = ChronoUnit.DAYS.between(createdTime, now)
-            if (days < 7) return "${days}일 전"
-
-            val weeks = ChronoUnit.WEEKS.between(createdTime, now)
-            if (weeks < 4) return "${weeks}주 전"
-
-            val months = ChronoUnit.MONTHS.between(createdTime, now)
-            if (months < 12) return "${months}개월 전"
-
-            // 1년 이상 경과 -> 날짜 출력
-            return createdTime.format(DateTimeFormatter.ofPattern("MM/dd"))
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-        return ""
     }
 }
