@@ -84,6 +84,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
 
                 if (result.isSuccessful) {
                     trendList = result.body()?.data!!
+                    Log.d("checkDatata","trendList : ${trendList}")
                     adapter = HomeTrendAdapter(trendList)
                     layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
                     addItemDecoration(HomeTrendItemDecoration())

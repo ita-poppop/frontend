@@ -108,10 +108,10 @@ class LocationMapFragment: BaseFragment<FragmentLocationMapBinding>(R.layout.fra
     override fun initView() {
         setclick()
         val location = args.location
-        val latitude = args.latitude
-        val longitude = args.longitude
+        val latitude = args.latitude.toDouble()
+        val longitude = args.longitude.toDouble()
         binding.tvMapLocation.text = location+ "역"
-        targetLatLng = LatLng(longitude.toDouble(), latitude.toDouble())
+        targetLatLng = LatLng(longitude, latitude)
 
         Toast.makeText(requireContext(),"위치는 $latitude,$longitude",Toast.LENGTH_SHORT).show()
         setupWindowInsets()
