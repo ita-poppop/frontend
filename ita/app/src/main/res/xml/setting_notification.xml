@@ -3,16 +3,13 @@
     <com.ita.poppop.util.preference.EndSwitchPreference
         app:key="set_1"
         app:title="팝업 오픈"
-        app:iconSpaceReserved="false"
         app:layout="@layout/preference_with_end_switch"/>
     <com.ita.poppop.util.preference.EndSwitchPreference
         app:key="set_2"
         app:title="리뷰 좋아요"
-        app:iconSpaceReserved="false"
         app:layout="@layout/preference_with_end_switch"/>
     <com.ita.poppop.util.preference.EndSwitchPreference
         app:key="set_3"
         app:title="댓글 알람"
-        app:iconSpaceReserved="false"
         app:layout="@layout/preference_with_end_switch"/>
 </PreferenceScreen>

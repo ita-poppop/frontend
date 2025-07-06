@@ -20,6 +20,7 @@ import androidx.navigation.fragment.NavHostFragment
 import com.ita.poppop.R
 import com.ita.poppop.base.BaseActivity
 import com.ita.poppop.databinding.ActivityMainBinding
+import com.ita.poppop.util.NotificationSettingsManager
 
 class MainActivity: BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,6 +41,18 @@ class MainActivity: BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
             val navController = navHostFragment.navController
             navController.setGraph(R.navigation.navi_launch)
 
+        }
+        initializeNotificationSettings()
+    }
+
+    private fun initializeNotificationSettings() {
+        try {
+            // 저장된 알림 설정을 읽어와서 적용
+            NotificationSettingsManager.applyStoredSettings(this)
+
+            android.util.Log.d("MyApplication", "알림 설정 초기화 완료")
+        } catch (e: Exception) {
+            android.util.Log.e("MyApplication", "알림 설정 초기화 실패: ${e.message}")
         }
     }
 }
