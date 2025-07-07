@@ -31,6 +31,7 @@ import com.ita.poppop.R
 import com.ita.poppop.base.BaseActivity
 import com.ita.poppop.databinding.ActivityMainBinding
 import com.ita.poppop.util.LoginManager
+import com.ita.poppop.util.TokenManager
 import com.ita.poppop.viewmodel.MainAViewModel
 import com.ita.poppop.viewmodel.empty.upload.UploadViewModel
 import com.kakao.sdk.auth.AuthApiClient
@@ -44,11 +45,15 @@ class MainActivity: BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
     private lateinit var navGraph: NavGraph
     private lateinit var navController: NavController
     private lateinit var mainAViewModel: MainAViewModel
+    private lateinit var tokenManager: TokenManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.e("checkStartFlow", "MainActivity")
         mainAViewModel = ViewModelProvider(this)[MainAViewModel::class.java]
+        tokenManager = TokenManager(this)
+        Log.e("checkToken", "getAccessToken: ${tokenManager.getAccessToken()},getRefreshToken:  ${tokenManager.getRefreshToken()}")
+        mainAViewModel.setTokenPair(tokenManager.getAccessToken(),tokenManager.getRefreshToken())
 
 
 
@@ -79,6 +84,7 @@ class MainActivity: BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
                     }
                     is MainAViewModel.LoginState.LoggedIn -> {
                         // 메인 화면으로 이동
+
                         moveToMain()
                         Toast.makeText(this@MainActivity,"moveToMain",Toast.LENGTH_SHORT).show()
                     }

@@ -4,9 +4,32 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.lifecycleScope
+import com.ita.poppop.data.remote.api.SignupRequest
+import com.ita.poppop.data.remote.repository.Member.MemberRepository
+import com.ita.poppop.data.remote.repository.Member.MemberRepositoryImpl
 import com.ita.poppop.util.LoginManager
+import com.ita.poppop.util.LoginManager.User
+import com.ita.poppop.util.RetrofitClient
+import com.ita.poppop.util.TokenManager
+import com.ita.poppop.util.TokenUtils
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import retrofit2.HttpException
 
 class MainAViewModel: ViewModel() {
+    private val repository: MemberRepository = MemberRepositoryImpl(RetrofitClient.memberApi)
+    // 서버 토큰
+    private val _tokenPair = MutableLiveData<Pair<String?, String?>>() // access, refresh
+    val tokenPair: LiveData<Pair<String?, String?>> = _tokenPair
+
+    fun setTokenPair(access: String?,refresh: String?) {
+        _tokenPair.value = Pair(access, refresh)
+    }
+
+
     // 로그인 상태를 나타내는 LiveData
     private val _loginState = MutableLiveData<LoginState>()
     val loginState: LiveData<LoginState> = _loginState
@@ -39,10 +62,43 @@ class MainAViewModel: ViewModel() {
         _isLoading.value = true
 
         LoginManager.getInstance().checkLoginStatus(object : LoginManager.LoginStatusCallback {
-            override fun onResult(isLoggedIn: Boolean) {
+
+            override fun onResult(isLoggedIn: User?) {
                 _isLoading.value = false
-                _loginState.value = if (isLoggedIn) {
-                    LoginState.LoggedIn
+
+                _loginState.value = if (isLoggedIn != null) {
+                    CoroutineScope(Dispatchers.Main).launch {
+                        try {
+                            // SignupRequest 객체 생성
+                            val signupRequest = SignupRequest(
+                                providerId = isLoggedIn.userId,
+                                registerId = isLoggedIn.registerId,
+                                nickName = isLoggedIn.userName,
+                                email = isLoggedIn.userEmail,
+                                profileImage = isLoggedIn.userProfile
+                            )
+
+                            val result = withContext(Dispatchers.IO) {
+                                repository.postSignup(signupRequest)
+                            }
+
+                            if (result.isSuccessful) {
+                                setTokenPair(result.body()!!.data.accessTocken,result.body()!!.data.refreshTocken)
+                                Log.e("checkToken", "Token: ${tokenPair.value}")
+                                _loginState.value = LoginState.LoggedIn
+                            } else {
+                                _loginState.value = LoginState.LoggedOut
+                            }
+                        } catch (e: HttpException) {
+                            // HTTP 에러 상세 정보
+                            _loginState.value = LoginState.LoggedOut
+                            Log.e("API_ERROR", "HTTP ${e.code()}: ${e.response()?.errorBody()?.string()}")
+                        } catch (e: Exception) {
+                            Log.e("API_ERROR", "Exception: ${e.message}", e)
+                            _loginState.value = LoginState.LoggedOut
+                        }
+                    }
+                    LoginState.Loading // 비동기 작업 중이므로 Loading 상태 유지
                 } else {
                     LoginState.LoggedOut
                 }
