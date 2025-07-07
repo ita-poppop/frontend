@@ -1,7 +1,7 @@
 package com.ita.poppop.data.remote.api
 
-import com.ita.poppop.data.remote.dto.GetReviewListResponse
-import com.ita.poppop.data.remote.dto.GetReviewResponse
+import com.ita.poppop.data.remote.dto.reviews.GetReviewListResponse
+import com.ita.poppop.data.remote.dto.reviews.GetReviewResponse
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path

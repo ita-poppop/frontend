@@ -5,7 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ita.poppop.data.remote.dto.ReviewData
+import com.ita.poppop.data.remote.dto.reviews.ReviewData
 import com.ita.poppop.data.remote.repository.popup.ReviewRepository
 import com.ita.poppop.util.ConvertTimeUtil
 import com.ita.poppop.view.empty.info.review.InfoReviewRVItem

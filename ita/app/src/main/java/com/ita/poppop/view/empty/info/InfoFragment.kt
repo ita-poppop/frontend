@@ -12,12 +12,15 @@ import com.bumptech.glide.Glide
 import com.google.android.material.tabs.TabLayout
 import com.ita.poppop.R
 import com.ita.poppop.base.BaseFragment
+import com.ita.poppop.data.remote.repository.popup.ReviewRepositoryImpl
 import com.ita.poppop.data.remote.repository.popup.TrendRepositoryImpl
 import com.ita.poppop.databinding.FragmentInfoBinding
+import com.ita.poppop.util.ViewModelFactory
 import com.ita.poppop.util.remote.RetrofitClient
 import com.ita.poppop.view.empty.info.InfoViewModel
 import com.ita.poppop.view.empty.info.detail.InfoDetailFragment
 import com.ita.poppop.view.empty.info.review.InfoReviewFragment
+import com.ita.poppop.view.empty.info.review.InfoReviewViewModel
 import com.ita.poppop.view.empty.info.story.InfoStoryRVAdapter
 import com.ita.poppop.view.empty.info.story.InfoStoryViewModel
 
@@ -75,7 +78,8 @@ class InfoFragment: BaseFragment<FragmentInfoBinding>(R.layout.fragment_info) {
             val popupId = 1325
 
             val repository = TrendRepositoryImpl(RetrofitClient.popupApi)
-            infoViewModel = InfoViewModel(repository)
+            val factory = ViewModelFactory { InfoViewModel(repository) }
+            infoViewModel = ViewModelProvider(this@InfoFragment, factory)[InfoViewModel::class.java]
 
             infoViewModel.getInfo(popupId)
 
@@ -119,7 +123,7 @@ class InfoFragment: BaseFragment<FragmentInfoBinding>(R.layout.fragment_info) {
                 }
 
             })
-            
+
             // 리뷰 상세에서 뒤로가기시 리뷰탭
             findNavController().currentBackStackEntry
                 ?.savedStateHandle

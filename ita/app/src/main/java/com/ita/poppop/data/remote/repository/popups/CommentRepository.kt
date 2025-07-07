@@ -1,7 +1,7 @@
 package com.ita.poppop.data.remote.repository.popup
 
-import com.ita.poppop.data.remote.dto.GetCommentListResponse
-import com.ita.poppop.data.remote.dto.GetCommentResponse
+import com.ita.poppop.data.remote.dto.comments.GetCommentListResponse
+import com.ita.poppop.data.remote.dto.comments.GetCommentResponse
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path

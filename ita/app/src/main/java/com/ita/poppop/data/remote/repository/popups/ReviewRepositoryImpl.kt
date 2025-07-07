@@ -1,8 +1,8 @@
 package com.ita.poppop.data.remote.repository.popup
 
 import com.ita.poppop.data.remote.api.ReviewApi
-import com.ita.poppop.data.remote.dto.GetReviewListResponse
-import com.ita.poppop.data.remote.dto.GetReviewResponse
+import com.ita.poppop.data.remote.dto.reviews.GetReviewListResponse
+import com.ita.poppop.data.remote.dto.reviews.GetReviewResponse
 import retrofit2.HttpException
 import retrofit2.Response
 

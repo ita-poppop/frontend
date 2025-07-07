@@ -1,4 +1,4 @@
-package com.ita.poppop.data.remote.dto
+package com.ita.poppop.data.remote.dto.reviews
 
 data class GetReviewResponse(
     val code: String,

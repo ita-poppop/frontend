@@ -5,7 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ita.poppop.data.remote.dto.CommentListData
+import com.ita.poppop.data.remote.dto.comments.CommentListData
 import com.ita.poppop.data.remote.repository.popup.CommentRepository
 import com.ita.poppop.util.ConvertTimeUtil
 import kotlinx.coroutines.Dispatchers
