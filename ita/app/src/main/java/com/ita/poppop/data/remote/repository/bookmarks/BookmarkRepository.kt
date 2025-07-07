@@ -1,0 +1,26 @@
+package com.ita.poppop.data.remote.repository.popup
+
+import com.ita.poppop.data.remote.dto.GetCommentListResponse
+import com.ita.poppop.data.remote.dto.GetCommentResponse
+import com.ita.poppop.data.remote.dto.bookmarks.DeleteBookmarkResponse
+import com.ita.poppop.data.remote.dto.bookmarks.GetBookmarkResponse
+import retrofit2.Response
+import retrofit2.http.GET
+import retrofit2.http.Header
+import retrofit2.http.POST
+import retrofit2.http.Path
+import retrofit2.http.Query
+
+interface BookmarkRepository {
+
+    @GET("/api/v1/popups/{popupId}/reviews/{reviewId}/comments")
+    suspend fun getBookmarks(
+        @Header("Authorization") accessToken: String
+    ): Response<GetBookmarkResponse>
+
+    @POST("/api/v1/popups/{popupId}/bookmark/delete")
+    suspend fun deleteBookmarks(
+        @Header("Authorization") accessToken: String,
+        @Path("popupId") popupId: Int
+    ): Response<DeleteBookmarkResponse>
+}

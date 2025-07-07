@@ -1,5 +1,6 @@
 package com.ita.poppop.util.remote
 
+import com.ita.poppop.data.remote.api.BookmarkApi
 import com.ita.poppop.data.remote.api.CommentApi
 import com.ita.poppop.data.remote.api.PopupApi
 import com.ita.poppop.data.remote.api.ReviewApi
@@ -71,5 +72,8 @@ object RetrofitClient {
     }
     val commentApi: CommentApi by lazy {
         retrofit.create(CommentApi::class.java)
+    }
+    val bookmarkApi: BookmarkApi by lazy {
+        retrofit.create(BookmarkApi::class.java)
     }
 }
