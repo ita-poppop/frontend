@@ -7,7 +7,6 @@ import com.ita.poppop.data.remote.dto.comments.PostCommentRequest
 import com.ita.poppop.data.remote.dto.comments.PostCommentResponse
 import retrofit2.Response
 import retrofit2.http.Body
-import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
@@ -36,7 +35,7 @@ interface CommentRepository {
         @Body request: PostCommentRequest
     ): Response<PostCommentResponse>
 
-    @DELETE("/api/v1/popups/{popupId}/reviews/{reviewId}/comments/{commentId}/delete")
+    @POST("/api/v1/popups/{popupId}/reviews/{reviewId}/comments/{commentId}/delete")
     suspend fun deleteComment(
         @Header("Authorization") accessToken: String,
         @Path("commentId") commentId: Int
