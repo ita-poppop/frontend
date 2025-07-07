@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.ita.poppop.databinding.FragmentInfoReviewCommentDeleteBottomSheetBinding
-import com.ita.poppop.view.empty.info.review.detail.InfoReviewDeleteDialog
 
 class InfoReviewCommentDeleteBottomSheet(
     private val commentItemId: Int,
@@ -37,8 +36,8 @@ class InfoReviewCommentDeleteBottomSheet(
     }
 
     private fun showCommentDeleteDialog() {
-        InfoReviewDeleteDialog(requireContext()).apply {
-            setItemClickListener(object : InfoReviewDeleteDialog.ItemClickListener {
+        InfoReviewCommentDeleteDialog(requireContext()).apply {
+            setItemClickListener(object : InfoReviewCommentDeleteDialog.ItemClickListener {
                 override fun onClick(message: String) {
                     onDeleteConfirmed(commentItemId)  // 콜백 호출
                     dismiss()

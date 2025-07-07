@@ -2,6 +2,7 @@ package com.ita.poppop.view.empty.info.review.detail.reply
 
 
 import android.graphics.Rect
+import android.util.Log
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -44,7 +45,7 @@ class InfoReviewDetailReplyFragment : BaseFragment<FragmentInfoReviewDetailReply
 
             // 댓글 삭제 신고 바텀 시트
             ivInfoReviewCommentDot.setOnClickListener {
-                showInfoReviewCommentDeleteBottomSheet()
+                showInfoReviewCommentDeleteBottomSheet(infoReviewDetailReplyArgs.comment.itemId)
             }
 
             // 댓글 상세
@@ -111,8 +112,13 @@ class InfoReviewDetailReplyFragment : BaseFragment<FragmentInfoReviewDetailReply
         }
     }
 
-    private fun showInfoReviewCommentDeleteBottomSheet() {
-        //InfoReviewCommentDeleteBottomSheet().show(parentFragmentManager, "delete comment")
+    private fun showInfoReviewCommentDeleteBottomSheet(commentItemId: Int) {
+        InfoReviewCommentDeleteBottomSheet(
+            commentItemId = commentItemId,
+            onDeleteConfirmed = { deleteItemId ->
+                infoReviewDetailReplyViewModel.deleteReply(deleteItemId)
+            }
+        ).show(parentFragmentManager, "delete comment")
     }
 
     // 대댓글 게시 입력창 위치 조정
