@@ -54,7 +54,7 @@ class UploadReviewFragment : BaseFragment<FragmentUploadReviewBinding>(R.layout.
             uploadImageAdapter.submitList(uploadItemList)
         }
         uploadViewModel.popupItem.observe(viewLifecycleOwner) { seleteItem ->
-            binding.tvUploadLocation.text = seleteItem?.title
+            binding.tvUploadLocation.text = seleteItem?.title ?: ""
         }
         mainViewModel.selectItem.observe(viewLifecycleOwner) { seleteItem ->
             uploadViewModel.setPopupItem(seleteItem)
@@ -121,6 +121,7 @@ class UploadReviewFragment : BaseFragment<FragmentUploadReviewBinding>(R.layout.
                         )
 
                         repository.postReview(
+                            "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiLsnoTspIDtmJUiLCJtZW1iZXJJZCI6NywicHJvdmlkZXJJZCI6InN0ZHpKdTlRNUdWRVFlNWZVVFpZdUYyQTRwazEiLCJuaWNrTmFtZSI6IuyehOykgO2YlSIsImVtYWlsIjoibGltanVuaHllbmdAZ21haWwuY29tIiwicHJvZmlsZUltYWdlIjoiaHR0cHM6Ly9saDMuZ29vZ2xldXNlcmNvbnRlbnQuY29tL2EvQUNnOG9jSlJnY0U1V25oWDNUUEU0NU1ZdjF3VFV6azhuNnVKWUFiT1BRVG9hZUFCY0NOT0hnPXM5Ni1jIiwiaWF0IjoxNzUxOTM5MDg4LCJleHAiOjE3NTE5NDI2ODh9.dCrTaAT8_B3lafZc4fOp804YbASztgASOtQ8vPRSc28",
                             mainViewModel.selectItem.value?.id!!,
                             postReviewRequest
                         )
