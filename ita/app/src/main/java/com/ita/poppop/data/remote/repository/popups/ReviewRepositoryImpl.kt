@@ -3,7 +3,7 @@ package com.ita.poppop.data.remote.repository.popup
 import com.ita.poppop.data.remote.api.ReviewApi
 import com.ita.poppop.data.remote.dto.reviews.GetReviewListResponse
 import com.ita.poppop.data.remote.dto.reviews.GetReviewResponse
-import com.ita.poppop.data.remote.dto.reviews.PostReviewLikeResponse
+import com.ita.poppop.data.remote.dto.reviews.PostReviewLikesResponse
 import retrofit2.HttpException
 import retrofit2.Response
 
@@ -54,9 +54,9 @@ class ReviewRepositoryImpl(
     override suspend fun postReviewLike(
         accessToken: String,
         reviewId: Int
-    ): Response<PostReviewLikeResponse> {
+    ): Response<PostReviewLikesResponse> {
         try {
-            val response = api.postReviewLike("Bearer $accessToken", reviewId)
+            val response = api.postReviewLikes("Bearer $accessToken", reviewId)
 
             if (response.code() == 200) {
                 return response

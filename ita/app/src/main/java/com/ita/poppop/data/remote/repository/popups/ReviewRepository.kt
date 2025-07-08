@@ -3,6 +3,7 @@ package com.ita.poppop.data.remote.repository.popup
 import com.ita.poppop.data.remote.dto.reviews.GetReviewListResponse
 import com.ita.poppop.data.remote.dto.reviews.GetReviewResponse
 import com.ita.poppop.data.remote.dto.reviews.PostReviewLikeResponse
+import com.ita.poppop.data.remote.dto.reviews.PostReviewLikesResponse
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Header
@@ -29,5 +30,5 @@ interface ReviewRepository {
     suspend fun postReviewLike(
         @Header("Authorization") accessToken: String,
         @Path("reviewId") reviewId: Int
-    ): Response<PostReviewLikeResponse>
+    ): Response<PostReviewLikesResponse>
 }
