@@ -1,44 +1,21 @@
 package com.ita.poppop.view
 
-import android.content.Context
-import android.content.Intent
-import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import android.util.TypedValue
-import android.view.View
-import android.view.ViewGroup
-import android.view.WindowInsetsController
 import android.widget.Toast
-import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContentProviderCompat.requireContext
-import androidx.core.content.ContextCompat
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.WindowInsetsControllerCompat
-import androidx.core.view.updateLayoutParams
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
-import com.google.firebase.auth.FirebaseAuth
 import com.ita.poppop.R
 import com.ita.poppop.base.BaseActivity
 import com.ita.poppop.databinding.ActivityMainBinding
-import com.ita.poppop.util.LoginManager
 import com.ita.poppop.util.TokenManager
 import com.ita.poppop.viewmodel.MainAViewModel
-import com.ita.poppop.viewmodel.empty.upload.UploadViewModel
-import com.kakao.sdk.auth.AuthApiClient
-import com.kakao.sdk.common.model.KakaoSdkError
 import com.kakao.sdk.common.util.Utility
-import com.kakao.sdk.user.UserApiClient
-import kotlinx.coroutines.launch
+import com.ita.poppop.util.NotificationSettingsManager
 
 
 class MainActivity: BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
@@ -99,6 +76,18 @@ class MainActivity: BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
                     }
                 }
             })
+        }
+        initializeNotificationSettings()
+    }
+
+    private fun initializeNotificationSettings() {
+        try {
+            // 저장된 알림 설정을 읽어와서 적용
+            NotificationSettingsManager.applyStoredSettings(this)
+
+            android.util.Log.d("MyApplication", "알림 설정 초기화 완료")
+        } catch (e: Exception) {
+            android.util.Log.e("MyApplication", "알림 설정 초기화 실패: ${e.message}")
         }
     }
 
