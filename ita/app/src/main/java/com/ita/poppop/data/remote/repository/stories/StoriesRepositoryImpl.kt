@@ -8,7 +8,6 @@ import retrofit2.Response
 class StoriesRepositoryImpl(
     private val api: StoriesApi
 ) : StoriesRepository {
-
     override suspend fun getStories(
         page: Int, size: Int
     ): Response<GetStoriesResponse> {

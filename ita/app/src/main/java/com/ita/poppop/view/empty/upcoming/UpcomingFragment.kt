@@ -12,7 +12,6 @@ import com.ita.poppop.base.BaseFragment
 import com.ita.poppop.databinding.FragmentHomeSearchBinding
 import com.ita.poppop.databinding.FragmentUpcomingBinding
 import com.ita.poppop.util.SwipeHelper
-import com.ita.poppop.view.empty.search.holder.HomeSearchAdapter
 import com.ita.poppop.view.empty.search.holder.HomeSearchItemDecoration
 import com.ita.poppop.view.empty.upcoming.holder.UpcomingAdapter
 import com.ita.poppop.view.empty.upcoming.holder.UpcomingItemDecoration

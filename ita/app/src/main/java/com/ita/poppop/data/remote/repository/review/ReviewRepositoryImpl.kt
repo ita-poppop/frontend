@@ -1,0 +1,77 @@
+package com.ita.poppop.data.remote.repository.review
+
+import com.ita.poppop.data.remote.api.PostReviewRequest
+import com.ita.poppop.data.remote.api.ReviewApi
+import com.ita.poppop.data.remote.dto.GetReviewListResponse
+import com.ita.poppop.data.remote.dto.GetReviewResponse
+import com.ita.poppop.data.remote.dto.review.PostReviewResponse
+import retrofit2.HttpException
+import retrofit2.Response
+
+
+class ReviewRepositoryImpl(
+    private val api: ReviewApi
+) : ReviewRepository {
+    override suspend fun getReviewList(
+        popupId: Int,
+        page: Int,
+        size: Int
+    ): Response<GetReviewListResponse> {
+        try {
+            val response = api.getReviewList(popupId,page,size)
+
+            if (response.code() == 200) {
+                return response
+            } else {
+                throw Exception("API 응답 오류: ${response.message()} (코드: ${response.code()})")
+            }
+        } catch (e: HttpException) {
+            // HTTP 500 에러 등을 명확하게 전달
+            throw Exception("HTTP ${e.code()}: ${e.message()}")
+        } catch (e: Exception) {
+            throw e
+        }
+    }
+
+    override suspend fun postReview(
+        accessToken: String,
+        popupId: Int,
+        postReviewRequest: PostReviewRequest
+    ): Response<PostReviewResponse> {
+        try {
+            val response = api.postReview("Bearer $accessToken",popupId,postReviewRequest)
+
+            if (response.code() == 200) {
+                return response
+            } else {
+                throw Exception("API 응답 오류: ${response.message()} (코드: ${response.code()})")
+            }
+        } catch (e: HttpException) {
+            // HTTP 500 에러 등을 명확하게 전달
+            throw Exception("HTTP ${e.code()}: ${e.message()}")
+        } catch (e: Exception) {
+            throw e
+        }
+    }
+
+    override suspend fun getReview(
+        popupId: Int,
+        reviewId: Int
+    ): Response<GetReviewResponse> {
+
+        try {
+            val response = api.getReview(popupId,reviewId)
+
+            if (response.code() == 200) {
+                return response
+            } else {
+                throw Exception("API 응답 오류: ${response.message()} (코드: ${response.code()})")
+            }
+        } catch (e: HttpException) {
+            // HTTP 500 에러 등을 명확하게 전달
+            throw Exception("HTTP ${e.code()}: ${e.message()}")
+        } catch (e: Exception) {
+            throw e
+        }
+    }
+}

@@ -1,6 +1,6 @@
-package com.ita.poppop.data.remote.api
+package com.ita.poppop.data.remote.repository.review
 
-import com.google.gson.annotations.SerializedName
+import com.ita.poppop.data.remote.api.PostReviewRequest
 import com.ita.poppop.data.remote.dto.GetReviewListResponse
 import com.ita.poppop.data.remote.dto.GetReviewResponse
 import com.ita.poppop.data.remote.dto.review.PostReviewResponse
@@ -12,8 +12,7 @@ import retrofit2.http.POST
 import retrofit2.http.Path
 import retrofit2.http.Query
 
-interface ReviewApi {
-
+interface ReviewRepository {
     @GET("/api/v1/popups/{popupId}/reviews")
     suspend fun getReviewList(
         @Path("popupId") popupId: Int,
@@ -34,11 +33,3 @@ interface ReviewApi {
         @Path("reviewId") reviewId: Int,
     ): Response<GetReviewResponse>
 }
-// 요청 데이터 클래스
-data class PostReviewRequest(
-    @SerializedName("content")
-    val content: String,
-
-    @SerializedName("imageUrls")
-    val imageUrls: List<String>
-)

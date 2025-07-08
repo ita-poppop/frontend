@@ -7,13 +7,14 @@ import androidx.navigation.NavDirections
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.ita.poppop.R
+import com.ita.poppop.data.remote.dto.stories.StoryData
 import com.ita.poppop.databinding.ItemHomeWaitingLayoutBinding
 import com.ita.poppop.view.main.MainFragmentDirections
 
 
 class HomeWaitingAdapter(
     private val onclick: (Int) -> Unit,
-    private var items : MutableList<Int>,
+    private var items : List<StoryData>,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     init {
         setHasStableIds(true)
@@ -22,7 +23,7 @@ class HomeWaitingAdapter(
     inner class HomeWaitingViewHolder(
         private val binding: ItemHomeWaitingLayoutBinding,
     ) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(item : Int) {
+        fun bind(item : StoryData) {
             binding.mcvStory.setOnClickListener {
                 Log.d("checkClick","HomeWaitingViewHolder")
                 onclick(1)
@@ -41,7 +42,7 @@ class HomeWaitingAdapter(
     }
 
     // 아이템 반환 메서드
-    private fun getItem(position: Int): Int {
+    private fun getItem(position: Int): StoryData {
         return items[position]
     }
 

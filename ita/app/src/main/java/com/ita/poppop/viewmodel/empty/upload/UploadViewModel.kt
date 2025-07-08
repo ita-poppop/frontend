@@ -1,11 +1,13 @@
 package com.ita.poppop.viewmodel.empty.upload
 
+import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.map
+import com.ita.poppop.data.remote.dto.popups.SearchData
 import com.ita.poppop.view.empty.home_upload.sub.ImageItem
 import com.ita.poppop.view.empty.home_upload.sub.UploadItem
 
@@ -27,6 +29,10 @@ class UploadViewModel: ViewModel() {
             addAll(imageList.map { UploadItem.Image(it) })
         }
     }
+
+    val imageUri: List<String>
+        get() = _imageList.value?.map { it.uri.toString() } ?: emptyList()
+
 
     fun addItem(item: ImageItem) {
         val currentList = _imageList.value?.toMutableList() ?: mutableListOf()
@@ -72,11 +78,11 @@ class UploadViewModel: ViewModel() {
     }
 
 
-    private val _popupItem = MutableLiveData<String?>()
-    val popupItem: LiveData<String?> get() = _popupItem
+    private val _popupItem = MutableLiveData<SearchData?>()
+    val popupItem: LiveData<SearchData?> get() = _popupItem
 
     // set 함수
-    fun setPopupItem(item: String) {
+    fun setPopupItem(item: SearchData?) {
         _popupItem.value = item
     }
 
@@ -101,7 +107,7 @@ class UploadViewModel: ViewModel() {
     val isAllValid = MediatorLiveData<Boolean>().apply {
         val validator = {
             value = !imageList.value.isNullOrEmpty() &&
-                    !popupItem.value.isNullOrBlank() &&
+                    popupItem.value != null &&
                     !reviewContent.value.isNullOrBlank()
         }
         addSource(imageList) { validator() }
