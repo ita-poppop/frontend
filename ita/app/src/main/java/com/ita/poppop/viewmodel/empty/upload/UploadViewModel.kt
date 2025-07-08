@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
+import android.util.Base64
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
@@ -13,8 +14,13 @@ import androidx.lifecycle.map
 import com.ita.poppop.data.remote.dto.popups.SearchData
 import com.ita.poppop.view.empty.home_upload.sub.ImageItem
 import com.ita.poppop.view.empty.home_upload.sub.UploadItem
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
+import java.util.UUID
 
 class UploadViewModel: ViewModel() {
     companion object {
@@ -35,33 +41,37 @@ class UploadViewModel: ViewModel() {
         }
     }
 
-    val imageUri: List<String>
-        get() = _imageList.value?.map { it.uri.toString() } ?: emptyList()
-    fun getImageUrisAsPngFilePaths(context: Context): List<String> {
-        return _imageList.value?.mapNotNull { imageItem ->
-            convertUriToPngFile(context, imageItem.uri)?.absolutePath
-        } ?: emptyList()
-    }
-    // 또는 파일로 저장하는 방법
-    private fun convertUriToPngFile(context: Context, uri: Uri): File? {
-        return try {
-            val inputStream = context.contentResolver.openInputStream(uri)
-            val bitmap = BitmapFactory.decodeStream(inputStream)
+    val imageUri: List<Uri>
+        get() = _imageList.value?.map { it.uri } ?: emptyList()
 
-            // 임시 파일 생성
-            val file = File(context.cacheDir, "temp_${System.currentTimeMillis()}.png")
-            val outputStream = FileOutputStream(file)
+    fun createMultipartListFromUris(context: Context): List<MultipartBody.Part> {
+        val uriList = imageUri
+        val parts = mutableListOf<MultipartBody.Part>()
 
-            // PNG 형식으로 저장
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
-            outputStream.close()
+        for ((index, uri) in uriList.withIndex()) {
+            try {
+                val inputStream = context.contentResolver.openInputStream(uri) ?: continue
+                val tempFile = File.createTempFile("upload_${UUID.randomUUID()}", ".png", context.cacheDir)
+                val outputStream = FileOutputStream(tempFile)
 
-            file
-        } catch (e: Exception) {
-            Log.e("UploadViewModel", "PNG 파일 변환 실패: ${e.message}")
-            null
+                inputStream.copyTo(outputStream)
+
+                inputStream.close()
+                outputStream.close()
+
+                val requestBody = RequestBody.create("image/png".toMediaTypeOrNull(), tempFile)
+                val part = MultipartBody.Part.createFormData("images", tempFile.name, requestBody)
+
+                parts.add(part)
+
+            } catch (e: Exception) {
+                Log.e("UploadViewModel", "파일 생성 실패: ${e.message}")
+            }
         }
+
+        return parts
     }
+
     fun addItem(item: ImageItem) {
         val currentList = _imageList.value?.toMutableList() ?: mutableListOf()
         if (currentList.size < MAX_IMAGE_COUNT) {

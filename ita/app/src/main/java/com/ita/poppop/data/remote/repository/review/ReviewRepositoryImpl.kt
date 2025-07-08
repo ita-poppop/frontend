@@ -1,10 +1,11 @@
 package com.ita.poppop.data.remote.repository.review
 
-import com.ita.poppop.data.remote.api.PostReviewRequest
 import com.ita.poppop.data.remote.api.ReviewApi
 import com.ita.poppop.data.remote.dto.GetReviewListResponse
 import com.ita.poppop.data.remote.dto.GetReviewResponse
 import com.ita.poppop.data.remote.dto.review.PostReviewResponse
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.HttpException
 import retrofit2.Response
 
@@ -36,10 +37,11 @@ class ReviewRepositoryImpl(
     override suspend fun postReview(
         accessToken: String,
         popupId: Int,
-        postReviewRequest: PostReviewRequest
+        content: String,
+        images: List<MultipartBody.Part>
     ): Response<PostReviewResponse> {
         try {
-            val response = api.postReview("Bearer $accessToken",popupId,postReviewRequest)
+            val response = api.postReview("Bearer $accessToken",popupId,content,images)
 
             if (response.code() == 200) {
                 return response
@@ -53,6 +55,8 @@ class ReviewRepositoryImpl(
             throw e
         }
     }
+
+
 
     override suspend fun getReview(
         popupId: Int,
