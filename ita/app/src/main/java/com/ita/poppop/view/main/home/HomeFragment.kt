@@ -102,10 +102,10 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
                 }
             } catch (e: HttpException) {
                 // HTTP 에러 상세 정보
-                showToast("HTTP 에러: ${e.code()} - ${e.message()}")
+                showToast("TrendHTTP 에러: ${e.code()} - ${e.message()}")
                 Log.e("API_ERROR", "HTTP ${e.code()}: ${e.response()?.errorBody()?.string()}")
             } catch (e: Exception) {
-                showToast("에러 발생: ${e.localizedMessage ?: "알 수 없는 오류"}")
+                showToast("Trend에러 발생: ${e.localizedMessage ?: "알 수 없는 오류"}")
                 Log.e("API_ERROR", "Exception: ${e.message}", e)
             }
         }
@@ -165,10 +165,10 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
                 }
             } catch (e: HttpException) {
                 // HTTP 에러 상세 정보
-                showToast("HTTP 에러: ${e.code()} - ${e.message()}")
+                showToast("WaitingHTTP 에러: ${e.code()} - ${e.message()}")
                 Log.e("API_ERROR", "HTTP ${e.code()}: ${e.response()?.errorBody()?.string()}")
             } catch (e: Exception) {
-                showToast("에러 발생: ${e.localizedMessage ?: "알 수 없는 오류"}")
+                showToast("Waiting에러 발생: ${e.localizedMessage ?: "알 수 없는 오류"}")
                 Log.e("API_ERROR", "Exception: ${e.message}", e)
             }
             adapter = HomeWaitingAdapter(
@@ -197,10 +197,10 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
                 }
             } catch (e: HttpException) {
                 // HTTP 에러 상세 정보
-                showToast("HTTP 에러: ${e.code()} - ${e.message()}")
+                showToast("UpcomingHTTP 에러: ${e.code()} - ${e.message()}")
                 Log.e("API_ERROR", "HTTP ${e.code()}: ${e.response()?.errorBody()?.string()}")
             } catch (e: Exception) {
-                showToast("에러 발생: ${e.localizedMessage ?: "알 수 없는 오류"}")
+                showToast("Upcoming에러 발생: ${e.localizedMessage ?: "알 수 없는 오류"}")
                 Log.e("API_ERROR", "Exception: ${e.message}", e)
             }
             adapter = HomeUpcomingAdapter(upcomingList)
