@@ -19,7 +19,7 @@ class FavoritesViewModel: ViewModel() {
     fun getFavorites(){
         val list = mutableListOf<FavoritesRVItem>()
         /*list.clear()*/
-        list.add(
+        /*list.add(
             FavoritesRVItem(
                 1,
                 R.drawable.map_dummy_img,
@@ -59,7 +59,7 @@ class FavoritesViewModel: ViewModel() {
                 "D-3"
             )
         )
-        _favoritesList.value = list
+        _favoritesList.value = list*/
     }
 
 }

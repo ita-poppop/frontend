@@ -51,7 +51,7 @@ class ReviewRepositoryImpl(
         }
     }
 
-    override suspend fun postReviewLike(
+    override suspend fun postReviewLikes(
         accessToken: String,
         reviewId: Int
     ): Response<PostReviewLikesResponse> {

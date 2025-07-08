@@ -6,7 +6,7 @@ data class GetCommentResponse(
 )
 
 data class CommentData(
-    val commentId: Int, 
+    val commentId: Int,
     val content: String,
     val writerProfileUrl: String,
     val writerName: String,

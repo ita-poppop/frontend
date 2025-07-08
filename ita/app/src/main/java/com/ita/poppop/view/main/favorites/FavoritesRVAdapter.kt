@@ -8,6 +8,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.ita.poppop.databinding.ItemFavoritesBinding
 
 class FavoritesRVAdapter: ListAdapter<FavoritesRVItem, FavoritesRVAdapter.FavoritesViewHolder>(FavoritesDiffutillCallback()) {
@@ -25,7 +26,9 @@ class FavoritesRVAdapter: ListAdapter<FavoritesRVItem, FavoritesRVAdapter.Favori
     class FavoritesViewHolder(val binding: ItemFavoritesBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: FavoritesRVItem) {
             binding.apply {
-                ivFavorites.setImageResource(item.imageUrl)
+                Glide.with(itemView.context)
+                    .load(item.imageUrl)
+                    .into(ivFavorites)
                 tvFavoritesLocation.text = item.location
                 tvFavoritesTitle.text = item.title
                 tvFavoritesPeriod.text = item.period
