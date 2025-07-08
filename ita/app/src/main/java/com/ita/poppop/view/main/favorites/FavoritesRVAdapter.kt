@@ -32,7 +32,7 @@ class FavoritesRVAdapter: ListAdapter<FavoritesRVItem, FavoritesRVAdapter.Favori
                 tvFavoritesLocation.text = item.location
                 tvFavoritesTitle.text = item.title
                 tvFavoritesPeriod.text = item.period
-                tvFavoritesDDay.text = item.dday
+                tvFavoritesDDay.text = item.dday.toString()
             }
         }
         fun bindClickListeners(

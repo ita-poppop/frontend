@@ -12,9 +12,12 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ita.poppop.R
 import com.ita.poppop.base.BaseFragment
+import com.ita.poppop.data.remote.repository.popup.BookmarkRepositoryImpl
 import com.ita.poppop.databinding.FragmentFavoritesBinding
 import com.ita.poppop.databinding.ToastMessageBinding
 import com.ita.poppop.util.SwipeHelper
+import com.ita.poppop.util.ViewModelFactory
+import com.ita.poppop.util.remote.RetrofitClient
 import com.ita.poppop.view.main.MainFragmentDirections
 import com.ita.poppop.view.main.hide
 import com.ita.poppop.view.main.home.InfoFragment
@@ -31,7 +34,12 @@ class FavoritesFragment: BaseFragment<FragmentFavoritesBinding>(R.layout.fragmen
 
     override fun initView() {
         binding.apply {
-            favoritesViewModel = ViewModelProvider(this@FavoritesFragment).get(FavoritesViewModel::class.java)
+            //favoritesViewModel = ViewModelProvider(this@FavoritesFragment).get(FavoritesViewModel::class.java)
+
+
+            val favoritesRepository = BookmarkRepositoryImpl(RetrofitClient.bookmarkApi)
+            val favoritesFactory = ViewModelFactory { FavoritesViewModel(favoritesRepository) }
+            favoritesViewModel = ViewModelProvider(this@FavoritesFragment, favoritesFactory)[FavoritesViewModel::class.java]
             linearLayoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
 
 
@@ -47,10 +55,10 @@ class FavoritesFragment: BaseFragment<FragmentFavoritesBinding>(R.layout.fragmen
             }
 
             favoritesViewModel.getFavorites()
-            favoritesViewModel.favoritesList.observe(viewLifecycleOwner, Observer { response ->
-                favoritesRVAdapter.submitList(response)
+            favoritesViewModel.favoritesList.observe(viewLifecycleOwner, Observer { favoritesList ->
+                favoritesRVAdapter.submitList(favoritesList)
 
-                emptyStateLayout.root.run { if(response.isNullOrEmpty()) show() else hide()}
+                emptyStateLayout.root.run { if(favoritesList.isNullOrEmpty()) show() else hide()}
             })
 
             favoritesRVAdapter.setFavoritesItemClickListener(object : FavoritesRVAdapter.FavoritesItemClickListener{
@@ -63,7 +71,9 @@ class FavoritesFragment: BaseFragment<FragmentFavoritesBinding>(R.layout.fragmen
                 }
 
                 override fun onDeleteClick(position: Int) {
-                    favoritesViewModel.deleteFavorites(position)
+                    val item = favoritesRVAdapter.currentList.getOrNull(position)
+                    val popupId = item?.itemId ?: return
+                    favoritesViewModel.deleteFavorites(popupId)
 
                     // toast message 띄우기
                     val removedItem = favoritesRVAdapter.currentList.getOrNull(position)?.title
