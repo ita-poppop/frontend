@@ -1,13 +1,26 @@
 package com.ita.poppop.viewmodel.empty.upload
 
+import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.net.Uri
+import android.util.Base64
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.map
+import com.ita.poppop.data.remote.dto.popups.SearchData
 import com.ita.poppop.view.empty.home_upload.sub.ImageItem
 import com.ita.poppop.view.empty.home_upload.sub.UploadItem
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import java.io.ByteArrayOutputStream
+import java.io.File
+import java.io.FileOutputStream
+import java.util.UUID
 
 class UploadViewModel: ViewModel() {
     companion object {
@@ -26,6 +39,37 @@ class UploadViewModel: ViewModel() {
             // 이미지들을 UploadItem.Image로 변환해서 추가
             addAll(imageList.map { UploadItem.Image(it) })
         }
+    }
+
+    val imageUri: List<Uri>
+        get() = _imageList.value?.map { it.uri } ?: emptyList()
+
+    fun createMultipartListFromUris(context: Context): List<MultipartBody.Part> {
+        val uriList = imageUri
+        val parts = mutableListOf<MultipartBody.Part>()
+
+        for ((index, uri) in uriList.withIndex()) {
+            try {
+                val inputStream = context.contentResolver.openInputStream(uri) ?: continue
+                val tempFile = File.createTempFile("upload_${UUID.randomUUID()}", ".png", context.cacheDir)
+                val outputStream = FileOutputStream(tempFile)
+
+                inputStream.copyTo(outputStream)
+
+                inputStream.close()
+                outputStream.close()
+
+                val requestBody = RequestBody.create("image/png".toMediaTypeOrNull(), tempFile)
+                val part = MultipartBody.Part.createFormData("images", tempFile.name, requestBody)
+
+                parts.add(part)
+
+            } catch (e: Exception) {
+                Log.e("UploadViewModel", "파일 생성 실패: ${e.message}")
+            }
+        }
+
+        return parts
     }
 
     fun addItem(item: ImageItem) {
@@ -72,11 +116,11 @@ class UploadViewModel: ViewModel() {
     }
 
 
-    private val _popupItem = MutableLiveData<String?>()
-    val popupItem: LiveData<String?> get() = _popupItem
+    private val _popupItem = MutableLiveData<SearchData?>()
+    val popupItem: LiveData<SearchData?> get() = _popupItem
 
     // set 함수
-    fun setPopupItem(item: String) {
+    fun setPopupItem(item: SearchData?) {
         _popupItem.value = item
     }
 
@@ -100,8 +144,11 @@ class UploadViewModel: ViewModel() {
 
     val isAllValid = MediatorLiveData<Boolean>().apply {
         val validator = {
+//            value = !imageList.value.isNullOrEmpty() &&
+//                    popupItem.value != null &&
+//                    !reviewContent.value.isNullOrBlank()
             value = !imageList.value.isNullOrEmpty() &&
-                    !popupItem.value.isNullOrBlank() &&
+                    true &&
                     !reviewContent.value.isNullOrBlank()
         }
         addSource(imageList) { validator() }

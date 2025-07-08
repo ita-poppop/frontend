@@ -9,24 +9,35 @@ import androidx.databinding.adapters.SeekBarBindingAdapter.setOnSeekBarChangeLis
 import androidx.databinding.adapters.ViewBindingAdapter.setClickListener
 import androidx.fragment.app.setFragmentResult
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.google.android.material.snackbar.Snackbar
 import com.ita.poppop.R
 import com.ita.poppop.base.BaseFragment
+import com.ita.poppop.data.remote.repository.review.ReviewRepository
+import com.ita.poppop.data.remote.repository.review.ReviewRepositoryImpl
+import com.ita.poppop.data.remote.repository.story.StoryRepository
+import com.ita.poppop.data.remote.repository.story.StoryRepositoryImpl
 import com.ita.poppop.databinding.FragmentUploadWaitingBinding
 import com.ita.poppop.util.bottomsheet.UploadBottomSheet
+import com.ita.poppop.util.remote.RetrofitClient
 import com.ita.poppop.view.empty.home_upload.sub.ImageItem
 import com.ita.poppop.view.empty.home_upload.sub.UploadImageAdapter
 import com.ita.poppop.view.empty.home_upload.sub.UploadImageItemDecoration
 import com.ita.poppop.viewmodel.empty.upload.UploadViewModel
 import com.ita.poppop.viewmodel.empty.upload.UploadWaitingViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import retrofit2.HttpException
 import kotlin.math.absoluteValue
 
 
 class UploadWaitingFragment : BaseFragment<FragmentUploadWaitingBinding>(R.layout.fragment_upload_waiting) {
     private lateinit var uploadViewModel: UploadViewModel
     private lateinit var uploadWaitingViewModel: UploadWaitingViewModel
+    private val repository: StoryRepository = StoryRepositoryImpl(RetrofitClient.storyApi)
     private var uri : Uri? = null
 
     override fun initView() {
@@ -102,8 +113,33 @@ class UploadWaitingFragment : BaseFragment<FragmentUploadWaitingBinding>(R.layou
         binding.rvUploadReview.setOnClickListener {
             showUploadBottomSheet()
         }
-        binding.mcvSearchArea.setOnClickListener{
+        binding.btUploadWaiting.setOnClickListener{
 
+            lifecycleScope.launch {
+                try {
+                    val result = withContext(Dispatchers.IO) {
+                        Log.d("checkViewModelsid","uploadWaitingViewModel : ${uploadWaitingViewModel.createMultipartFromWaitingImage(requireContext())}")
+
+                        repository.postUploadStory(
+                            "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiLspIDtmJXsnoQiLCJtZW1iZXJJZCI6MTEsInByb3ZpZGVySWQiOiJOQUJDYjZJRmtkTzVoQ0FTbTJ2OXN3UmprR2EyIiwibmlja05hbWUiOiLspIDtmJXsnoQiLCJlbWFpbCI6ImltMzQ5NDEyQGdtYWlsLmNvbSIsInByb2ZpbGVJbWFnZSI6Imh0dHBzOi8vbGgzLmdvb2dsZXVzZXJjb250ZW50LmNvbS9hL0FDZzhvY0tIZnZyaU5OMDd4cjQ4QTVUS2RFM3pQRHdrLTFjdGQzQVFPT2wwZFhGY1YzcnB0UT1zOTYtYyIsImlhdCI6MTc1MTk2NjY4NywiZXhwIjoxNzUxOTcwMjg3fQ.P0tRz87Y0jBvRIPYDNhDF9BCcw96GPxdbNuzci9tmOQ",
+                            2310,
+                            uploadWaitingViewModel.createMultipartFromWaitingImage(requireContext())!!,
+                            0,
+                            uploadWaitingViewModel.waitingCount.value!!.toInt()
+                        )
+                    }
+
+                    if (result.isSuccessful) {
+                        Log.d("checkUploadData","result : ${result.body()}")
+
+                    }
+                } catch (e: HttpException) {
+                    // HTTP 에러 상세 정보
+                    Log.e("API_ERROR", "HTTP ${e.code()}: ${e.response()?.errorBody()?.string()}")
+                } catch (e: Exception) {
+                    Log.e("API_ERROR", "Exception: ${e.message}", e)
+                }
+            }
         }
     }
 

@@ -3,9 +3,17 @@ package com.ita.poppop.viewmodel.main
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.ita.poppop.data.remote.dto.popups.SearchData
 import com.ita.poppop.view.empty.home_upload.sub.ImageItem
 
 class MainViewModel: ViewModel() {
+    private val _selectItem = MutableLiveData<SearchData?>()
+    val selectItem: LiveData<SearchData?> get() = _selectItem
+
+    // set 함수
+    fun setSelectItem(item: SearchData) {
+        _selectItem.value = item
+    }
 
 
     private val _profileImage = MutableLiveData<ImageItem?>()

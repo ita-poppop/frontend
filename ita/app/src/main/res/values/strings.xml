@@ -30,6 +30,13 @@
     <string name="home_waiting_title">핫플레이스 웨이팅</string>
     <string name="home_upcoming_title">오픈 예정 팝업</string>
 
+    <!-- Empty -->
+    <string name="empty_waiting">아직등록된 웨이팅이 없어요</string>
+    <string name="empty_planned">오픈예정인 팝업이 없어요</string>
+
+
+
+
 
     <!-- HomeSearchFragment -->
     <string name="home_search_frag_title">팝업 검색하기</string>

@@ -1,31 +1,37 @@
 package com.ita.poppop.view.empty.home_upload
 
-import android.graphics.Color
 import android.net.Uri
 import android.util.Log
-import android.widget.Toast
 import androidx.core.os.BundleCompat
-import androidx.databinding.adapters.ViewBindingAdapter.setClickListener
-import androidx.fragment.app.setFragmentResult
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavDirections
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import com.ita.poppop.R
 import com.ita.poppop.base.BaseFragment
+import com.ita.poppop.data.remote.repository.review.ReviewRepository
+import com.ita.poppop.data.remote.repository.review.ReviewRepositoryImpl
 import com.ita.poppop.databinding.FragmentUploadReviewBinding
 import com.ita.poppop.util.bottomsheet.UploadBottomSheet
+import com.ita.poppop.util.remote.RetrofitClient
 import com.ita.poppop.view.empty.home_upload.sub.ImageItem
 import com.ita.poppop.view.empty.home_upload.sub.UploadImageAdapter
 import com.ita.poppop.view.empty.home_upload.sub.UploadImageItemDecoration
 import com.ita.poppop.viewmodel.empty.upload.UploadViewModel
+import com.ita.poppop.viewmodel.main.MainViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import retrofit2.HttpException
 import kotlin.math.absoluteValue
 
 class UploadReviewFragment : BaseFragment<FragmentUploadReviewBinding>(R.layout.fragment_upload_review) {
     private lateinit var uploadImageAdapter: UploadImageAdapter
     private lateinit var uploadViewModel: UploadViewModel
-
+    private lateinit var mainViewModel: MainViewModel
+    private val repository: ReviewRepository = ReviewRepositoryImpl(RetrofitClient.reviewApi)
     override fun initView() {
         setupWindowInsets()
         setupToolbar()
@@ -38,6 +44,7 @@ class UploadReviewFragment : BaseFragment<FragmentUploadReviewBinding>(R.layout.
 
     private fun setViewModel() {
         uploadViewModel = ViewModelProvider(this)[UploadViewModel::class.java]
+        mainViewModel = ViewModelProvider(requireActivity())[MainViewModel::class.java]
         // 바인딩에 ViewModel 연결
         binding.uploadReviewViewModel = uploadViewModel
 
@@ -45,11 +52,13 @@ class UploadReviewFragment : BaseFragment<FragmentUploadReviewBinding>(R.layout.
         uploadViewModel.uploadList.observe(viewLifecycleOwner) { uploadItemList ->
             uploadImageAdapter.submitList(uploadItemList)
         }
-
+        uploadViewModel.popupItem.observe(viewLifecycleOwner) { seleteItem ->
+            binding.tvUploadLocation.text = seleteItem?.title ?: ""
+        }
+        mainViewModel.selectItem.observe(viewLifecycleOwner) { seleteItem ->
+            uploadViewModel.setPopupItem(seleteItem)
+        }
         uploadViewModel.isAllValid.observe(viewLifecycleOwner) { valid ->
-            Log.d("checkViewModel","imageList : ${uploadViewModel.imageList.value}")
-            Log.d("checkViewModel","popupItem : ${uploadViewModel.popupItem.value}")
-            Log.d("checkViewModel","reviewContent : ${uploadViewModel.reviewContent.value}")
             binding.btUploadReview.isEnabled = valid
 
         }
@@ -100,6 +109,34 @@ class UploadReviewFragment : BaseFragment<FragmentUploadReviewBinding>(R.layout.
     private fun setClickListener() {
         binding.mcvSearchArea.setOnClickListener {
             navigateTo(UploadReviewFragmentDirections.actionUploadReviewFragmentToSearchFragment())
+        }
+        binding.btUploadReview.setOnClickListener{
+            lifecycleScope.launch {
+                try {
+                    val result = withContext(Dispatchers.IO) {
+
+
+                        repository.postReview(
+                            "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiLspIDtmJXsnoQiLCJtZW1iZXJJZCI6MTEsInByb3ZpZGVySWQiOiJOQUJDYjZJRmtkTzVoQ0FTbTJ2OXN3UmprR2EyIiwibmlja05hbWUiOiLspIDtmJXsnoQiLCJlbWFpbCI6ImltMzQ5NDEyQGdtYWlsLmNvbSIsInByb2ZpbGVJbWFnZSI6Imh0dHBzOi8vbGgzLmdvb2dsZXVzZXJjb250ZW50LmNvbS9hL0FDZzhvY0tIZnZyaU5OMDd4cjQ4QTVUS2RFM3pQRHdrLTFjdGQzQVFPT2wwZFhGY1YzcnB0UT1zOTYtYyIsImlhdCI6MTc1MTk2NjY4NywiZXhwIjoxNzUxOTcwMjg3fQ.P0tRz87Y0jBvRIPYDNhDF9BCcw96GPxdbNuzci9tmOQ",
+                            2310,
+                            uploadViewModel.reviewContent.value.toString(),
+                            uploadViewModel.createMultipartListFromUris(requireContext())
+                        )
+                    }
+
+                    if (result.isSuccessful) {
+                        Log.d("checkUploadData","result : ${result.body()}")
+
+                    }
+                } catch (e: HttpException) {
+                    // HTTP 에러 상세 정보
+                    Log.e("API_ERROR", "HTTP ${e.code()}: ${e.response()?.errorBody()?.string()}")
+                } catch (e: Exception) {
+                    Log.e("API_ERROR", "Exception: ${e.message}", e)
+                }
+            }
+
+
         }
     }
 

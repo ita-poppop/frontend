@@ -1,5 +1,6 @@
 package com.ita.poppop.view.empty.search.holder
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -9,6 +10,7 @@ import com.ita.poppop.databinding.ItemHomeSearchLayoutBinding
 
 
 class HomeSearchAdapter(
+    private val onAddClick: (item : SearchData) -> Unit,
     private var items : List<SearchData>,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     init {
@@ -19,6 +21,9 @@ class HomeSearchAdapter(
         private val binding: ItemHomeSearchLayoutBinding,
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item : SearchData) {
+            binding.root.setOnClickListener {
+                onAddClick(item)
+            }
             Glide.with(binding.root)
                 .load(item.image)
                 .centerCrop()

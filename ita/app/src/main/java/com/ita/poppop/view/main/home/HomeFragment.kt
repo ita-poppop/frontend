@@ -12,10 +12,14 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ita.poppop.R
 import com.ita.poppop.base.BaseFragment
+import com.ita.poppop.data.remote.api.StoriesApi
 import com.ita.poppop.data.remote.dto.popups.PlannedData
 import com.ita.poppop.data.remote.dto.popups.TrendData
+import com.ita.poppop.data.remote.dto.stories.StoryData
 import com.ita.poppop.data.remote.repository.popups.PopupsRepository
 import com.ita.poppop.data.remote.repository.popups.PopupsRepositoryImpl
+import com.ita.poppop.data.remote.repository.stories.StoriesRepository
+import com.ita.poppop.data.remote.repository.stories.StoriesRepositoryImpl
 import com.ita.poppop.databinding.FragmentHomeBinding
 import com.ita.poppop.util.DimManager
 import com.ita.poppop.util.remote.RetrofitClient
@@ -41,6 +45,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
 
 
     private val repository: PopupsRepository = PopupsRepositoryImpl(RetrofitClient.popupApi)
+    private val repository2: StoriesRepository = StoriesRepositoryImpl(RetrofitClient.storiesApi)
 
 
     override fun initView() {
@@ -84,6 +89,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
 
                 if (result.isSuccessful) {
                     trendList = result.body()?.data!!
+                    Log.d("checkDatata","trendList : ${trendList}")
                     adapter = HomeTrendAdapter(trendList)
                     layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
                     addItemDecoration(HomeTrendItemDecoration())
@@ -137,13 +143,36 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
     }
 
     private fun setupWaitingRecycler() = with(binding.rvWaiting) {
-        val waitingList = mutableListOf(1, 2, 3, 4, 5, 6)
-        adapter = HomeWaitingAdapter(
-            onclick = { position ->
-                navigateTo(MainFragmentDirections.actionMainFragmentToNaviHomeStory())
-            },waitingList)
-        layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-        addItemDecoration(HomeWaitingItemDecoration())
+
+        var waitingList = listOf<StoryData>()
+        lifecycleScope.launch {
+            try {
+                val result = withContext(Dispatchers.IO) {
+                    repository2.getStories(1, 4)
+                }
+
+                if (result.isSuccessful) {
+                    waitingList = result.body()?.data!!
+                    Log.d("checkDatata","waitingList : ${waitingList}")
+
+
+                }
+            } catch (e: HttpException) {
+                // HTTP 에러 상세 정보
+                showToast("HTTP 에러: ${e.code()} - ${e.message()}")
+                Log.e("API_ERROR", "HTTP ${e.code()}: ${e.response()?.errorBody()?.string()}")
+            } catch (e: Exception) {
+                showToast("에러 발생: ${e.localizedMessage ?: "알 수 없는 오류"}")
+                Log.e("API_ERROR", "Exception: ${e.message}", e)
+            }
+            adapter = HomeWaitingAdapter(
+                onclick = { position ->
+                    navigateTo(MainFragmentDirections.actionMainFragmentToNaviHomeStory())
+                },waitingList)
+            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+            addItemDecoration(HomeWaitingItemDecoration(context,waitingList))
+        }
+
     }
 
     private fun setupUpcomingRecycler() = with(binding.rvUpcoming) {
@@ -156,9 +185,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
 
                 if (result.isSuccessful) {
                     upcomingList = result.body()?.data!!
-                    adapter = HomeUpcomingAdapter(upcomingList)
-                    layoutManager = GridLayoutManager(context, 2)
-                    addItemDecoration(HomeUpcomingItemDecoration())
+                    Log.d("checkDatata","upcomingList : ${upcomingList}")
+
 
                 }
             } catch (e: HttpException) {
@@ -169,6 +197,9 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
                 showToast("에러 발생: ${e.localizedMessage ?: "알 수 없는 오류"}")
                 Log.e("API_ERROR", "Exception: ${e.message}", e)
             }
+            adapter = HomeUpcomingAdapter(upcomingList)
+            layoutManager = GridLayoutManager(context, 2)
+            addItemDecoration(HomeUpcomingItemDecoration(context,upcomingList))
         }
 
 
