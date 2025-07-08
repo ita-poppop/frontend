@@ -1,5 +1,6 @@
 package com.ita.poppop.view.empty.info.detail
 
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -11,11 +12,12 @@ import com.ita.poppop.util.ViewModelFactory
 import com.ita.poppop.util.remote.RetrofitClient
 import com.ita.poppop.view.empty.info.detail.recommend.InfoRecommendRVAdapter
 import com.ita.poppop.view.empty.info.detail.recommend.InfoRecommendViewModel
+import com.ita.poppop.viewmodel.MainAViewModel
 
 class InfoDetailFragment: BaseFragment<FragmentInfoDetailBinding>(R.layout.fragment_info_detail) {
 
     private lateinit var infoDetailViewModel: InfoDetailViewModel
-
+    val mainViewModel: MainAViewModel by activityViewModels()
     private lateinit var infoRecommendViewModel: InfoRecommendViewModel
 
     private val infoRecommendRVAdapter by lazy {
@@ -30,7 +32,7 @@ class InfoDetailFragment: BaseFragment<FragmentInfoDetailBinding>(R.layout.fragm
             val popupId = arguments?.getInt("popupId") ?: 0
 
             val repository = PopupsRepositoryImpl(RetrofitClient.popupApi)
-            val factory = ViewModelFactory { InfoDetailViewModel(repository) }
+            val factory = ViewModelFactory { InfoDetailViewModel(mainViewModel.tokenPair.value.first.toString(),repository) }
             infoDetailViewModel = ViewModelProvider(this@InfoDetailFragment, factory)[InfoDetailViewModel::class.java]
 
             infoDetailViewModel.getInfoDetail(popupId)

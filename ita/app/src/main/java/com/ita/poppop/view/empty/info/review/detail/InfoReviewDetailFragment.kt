@@ -1,6 +1,7 @@
 package com.ita.poppop.view.empty.info.review.detail
 
 import android.graphics.Rect
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -17,11 +18,12 @@ import com.ita.poppop.view.empty.info.review.comment.InfoReviewCommentDeleteBott
 import com.ita.poppop.view.empty.info.review.comment.InfoReviewCommentRVAdapter
 import com.ita.poppop.view.empty.info.review.comment.InfoReviewCommentViewModel
 import com.ita.poppop.view.empty.info.review.image.InfoReviewImageRVAdapter
+import com.ita.poppop.viewmodel.MainAViewModel
 
 class InfoReviewDetailFragment : BaseFragment<FragmentInfoReviewDetailBinding>(R.layout.fragment_info_review_detail){
 
     private val infoReviewDetailArgs: InfoReviewDetailFragmentArgs by navArgs()
-
+    val mainViewModel: MainAViewModel by activityViewModels()
     private lateinit var infoReviewDetailViewModel: InfoReviewDetailViewModel
     private lateinit var infoReviewDetailViewHolder: InfoReviewDetailViewHolder
 
@@ -80,7 +82,7 @@ class InfoReviewDetailFragment : BaseFragment<FragmentInfoReviewDetailBinding>(R
 
             // 리뷰 댓글
             val commentRepository = CommentRepositoryImpl(RetrofitClient.commentApi)
-            val commentFactory = ViewModelFactory { InfoReviewCommentViewModel(commentRepository) }
+            val commentFactory = ViewModelFactory { InfoReviewCommentViewModel(mainViewModel.tokenPair.value.first.toString(),commentRepository) }
             infoReviewCommentViewModel = ViewModelProvider(this@InfoReviewDetailFragment, commentFactory)[InfoReviewCommentViewModel::class.java]
             infoReviewCommentViewModel.getInfoReviewCommentList(infoReviewDetailArgs.review.itemId)
             infoReviewCommentViewModel.inforeviewcommentList.observe(viewLifecycleOwner) { commentList ->

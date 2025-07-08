@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Gravity
 import android.widget.Toast
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
@@ -21,10 +22,12 @@ import com.ita.poppop.util.remote.RetrofitClient
 import com.ita.poppop.view.main.MainFragmentDirections
 import com.ita.poppop.view.main.hide
 import com.ita.poppop.view.main.show
+import com.ita.poppop.viewmodel.MainAViewModel
+import com.ita.poppop.viewmodel.main.MainViewModel
 
 class FavoritesFragment: BaseFragment<FragmentFavoritesBinding>(R.layout.fragment_favorites) {
     private lateinit var favoritesViewModel: FavoritesViewModel
-
+    val mainViewModel: MainAViewModel by activityViewModels()
     private val favoritesRVAdapter by lazy {
         FavoritesRVAdapter()
     }
@@ -37,7 +40,7 @@ class FavoritesFragment: BaseFragment<FragmentFavoritesBinding>(R.layout.fragmen
 
 
             val favoritesRepository = BookmarkRepositoryImpl(RetrofitClient.bookmarkApi)
-            val favoritesFactory = ViewModelFactory { FavoritesViewModel(favoritesRepository) }
+            val favoritesFactory = ViewModelFactory { FavoritesViewModel(mainViewModel.tokenPair.value.first.toString(),favoritesRepository) }
             favoritesViewModel = ViewModelProvider(this@FavoritesFragment, favoritesFactory)[FavoritesViewModel::class.java]
             linearLayoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
 

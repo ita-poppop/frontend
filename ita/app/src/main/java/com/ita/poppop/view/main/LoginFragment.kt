@@ -1,22 +1,10 @@
 package com.ita.poppop.view.main
 
 import android.util.Log
-import android.widget.Toast
 import androidx.credentials.CredentialManager
-import androidx.credentials.CustomCredential
-import androidx.credentials.GetCredentialRequest
-import androidx.credentials.GetCredentialResponse
-import androidx.credentials.exceptions.GetCredentialCancellationException
-import androidx.credentials.exceptions.GetCredentialException
-import androidx.credentials.exceptions.NoCredentialException
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.libraries.identity.googleid.GetGoogleIdOption
-import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.auth.GoogleAuthProvider
 import com.ita.poppop.R
 import com.ita.poppop.base.BaseFragment
 import com.ita.poppop.data.remote.api.SignupRequest
@@ -25,14 +13,7 @@ import com.ita.poppop.data.remote.repository.Member.MemberRepositoryImpl
 import com.ita.poppop.databinding.FragmentLoginBinding
 import com.ita.poppop.util.LoginManager
 import com.ita.poppop.util.RetrofitClient
-import com.ita.poppop.view.main.home.trend.HomeTrendAdapter
-import com.ita.poppop.view.main.home.trend.HomeTrendItemDecoration
 import com.ita.poppop.viewmodel.MainAViewModel
-import com.ita.poppop.viewmodel.MainAViewModel.LoginState
-import com.kakao.sdk.auth.model.OAuthToken
-import com.kakao.sdk.common.model.ClientError
-import com.kakao.sdk.common.model.ClientErrorCause
-import com.kakao.sdk.user.UserApiClient
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext

@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -21,12 +22,13 @@ import com.ita.poppop.view.empty.info.detail.InfoDetailFragment
 import com.ita.poppop.view.empty.info.review.InfoReviewFragment
 import com.ita.poppop.view.empty.info.story.InfoStoryRVAdapter
 import com.ita.poppop.view.empty.info.story.InfoStoryViewModel
+import com.ita.poppop.viewmodel.MainAViewModel
 
 
 class InfoFragment: BaseFragment<FragmentInfoBinding>(R.layout.fragment_info) {
 
     private val args: InfoFragmentArgs by navArgs()
-
+    val mainViewModel: MainAViewModel by activityViewModels()
     private lateinit var infoViewModel: InfoViewModel
 
     private lateinit var infoStoryViewModel: InfoStoryViewModel
@@ -82,7 +84,7 @@ class InfoFragment: BaseFragment<FragmentInfoBinding>(R.layout.fragment_info) {
             //val popupId = 1325
 
             val repository = PopupsRepositoryImpl(RetrofitClient.popupApi)
-            val factory = ViewModelFactory { InfoViewModel(repository) }
+            val factory = ViewModelFactory { InfoViewModel(mainViewModel.tokenPair.value.first.toString(),repository) }
             infoViewModel = ViewModelProvider(this@InfoFragment, factory)[InfoViewModel::class.java]
 
             val popupId = args.popupId

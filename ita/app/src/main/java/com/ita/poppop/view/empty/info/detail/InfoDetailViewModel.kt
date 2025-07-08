@@ -12,6 +12,7 @@ import kotlinx.coroutines.withContext
 import retrofit2.HttpException
 
 class InfoDetailViewModel(
+    private val accessToken: String,
     private val repository: PopupsRepository
 ) : ViewModel() {
 
@@ -22,7 +23,6 @@ class InfoDetailViewModel(
         viewModelScope.launch {
             try {
                 val result = withContext(Dispatchers.IO) {
-                    val accessToken = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzdHJpbmciLCJtZW1iZXJJZCI6MTAsInByb3ZpZGVySWQiOiJzdHJpbmciLCJuaWNrTmFtZSI6InN0cmluZyIsImVtYWlsIjoic3RyaW5nIiwicHJvZmlsZUltYWdlIjoic3RyaW5nIiwiaWF0IjoxNzUxOTY5Nzk0LCJleHAiOjE3NTE5NzMzOTR9.MLJ-1Dw7DKDHtEXWnvgaiQYcqGNsaUJydWSH_WBP-og"
                     repository.getDetailPopups(accessToken, popupId)
                 }
                 if (result.isSuccessful) {

@@ -15,6 +15,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class InfoReviewCommentViewModel(
+    private val accessToken: String,
     private val repository: CommentRepository
 ) : ViewModel() {
     private val _inforeviewcommentList = MutableLiveData<MutableList<InfoReviewCommentRVItem>>()
@@ -25,7 +26,6 @@ class InfoReviewCommentViewModel(
         viewModelScope.launch {
             try {
                 val response = withContext(Dispatchers.IO) {
-                    val accessToken = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiLsnoTspIDtmJUiLCJpZCI6IjQzMjQ0NzEzMTQiLCJuaWNrTmFtZSI6IuyehOykgO2YlSIsImVtYWlsIjoibGltanVuaHllbmdAZ21haWwuY29tIiwiUHJvZmlsZUltYWdlIjoiaHR0cHM6Ly9pbWcxLmtha2FvY2RuLm5ldC90aHVtYi9SNjQweDY0MC5xNzAvP2ZuYW1lPWh0dHBzOi8vdDEua2FrYW9jZG4ubmV0L2FjY291bnRfaW1hZ2VzL2RlZmF1bHRfcHJvZmlsZS5qcGVnIiwiaWF0IjoxNzUxODY3NDYyfQ.84sTRKySacPuKTTgZZXM0SUmxPD_8ujFobzpDx0HUSU"
                     val request = PostCommentRequest(content, parentId = 0)
                     repository.postComment(accessToken, reviewId, request)
                 }
@@ -67,7 +67,6 @@ class InfoReviewCommentViewModel(
         viewModelScope.launch {
             try {
                 val response = withContext(Dispatchers.IO) {
-                    val accessToken = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiLsnoTspIDtmJUiLCJpZCI6IjQzMjQ0NzEzMTQiLCJuaWNrTmFtZSI6IuyehOykgO2YlSIsImVtYWlsIjoibGltanVuaHllbmdAZ21haWwuY29tIiwiUHJvZmlsZUltYWdlIjoiaHR0cHM6Ly9pbWcxLmtha2FvY2RuLm5ldC90aHVtYi9SNjQweDY0MC5xNzAvP2ZuYW1lPWh0dHBzOi8vdDEua2FrYW9jZG4ubmV0L2FjY291bnRfaW1hZ2VzL2RlZmF1bHRfcHJvZmlsZS5qcGVnIiwiaWF0IjoxNzUxODY3NDYyfQ.84sTRKySacPuKTTgZZXM0SUmxPD_8ujFobzpDx0HUSU"
                     repository.deleteComment(accessToken, commentId)
                 }
                 if (response.isSuccessful) {

@@ -13,6 +13,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class FavoritesViewModel(
+    private val accessToken: String,
     private val repository: BookmarkRepository
 ) : ViewModel() {
 
@@ -24,7 +25,6 @@ class FavoritesViewModel(
         viewModelScope.launch {
             try {
                 val response = withContext(Dispatchers.IO) {
-                    val accessToken = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzdHJpbmciLCJtZW1iZXJJZCI6MTAsInByb3ZpZGVySWQiOiJzdHJpbmciLCJuaWNrTmFtZSI6InN0cmluZyIsImVtYWlsIjoic3RyaW5nIiwicHJvZmlsZUltYWdlIjoic3RyaW5nIiwiaWF0IjoxNzUxOTY3Mjc5LCJleHAiOjE3NTE5NzA4Nzl9.izPAIRoY2f8l1WIaYDvkeRTckpPQacOn4lteWOcLI30"
                     repository.deleteBookmarks(accessToken, popupId)
                 }
                 if (response.isSuccessful) {
@@ -50,7 +50,6 @@ class FavoritesViewModel(
         viewModelScope.launch {
             try {
                 val response = withContext(Dispatchers.IO) {
-                    val accessToken = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzdHJpbmciLCJtZW1iZXJJZCI6MTAsInByb3ZpZGVySWQiOiJzdHJpbmciLCJuaWNrTmFtZSI6InN0cmluZyIsImVtYWlsIjoic3RyaW5nIiwicHJvZmlsZUltYWdlIjoic3RyaW5nIiwiaWF0IjoxNzUxOTY3Mjc5LCJleHAiOjE3NTE5NzA4Nzl9.izPAIRoY2f8l1WIaYDvkeRTckpPQacOn4lteWOcLI30"
                     repository.getBookmarks(accessToken)
                 }
                 if (response.isSuccessful) {

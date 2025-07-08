@@ -11,6 +11,7 @@ import com.ita.poppop.data.remote.repository.popups.PopupsRepository
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 class InfoViewModel(
+    private val accessToken: String,
     private val repository: PopupsRepository
 ) : ViewModel() {
 
@@ -21,7 +22,6 @@ class InfoViewModel(
         viewModelScope.launch {
             try {
                 val response = withContext(Dispatchers.IO) {
-                    val accessToken = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzdHJpbmciLCJtZW1iZXJJZCI6MTAsInByb3ZpZGVySWQiOiJzdHJpbmciLCJuaWNrTmFtZSI6InN0cmluZyIsImVtYWlsIjoic3RyaW5nIiwicHJvZmlsZUltYWdlIjoic3RyaW5nIiwiaWF0IjoxNzUxOTY3Mjc5LCJleHAiOjE3NTE5NzA4Nzl9.izPAIRoY2f8l1WIaYDvkeRTckpPQacOn4lteWOcLI30"
                     repository.getDetailPopups(accessToken, popupId)
                 }
                 if (response.isSuccessful) {
