@@ -50,9 +50,9 @@ class InfoReviewDetailFragment : BaseFragment<FragmentInfoReviewDetailBinding>(R
             //infoReviewDetailViewModel = ViewModelProvider(this@InfoReviewDetailFragment).get(InfoReviewDetailViewModel::class.java)
             //infoReviewDetailViewModel.getInfoReviewDetail(infoReviewDetailArgs.review.itemId)
             // 리뷰 상세
-            val repository = ReviewRepositoryImpl(RetrofitClient.reviewApi)
-            val factory = ViewModelFactory { InfoReviewDetailViewModel(repository) }
-            infoReviewDetailViewModel = ViewModelProvider(this@InfoReviewDetailFragment, factory)[InfoReviewDetailViewModel::class.java]
+            val reviewRepository = ReviewRepositoryImpl(RetrofitClient.reviewApi)
+            val reviewFactory = ViewModelFactory { InfoReviewDetailViewModel(reviewRepository) }
+            infoReviewDetailViewModel = ViewModelProvider(this@InfoReviewDetailFragment, reviewFactory)[InfoReviewDetailViewModel::class.java]
             infoReviewDetailViewHolder = InfoReviewDetailViewHolder(binding, infoReviewImageRVAdapter)
 
             // 리뷰 상세 요청
@@ -79,12 +79,12 @@ class InfoReviewDetailFragment : BaseFragment<FragmentInfoReviewDetailBinding>(R
             }
 
             // 리뷰 댓글
-            val repository2 = CommentRepositoryImpl(RetrofitClient.commentApi)
-            val factory2 = ViewModelFactory { InfoReviewCommentViewModel(repository2) }
-            infoReviewCommentViewModel = ViewModelProvider(this@InfoReviewDetailFragment, factory2)[InfoReviewCommentViewModel::class.java]
+            val commentRepository = CommentRepositoryImpl(RetrofitClient.commentApi)
+            val commentFactory = ViewModelFactory { InfoReviewCommentViewModel(commentRepository) }
+            infoReviewCommentViewModel = ViewModelProvider(this@InfoReviewDetailFragment, commentFactory)[InfoReviewCommentViewModel::class.java]
             infoReviewCommentViewModel.getInfoReviewCommentList(infoReviewDetailArgs.review.itemId)
             infoReviewCommentViewModel.inforeviewcommentList.observe(viewLifecycleOwner) { commentList ->
-                infoReviewCommentRVAdapter.submitList(commentList.toList())
+                infoReviewCommentRVAdapter.submitList(commentList)
             }
             rvReviewComment.apply {
                 val layoutmanager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
@@ -98,7 +98,8 @@ class InfoReviewDetailFragment : BaseFragment<FragmentInfoReviewDetailBinding>(R
             tvUploadComment.setOnClickListener {
                 val content = editUploadComment.text.toString().trim()
                 if (content.isNotEmpty()) {
-                    infoReviewCommentViewModel.addComment(content)
+                    infoReviewCommentViewModel.postComment(infoReviewDetailArgs.review.itemId, content)
+                    infoReviewCommentViewModel.getInfoReviewCommentList(infoReviewDetailArgs.review.itemId)
 
                     editUploadComment.text?.clear()
 

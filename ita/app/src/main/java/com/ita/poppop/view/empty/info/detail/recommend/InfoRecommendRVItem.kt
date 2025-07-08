@@ -1,8 +1,8 @@
-package com.ita.poppop.view.empty.info.recommend
+package com.ita.poppop.view.empty.info.detail.recommend
 
 data class InfoRecommendRVItem(
     var itemId: Int,
-    var imageUrl: Int,
+    var imageUrl: String,
     var title: String,
     var location: String
 )

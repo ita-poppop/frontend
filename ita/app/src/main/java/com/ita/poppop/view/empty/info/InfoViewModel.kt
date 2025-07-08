@@ -5,15 +5,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ita.poppop.data.remote.repository.popup.TrendRepository
 import kotlinx.coroutines.Dispatchers
 import com.ita.poppop.data.remote.dto.popups.PopupDetailData
+import com.ita.poppop.data.remote.repository.popups.PopupsRepository
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import retrofit2.HttpException
-
 class InfoViewModel(
-    private val repository: TrendRepository
+    private val repository: PopupsRepository
 ) : ViewModel() {
 
     private val _infoData = MutableLiveData<PopupDetailData>()
@@ -22,18 +20,23 @@ class InfoViewModel(
     fun getInfo(popupId: Int) {
         viewModelScope.launch {
             try {
-                val result = withContext(Dispatchers.IO) {
-                    repository.getPopupDetail(1325)
+                val response = withContext(Dispatchers.IO) {
+                    val accessToken = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzdHJpbmciLCJtZW1iZXJJZCI6MTAsInByb3ZpZGVySWQiOiJzdHJpbmciLCJuaWNrTmFtZSI6InN0cmluZyIsImVtYWlsIjoic3RyaW5nIiwicHJvZmlsZUltYWdlIjoic3RyaW5nIiwiaWF0IjoxNzUxOTY3Mjc5LCJleHAiOjE3NTE5NzA4Nzl9.izPAIRoY2f8l1WIaYDvkeRTckpPQacOn4lteWOcLI30"
+                    repository.getDetailPopups(accessToken, popupId)
                 }
-                if (result.isSuccessful) {
-                    Log.d("InfoApi_SUCCESS", "${result}")
+                if (response.isSuccessful) {
+                    response.body()?.data?.let { data ->
+                        _infoData.value = data
+                        Log.d("InfoApi_SUCCESS", "Info: $data")
+                    }
+                } else {
+                    Log.e("InfoApi_ERROR", "API error: ${response.message()} (${response.code()})")
                 }
-            } catch (e: HttpException) {
-                // HTTP 에러 상세 정보
-                Log.e("InfoAPI_ERROR", "HTTP ${e.code()}: ${e.response()?.errorBody()?.string()}")
             } catch (e: Exception) {
-                Log.e("InfoAPI_ERROR", "Exception: ${e.message}", e)
+                Log.e("InfoApi_ERROR", "Exception: ${e.message}", e)
             }
         }
     }
+
+
 }

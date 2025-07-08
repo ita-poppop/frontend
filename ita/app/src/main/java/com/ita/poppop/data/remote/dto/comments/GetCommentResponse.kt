@@ -1,16 +1,16 @@
-package com.ita.poppop.data.remote.dto
+package com.ita.poppop.data.remote.dto.comments
 
-data class GetCommentListResponse(
+data class GetCommentResponse(
     val code: String,
-    val data: List<CommentListData>
+    val data: CommentData
 )
 
-data class CommentListData(
+data class CommentData(
     val commentId: Int,
     val content: String,
     val writerProfileUrl: String,
     val writerName: String,
     val createdAt: String,
     val updatedAt: String,
-    val replyCount: Int
+    val children: List<CommentData>
 )

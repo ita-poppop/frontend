@@ -5,22 +5,14 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ita.poppop.R
-import com.ita.poppop.data.remote.dto.CommentData
-import com.ita.poppop.data.remote.dto.ReviewData
+import com.ita.poppop.data.remote.dto.comments.CommentData
 import com.ita.poppop.data.remote.repository.popup.CommentRepository
 import com.ita.poppop.util.ConvertTimeUtil
 import com.ita.poppop.view.empty.info.review.InfoReviewDetailReplyRVItem
-import com.ita.poppop.view.empty.info.review.InfoReviewRVItem
 import com.ita.poppop.view.empty.info.review.comment.InfoReviewCommentRVItem
-import com.ita.poppop.view.empty.info.review.image.InfoReviewImageRVItem
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.time.LocalDateTime
-import java.time.ZoneId
-import java.time.format.DateTimeFormatter
-import java.time.temporal.ChronoUnit
 
 class InfoReviewDetailReplyViewModel(
     private val repository: CommentRepository

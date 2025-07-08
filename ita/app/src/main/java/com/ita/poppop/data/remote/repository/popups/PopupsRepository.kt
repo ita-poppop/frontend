@@ -6,12 +6,14 @@ import com.ita.poppop.data.remote.dto.popups.GetSearchResponse
 import com.ita.poppop.data.remote.dto.popups.GetTrendResponse
 import retrofit2.Response
 import retrofit2.http.GET
+import retrofit2.http.Header
 import retrofit2.http.Query
 
 
 interface PopupsRepository {
     @GET("/api/v1/popups/{popupId}")
     suspend fun getDetailPopups(
+        @Header("Authorization") accessToken: String,
         @Query("popupId") popupId: Int
     ): Response<GetPopupDetailResponse>
 

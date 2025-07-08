@@ -1,5 +1,6 @@
 package com.ita.poppop.util.remote
 
+import com.ita.poppop.data.remote.api.BookmarkApi
 import com.ita.poppop.data.remote.api.CommentApi
 import com.ita.poppop.data.remote.api.PopupApi
 import com.ita.poppop.data.remote.api.ReviewApi
@@ -43,7 +44,7 @@ import java.util.concurrent.TimeUnit
 //}
 
 object RetrofitClient {
-    private const val BASE_URL = "http://43.200.189.197:8080/"
+    private const val BASE_URL = "https://poppop.site/"
 
     private val retrofit: Retrofit by lazy {
         val logging = HttpLoggingInterceptor().apply {
@@ -71,5 +72,8 @@ object RetrofitClient {
     }
     val commentApi: CommentApi by lazy {
         retrofit.create(CommentApi::class.java)
+    }
+    val bookmarkApi: BookmarkApi by lazy {
+        retrofit.create(BookmarkApi::class.java)
     }
 }

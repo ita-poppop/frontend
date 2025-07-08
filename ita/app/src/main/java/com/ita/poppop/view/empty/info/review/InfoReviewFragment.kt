@@ -10,7 +10,7 @@ import com.ita.poppop.data.remote.repository.popup.ReviewRepositoryImpl
 import com.ita.poppop.databinding.FragmentInfoReviewBinding
 import com.ita.poppop.util.remote.RetrofitClient
 import com.ita.poppop.util.ViewModelFactory
-import com.ita.poppop.view.main.home.InfoFragmentDirections
+import com.ita.poppop.view.empty.info.InfoFragmentDirections
 
 class InfoReviewFragment: BaseFragment<FragmentInfoReviewBinding>(R.layout.fragment_info_review) {
 
