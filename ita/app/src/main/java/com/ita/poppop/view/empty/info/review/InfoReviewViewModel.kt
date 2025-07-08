@@ -23,7 +23,7 @@ class InfoReviewViewModel(
         viewModelScope.launch {
             try {
                 val response = withContext(Dispatchers.IO) {
-                    repository.getReviewList(1325, 1, 5)
+                    repository.getReviewList(1325, 1, 20)
                 }
                 if (response.isSuccessful) {
                     response.body()?.let { body ->
