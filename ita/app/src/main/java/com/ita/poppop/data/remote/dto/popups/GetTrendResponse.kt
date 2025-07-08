@@ -14,6 +14,9 @@ data class GetTrendResponse(
 )
 
 data class TrendData(
+    @SerializedName("id")
+    val id: Int,
+
     @SerializedName("title")
     val title: String,
 

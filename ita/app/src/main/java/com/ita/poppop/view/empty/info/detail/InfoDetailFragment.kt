@@ -5,12 +5,10 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ita.poppop.R
 import com.ita.poppop.base.BaseFragment
-
-import com.ita.poppop.data.remote.repository.popup.TrendRepositoryImpl
+import com.ita.poppop.data.remote.repository.popups.PopupsRepositoryImpl
 import com.ita.poppop.databinding.FragmentInfoDetailBinding
 import com.ita.poppop.util.ViewModelFactory
 import com.ita.poppop.util.remote.RetrofitClient
-import com.ita.poppop.view.empty.info.InfoViewModel
 import com.ita.poppop.view.empty.info.detail.recommend.InfoRecommendRVAdapter
 import com.ita.poppop.view.empty.info.detail.recommend.InfoRecommendViewModel
 
@@ -28,21 +26,22 @@ class InfoDetailFragment: BaseFragment<FragmentInfoDetailBinding>(R.layout.fragm
         binding.apply {
 
             //val popupId = arguments?.getInt("popupId") ?: return
-            val popupId = 1325
+            //val popupId = 1325
+            val popupId = arguments?.getInt("popupId") ?: 0
 
-            val repository = TrendRepositoryImpl(RetrofitClient.popupApi)
+            val repository = PopupsRepositoryImpl(RetrofitClient.popupApi)
             val factory = ViewModelFactory { InfoDetailViewModel(repository) }
             infoDetailViewModel = ViewModelProvider(this@InfoDetailFragment, factory)[InfoDetailViewModel::class.java]
 
             infoDetailViewModel.getInfoDetail(popupId)
 
-            infoDetailViewModel.infoDetail.observe(viewLifecycleOwner) { response ->
-                tvInfoDetail.text = response.detail
+            infoDetailViewModel.infoDetail.observe(viewLifecycleOwner) { combinedText ->
+                tvInfoDetail.text = combinedText
                 //tvInfoDetailComment.text = response.comment
             }
 
 
-            val repository2 = TrendRepositoryImpl(RetrofitClient.popupApi)
+            val repository2 = PopupsRepositoryImpl(RetrofitClient.popupApi)
             val factory2 = ViewModelFactory { InfoRecommendViewModel(repository2) }
             infoRecommendViewModel = ViewModelProvider(this@InfoDetailFragment, factory2)[InfoRecommendViewModel::class.java]
 

@@ -5,13 +5,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ita.poppop.data.remote.repository.popup.TrendRepository
 import kotlinx.coroutines.Dispatchers
 import com.ita.poppop.data.remote.dto.popups.PopupDetailData
+import com.ita.poppop.data.remote.repository.popups.PopupsRepository
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 class InfoViewModel(
-    private val repository: TrendRepository
+    private val repository: PopupsRepository
 ) : ViewModel() {
 
     private val _infoData = MutableLiveData<PopupDetailData>()
@@ -21,7 +21,8 @@ class InfoViewModel(
         viewModelScope.launch {
             try {
                 val response = withContext(Dispatchers.IO) {
-                    repository.getPopupDetail(1325)
+                    val accessToken = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzdHJpbmciLCJtZW1iZXJJZCI6MTAsInByb3ZpZGVySWQiOiJzdHJpbmciLCJuaWNrTmFtZSI6InN0cmluZyIsImVtYWlsIjoic3RyaW5nIiwicHJvZmlsZUltYWdlIjoic3RyaW5nIiwiaWF0IjoxNzUxOTY3Mjc5LCJleHAiOjE3NTE5NzA4Nzl9.izPAIRoY2f8l1WIaYDvkeRTckpPQacOn4lteWOcLI30"
+                    repository.getDetailPopups(accessToken, popupId)
                 }
                 if (response.isSuccessful) {
                     response.body()?.data?.let { data ->

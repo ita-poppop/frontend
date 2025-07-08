@@ -2,12 +2,12 @@ package com.ita.poppop.view.main.favorites
 
 import android.app.ProgressDialog.show
 import android.os.Bundle
+import android.util.Log
 import android.view.Gravity
 import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ita.poppop.R
@@ -20,7 +20,6 @@ import com.ita.poppop.util.ViewModelFactory
 import com.ita.poppop.util.remote.RetrofitClient
 import com.ita.poppop.view.main.MainFragmentDirections
 import com.ita.poppop.view.main.hide
-import com.ita.poppop.view.main.home.InfoFragment
 import com.ita.poppop.view.main.show
 
 class FavoritesFragment: BaseFragment<FragmentFavoritesBinding>(R.layout.fragment_favorites) {
@@ -64,9 +63,12 @@ class FavoritesFragment: BaseFragment<FragmentFavoritesBinding>(R.layout.fragmen
             favoritesRVAdapter.setFavoritesItemClickListener(object : FavoritesRVAdapter.FavoritesItemClickListener{
                 override fun onItemClick(position: Int) {
                     //val popupId = 1
+                    val item = favoritesRVAdapter.currentList.getOrNull(position) ?: return
+                    val popupId = item.itemId
+                    Log.d("FavoritesFragment", "Clicked popupId: $popupId")
 
                     val parentNavController = requireActivity().findNavController(R.id.fcv_main_activity_container)
-                    val action = MainFragmentDirections.actionMainFragmentToNaviInfo()
+                    val action = MainFragmentDirections.actionMainFragmentToNaviInfo(popupId)
                     parentNavController.navigate(action)
                 }
 

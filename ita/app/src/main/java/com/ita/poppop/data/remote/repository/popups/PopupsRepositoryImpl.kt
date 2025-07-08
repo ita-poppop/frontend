@@ -13,10 +13,11 @@ class PopupsRepositoryImpl(
     private val api: PopupApi
 ) : PopupsRepository {
     override suspend fun getDetailPopups(
+        accessToken: String,
         popupId: Int
     ): Response<GetPopupDetailResponse> {
         try {
-            val response = api.getPopupDetail(popupId)
+            val response = api.getPopupDetail("Bearer $accessToken",popupId)
 
             if (response.code() == 200) {
                 return response

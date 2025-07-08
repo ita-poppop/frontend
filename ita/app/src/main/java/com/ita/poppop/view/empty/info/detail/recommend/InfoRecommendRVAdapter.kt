@@ -6,6 +6,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.ita.poppop.R
 import com.ita.poppop.databinding.ItemInfoRecommendBinding
 
 class InfoRecommendRVAdapter: ListAdapter<InfoRecommendRVItem, InfoRecommendRVAdapter.InfoRecommendViewHolder>(
@@ -14,7 +16,11 @@ class InfoRecommendRVAdapter: ListAdapter<InfoRecommendRVItem, InfoRecommendRVAd
     class InfoRecommendViewHolder(val binding: ItemInfoRecommendBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: InfoRecommendRVItem) {
             binding.apply {
-                ivInfoRecommend.setImageResource(item.imageUrl)
+                Glide.with(ivInfoRecommend.context)
+                    .load(item.imageUrl)
+                    .placeholder(R.drawable.app_logo)
+                    .centerCrop()
+                    .into(ivInfoRecommend)
                 tvInfoRecommendTitle.text = item.title
                 tvRecommendLocation.text = item.location
             }

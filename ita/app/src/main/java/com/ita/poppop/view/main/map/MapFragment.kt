@@ -85,9 +85,11 @@ class MapFragment: BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnMa
             mapRVAdapter.setMapItemClickListener(object : MapRVAdapter.MapItemClickListener{
                 override fun onItemClick(position: Int) {
                     //val popupId = 1
+                    val item = mapRVAdapter.currentList.getOrNull(position) ?: return
+                    val popupId = item.itemId
 
                     val parentNavController = requireActivity().findNavController(R.id.fcv_main_activity_container)
-                    val action = MainFragmentDirections.actionMainFragmentToNaviInfo()
+                    val action = MainFragmentDirections.actionMainFragmentToNaviInfo(popupId)
                     parentNavController.navigate(action)
                 }
             })

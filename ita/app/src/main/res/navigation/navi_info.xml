@@ -6,8 +6,13 @@
 
     <fragment
         android:id="@+id/infoFragment"
-        android:name="com.ita.poppop.view.main.home.InfoFragment"
+        android:name="com.ita.poppop.view.empty.info.InfoFragment"
         android:label="InfoFragment" >
+
+        <argument
+            android:name="popupId"
+            app:argType="integer" />
+
         <action
             android:id="@+id/action_infoFragment_to_infoReviewDetailFragment"
             app:destination="@id/infoReviewDetailFragment" />

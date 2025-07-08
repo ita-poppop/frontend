@@ -41,7 +41,12 @@
             app:destination="@id/navi_setting" />
         <action
             android:id="@+id/action_mainFragment_to_navi_info"
-            app:destination="@id/navi_info" />
+            app:destination="@id/navi_info">
+            <argument
+                android:name="popupId"
+                app:argType="integer" />
+        </action>
+
         <action
             android:id="@+id/action_mainFragment_to_navi_home_upcoming"
             app:destination="@id/navi_home_upcoming" />
