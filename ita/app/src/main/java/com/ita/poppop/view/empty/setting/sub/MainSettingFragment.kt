@@ -15,9 +15,9 @@ import com.ita.poppop.R
 import com.ita.poppop.data.remote.api.SignupRequest
 import com.ita.poppop.data.remote.repository.Member.MemberRepository
 import com.ita.poppop.data.remote.repository.Member.MemberRepositoryImpl
-import com.ita.poppop.util.RetrofitClient
 import com.ita.poppop.util.dialog.LogoutDialog
 import com.ita.poppop.util.dialog.WithdrawDialog
+import com.ita.poppop.util.remote.RetrofitClient
 import com.ita.poppop.view.empty.setting.SettingFragment
 import com.ita.poppop.viewmodel.MainAViewModel
 import kotlinx.coroutines.Dispatchers

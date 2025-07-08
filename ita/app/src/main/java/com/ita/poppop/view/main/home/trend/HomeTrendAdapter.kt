@@ -9,6 +9,7 @@ import com.ita.poppop.databinding.ItemHomeTrendLayoutBinding
 
 
 class HomeTrendAdapter(
+    private val onClick: (Int) -> Unit,
     private var items :  List<TrendData>,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     init {
@@ -19,6 +20,9 @@ class HomeTrendAdapter(
         private val binding: ItemHomeTrendLayoutBinding,
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item : TrendData) {
+            binding.root.setOnClickListener{
+                onClick(item.id)
+            }
             Glide.with(binding.root)
                 .load(item.imageUrl)
                 .centerCrop()

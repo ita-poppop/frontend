@@ -90,7 +90,13 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
                 if (result.isSuccessful) {
                     trendList = result.body()?.data!!
                     Log.d("checkDatata","trendList : ${trendList}")
-                    adapter = HomeTrendAdapter(trendList)
+                    adapter = HomeTrendAdapter(
+                        onClick = {itemId ->
+                            val parentNavController = requireActivity().findNavController(R.id.fcv_main_activity_container)
+                            val action = MainFragmentDirections.actionMainFragmentToNaviInfo(itemId)
+                            parentNavController.navigate(action)
+                        },trendList
+                    )
                     layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
                     addItemDecoration(HomeTrendItemDecoration())
                 }

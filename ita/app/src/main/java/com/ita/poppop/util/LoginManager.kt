@@ -19,6 +19,7 @@ import com.ita.poppop.R
 import com.ita.poppop.data.remote.api.SignupRequest
 import com.ita.poppop.data.remote.repository.Member.MemberRepository
 import com.ita.poppop.data.remote.repository.Member.MemberRepositoryImpl
+import com.ita.poppop.util.remote.RetrofitClient
 import com.kakao.sdk.user.UserApiClient
 import com.kakao.sdk.auth.AuthApiClient
 import com.kakao.sdk.auth.model.OAuthToken

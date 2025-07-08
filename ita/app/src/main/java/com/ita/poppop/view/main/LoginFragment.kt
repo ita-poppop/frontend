@@ -12,7 +12,7 @@ import com.ita.poppop.data.remote.repository.Member.MemberRepository
 import com.ita.poppop.data.remote.repository.Member.MemberRepositoryImpl
 import com.ita.poppop.databinding.FragmentLoginBinding
 import com.ita.poppop.util.LoginManager
-import com.ita.poppop.util.RetrofitClient
+import com.ita.poppop.util.remote.RetrofitClient
 import com.ita.poppop.viewmodel.MainAViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

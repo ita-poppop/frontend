@@ -1,8 +1,8 @@
 package com.ita.poppop.data.remote.repository.review
 
-import com.ita.poppop.data.remote.dto.GetReviewListResponse
-import com.ita.poppop.data.remote.dto.GetReviewResponse
 import com.ita.poppop.data.remote.dto.review.PostReviewResponse
+import com.ita.poppop.data.remote.dto.reviews.GetReviewListResponse
+import com.ita.poppop.data.remote.dto.reviews.GetReviewResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Response

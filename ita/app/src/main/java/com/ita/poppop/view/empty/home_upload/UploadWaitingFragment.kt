@@ -7,6 +7,7 @@ import android.widget.SeekBar
 import androidx.core.os.BundleCompat
 import androidx.databinding.adapters.SeekBarBindingAdapter.setOnSeekBarChangeListener
 import androidx.databinding.adapters.ViewBindingAdapter.setClickListener
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.setFragmentResult
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -25,6 +26,7 @@ import com.ita.poppop.util.remote.RetrofitClient
 import com.ita.poppop.view.empty.home_upload.sub.ImageItem
 import com.ita.poppop.view.empty.home_upload.sub.UploadImageAdapter
 import com.ita.poppop.view.empty.home_upload.sub.UploadImageItemDecoration
+import com.ita.poppop.viewmodel.MainAViewModel
 import com.ita.poppop.viewmodel.empty.upload.UploadViewModel
 import com.ita.poppop.viewmodel.empty.upload.UploadWaitingViewModel
 import kotlinx.coroutines.Dispatchers
@@ -37,6 +39,7 @@ import kotlin.math.absoluteValue
 class UploadWaitingFragment : BaseFragment<FragmentUploadWaitingBinding>(R.layout.fragment_upload_waiting) {
     private lateinit var uploadViewModel: UploadViewModel
     private lateinit var uploadWaitingViewModel: UploadWaitingViewModel
+    val mainAViewModel: MainAViewModel by activityViewModels()
     private val repository: StoryRepository = StoryRepositoryImpl(RetrofitClient.storyApi)
     private var uri : Uri? = null
 
@@ -121,7 +124,7 @@ class UploadWaitingFragment : BaseFragment<FragmentUploadWaitingBinding>(R.layou
                         Log.d("checkViewModelsid","uploadWaitingViewModel : ${uploadWaitingViewModel.createMultipartFromWaitingImage(requireContext())}")
 
                         repository.postUploadStory(
-                            "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiLspIDtmJXsnoQiLCJtZW1iZXJJZCI6MTEsInByb3ZpZGVySWQiOiJOQUJDYjZJRmtkTzVoQ0FTbTJ2OXN3UmprR2EyIiwibmlja05hbWUiOiLspIDtmJXsnoQiLCJlbWFpbCI6ImltMzQ5NDEyQGdtYWlsLmNvbSIsInByb2ZpbGVJbWFnZSI6Imh0dHBzOi8vbGgzLmdvb2dsZXVzZXJjb250ZW50LmNvbS9hL0FDZzhvY0tIZnZyaU5OMDd4cjQ4QTVUS2RFM3pQRHdrLTFjdGQzQVFPT2wwZFhGY1YzcnB0UT1zOTYtYyIsImlhdCI6MTc1MTk2NjY4NywiZXhwIjoxNzUxOTcwMjg3fQ.P0tRz87Y0jBvRIPYDNhDF9BCcw96GPxdbNuzci9tmOQ",
+                            mainAViewModel.tokenPair.value.first.toString(),
                             2310,
                             uploadWaitingViewModel.createMultipartFromWaitingImage(requireContext())!!,
                             0,
@@ -131,7 +134,7 @@ class UploadWaitingFragment : BaseFragment<FragmentUploadWaitingBinding>(R.layou
 
                     if (result.isSuccessful) {
                         Log.d("checkUploadData","result : ${result.body()}")
-
+                        handleBackNavigation()
                     }
                 } catch (e: HttpException) {
                     // HTTP 에러 상세 정보

@@ -10,9 +10,9 @@ import com.ita.poppop.data.remote.repository.Member.MemberRepository
 import com.ita.poppop.data.remote.repository.Member.MemberRepositoryImpl
 import com.ita.poppop.util.LoginManager
 import com.ita.poppop.util.LoginManager.User
-import com.ita.poppop.util.RetrofitClient
 import com.ita.poppop.util.TokenManager
 import com.ita.poppop.util.TokenUtils
+import com.ita.poppop.util.remote.RetrofitClient
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

@@ -6,8 +6,6 @@ import com.ita.poppop.base.BaseFragment
 import com.ita.poppop.databinding.FragmentMyReviewBinding
 import com.ita.poppop.view.empty.myreview.holder.MyReviewAdapter
 import com.ita.poppop.view.empty.myreview.holder.MyReviewItemDecoration
-import com.ita.poppop.view.main.home.trend.HomeTrendAdapter
-import com.ita.poppop.view.main.home.trend.HomeTrendItemDecoration
 
 
 class MyReviewFragment : BaseFragment<FragmentMyReviewBinding>(
