@@ -4,6 +4,7 @@ import com.ita.poppop.data.remote.api.CommentApi
 import com.ita.poppop.data.remote.api.PopupApi
 import com.ita.poppop.data.remote.api.ReviewApi
 import com.ita.poppop.data.remote.api.StoriesApi
+import com.ita.poppop.data.remote.api.StoryApi
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -72,6 +73,9 @@ object RetrofitClient {
     }
     val commentApi: CommentApi by lazy {
         retrofit.create(CommentApi::class.java)
+    }
+    val storyApi: StoryApi by lazy {
+        retrofit.create(StoryApi::class.java)
     }
     val storiesApi: StoriesApi by lazy {
         retrofit.create(StoriesApi::class.java)

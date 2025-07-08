@@ -117,7 +117,7 @@ class UploadReviewFragment : BaseFragment<FragmentUploadReviewBinding>(R.layout.
 
 
                         repository.postReview(
-                            "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiLsnoTspIDtmJUiLCJtZW1iZXJJZCI6NywicHJvdmlkZXJJZCI6InN0ZHpKdTlRNUdWRVFlNWZVVFpZdUYyQTRwazEiLCJuaWNrTmFtZSI6IuyehOykgO2YlSIsImVtYWlsIjoibGltanVuaHllbmdAZ21haWwuY29tIiwicHJvZmlsZUltYWdlIjoiaHR0cHM6Ly9saDMuZ29vZ2xldXNlcmNvbnRlbnQuY29tL2EvQUNnOG9jSlJnY0U1V25oWDNUUEU0NU1ZdjF3VFV6azhuNnVKWUFiT1BRVG9hZUFCY0NOT0hnPXM5Ni1jIiwiaWF0IjoxNzUxOTYwMzAyLCJleHAiOjE3NTE5NjM5MDJ9.0Lu5IAV0XQxSvdcKnZuO-72hiN0Emq0c6POO0-Qxg1U",
+                            "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiLspIDtmJXsnoQiLCJtZW1iZXJJZCI6MTEsInByb3ZpZGVySWQiOiJOQUJDYjZJRmtkTzVoQ0FTbTJ2OXN3UmprR2EyIiwibmlja05hbWUiOiLspIDtmJXsnoQiLCJlbWFpbCI6ImltMzQ5NDEyQGdtYWlsLmNvbSIsInByb2ZpbGVJbWFnZSI6Imh0dHBzOi8vbGgzLmdvb2dsZXVzZXJjb250ZW50LmNvbS9hL0FDZzhvY0tIZnZyaU5OMDd4cjQ4QTVUS2RFM3pQRHdrLTFjdGQzQVFPT2wwZFhGY1YzcnB0UT1zOTYtYyIsImlhdCI6MTc1MTk2NjY4NywiZXhwIjoxNzUxOTcwMjg3fQ.P0tRz87Y0jBvRIPYDNhDF9BCcw96GPxdbNuzci9tmOQ",
                             2310,
                             uploadViewModel.reviewContent.value.toString(),
                             uploadViewModel.createMultipartListFromUris(requireContext())

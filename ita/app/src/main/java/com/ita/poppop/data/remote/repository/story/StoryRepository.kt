@@ -8,8 +8,14 @@ import com.ita.poppop.data.remote.dto.story.GetStoryDetailResponse
 import com.ita.poppop.data.remote.dto.story.GetStoryResponse
 import com.ita.poppop.data.remote.dto.story.PostDeleteStoryResponse
 import com.ita.poppop.data.remote.dto.story.PostUploadStoryResponse
+import okhttp3.MultipartBody
 import retrofit2.Response
 import retrofit2.http.GET
+import retrofit2.http.Header
+import retrofit2.http.Multipart
+import retrofit2.http.POST
+import retrofit2.http.Part
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface StoryRepository {
@@ -20,13 +26,20 @@ interface StoryRepository {
         @Query("size") size: Int
     ): Response<GetStoryResponse>
 
-    @GET("/api/v1/popups/{popupId}/stories")
+
+    @Multipart
+    @POST("/api/v1/popups/{popupId}/stories")
     suspend fun postUploadStory(
-        @Query("popupId") popupId: Int
+        @Header("Authorization") accessToken: String,
+        @Path("popupId") popupId: Int,
+        @Part photo: MultipartBody.Part,
+        @Part("estimatedWaitTime") estimatedWaitTime: Int,
+        @Part("estimatedWaitCount") estimatedWaitCount: Int
     ): Response<PostUploadStoryResponse>
 
-    @GET("/api/v1/popups/{popupId}/stories/{storyId}/delete")
+    @POST("/api/v1/popups/{popupId}/stories/{storyId}/delete")
     suspend fun postDeleteStory(
+        @Header("Authorization") accessToken: String,
         @Query("popupId") popupId: Int,
         @Query("storyId") storyId: Int
     ): Response<PostDeleteStoryResponse>

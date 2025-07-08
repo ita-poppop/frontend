@@ -5,6 +5,7 @@ import com.ita.poppop.data.remote.dto.story.GetStoryDetailResponse
 import com.ita.poppop.data.remote.dto.story.GetStoryResponse
 import com.ita.poppop.data.remote.dto.story.PostDeleteStoryResponse
 import com.ita.poppop.data.remote.dto.story.PostUploadStoryResponse
+import okhttp3.MultipartBody
 import retrofit2.HttpException
 import retrofit2.Response
 
@@ -35,10 +36,14 @@ class StoryRepositoryImpl(
     }
 
     override suspend fun postUploadStory(
-        popupId: Int
+        accessToken: String,
+        popupId: Int,
+        images: MultipartBody.Part,
+        estimatedWaitTime: Int,
+        estimatedWaitCount: Int
     ): Response<PostUploadStoryResponse> {
         try {
-            val response = api.postUploadStory(popupId)
+            val response = api.postUploadStory("Bearer $accessToken",popupId,images,estimatedWaitTime,estimatedWaitCount)
 
             if (response.code() == 200) {
                 return response
@@ -54,11 +59,12 @@ class StoryRepositoryImpl(
     }
 
     override suspend fun postDeleteStory(
+        accessToken: String,
         popupId: Int,
         storyId: Int
     ): Response<PostDeleteStoryResponse> {
         try {
-            val response = api.postDeleteStory(popupId,storyId)
+            val response = api.postDeleteStory("Bearer $accessToken",popupId,storyId)
 
             if (response.code() == 200) {
                 return response

@@ -1,5 +1,6 @@
 package com.ita.poppop.viewmodel.empty.upload
 
+import android.content.Context
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
@@ -8,6 +9,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.map
 import com.ita.poppop.view.empty.home_upload.sub.ImageItem
 import com.ita.poppop.view.empty.home_upload.sub.UploadItem
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.asRequestBody
+import java.io.File
+import java.io.FileOutputStream
+import java.util.UUID
 
 
 class UploadWaitingViewModel: ViewModel() {
@@ -41,22 +49,45 @@ class UploadWaitingViewModel: ViewModel() {
         _popupItem.value = item
     }
 
+    fun createMultipartFromWaitingImage(context: Context): MultipartBody.Part? {
+        val uri = waitingImage.value?.uri ?: return null
 
+        return try {
+            val inputStream = context.contentResolver.openInputStream(uri) ?: return null
+            val tempFile = File.createTempFile("upload_", ".jpg", context.cacheDir)
+            FileOutputStream(tempFile).use { output ->
+                inputStream.copyTo(output)
+            }
+            inputStream.close()
+
+            val requestBody = tempFile
+                .asRequestBody("image/jpeg".toMediaTypeOrNull())
+
+            MultipartBody.Part.createFormData("photo", tempFile.name, requestBody) // ✅ 키 이름이 photo여야 함
+
+        } catch (e: Exception) {
+            Log.e("UploadViewModel", "Multipart 생성 실패: ${e.message}")
+            null
+        }
+    }
 
 
     private val _waitingCount = MutableLiveData<Int?>()
     val waitingCount: LiveData<Int?> get() = _waitingCount
 
     // 양방향 바인딩을 위한 setter 함수
-    fun setWaiting(count: Int?) {
+    fun setWaiting(count: Int?) {  
         _waitingCount.value = count
     }
 
 
     val isAllValid = MediatorLiveData<Boolean>().apply {
         val validator = {
+//            value = waitingImage.value != null &&
+//                    waitingCount.value  != null &&
+//                    !popupItem.value.isNullOrBlank()
             value = waitingImage.value != null &&
-                    waitingCount.value  != null &&
+                    true &&
                     !popupItem.value.isNullOrBlank()
         }
         addSource(waitingImage) { validator() }

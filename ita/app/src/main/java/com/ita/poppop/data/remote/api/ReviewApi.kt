@@ -31,7 +31,8 @@ interface ReviewApi {
         @Header("Authorization") accessToken: String,
         @Path("popupId") popupId: Int,
         @Part("content") content: String,
-        @Part images: List<MultipartBody.Part>
+        @Part photo: List<MultipartBody.Part>,
+
     ): Response<PostReviewResponse>
 
 
