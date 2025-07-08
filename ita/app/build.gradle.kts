@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.kotlin.kapt)
     //alias(libs.plugins.safeargs)
+    id("com.google.gms.google-services")
 
     id("androidx.navigation.safeargs.kotlin")
     id ("kotlin-parcelize")
@@ -89,5 +90,36 @@ dependencies {
     // 서버
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+
+    // 카카오 로그인
+    val kakaoSdkVersion = "2.21.4"
+
+    implementation("com.kakao.sdk:v2-all:${kakaoSdkVersion}") // 전체 모듈 설치, 2.11.0 버전부터 지원
+    implementation("com.kakao.sdk:v2-user:${kakaoSdkVersion}") // 카카오 로그인 API 모듈
+    implementation("com.kakao.sdk:v2-share:${kakaoSdkVersion}") // 카카오톡 공유 API 모듈
+    implementation("com.kakao.sdk:v2-talk:${kakaoSdkVersion}") // 카카오톡 채널, 카카오톡 소셜, 카카오톡 메시지 API 모듈
+    implementation("com.kakao.sdk:v2-friend:${kakaoSdkVersion}") // 피커 API 모듈
+    implementation("com.kakao.sdk:v2-navi:${kakaoSdkVersion}") // 카카오내비 API 모듈
+    implementation("com.kakao.sdk:v2-cert:${kakaoSdkVersion}") // 카카오톡 인증 서비스 API 모듈
+
+
+    //구글 로그인
+
+
+
+    // Also add the dependencies for the Credential Manager libraries and specify their versions
+    implementation("com.google.android.gms:play-services-auth:20.1.0")
+    implementation("androidx.credentials:credentials:1.3.0")
+    implementation("androidx.credentials:credentials-play-services-auth:1.3.0")
+    implementation("com.google.android.libraries.identity.googleid:googleid:1.1.1")
+
+    // 파이어베이스
+    implementation("com.google.firebase:firebase-analytics")
+    // Import the BoM for the Firebase platform
+    implementation(platform("com.google.firebase:firebase-bom:32.2.0"))
+
+    // Add the dependency for the Firebase Authentication library
+    // When using the BoM, you don't specify versions in Firebase library dependencies
+    implementation("com.google.firebase:firebase-auth")
 
 }
