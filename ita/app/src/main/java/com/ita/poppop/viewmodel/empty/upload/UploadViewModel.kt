@@ -1,5 +1,8 @@
 package com.ita.poppop.viewmodel.empty.upload
 
+import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.LiveData
@@ -10,6 +13,8 @@ import androidx.lifecycle.map
 import com.ita.poppop.data.remote.dto.popups.SearchData
 import com.ita.poppop.view.empty.home_upload.sub.ImageItem
 import com.ita.poppop.view.empty.home_upload.sub.UploadItem
+import java.io.File
+import java.io.FileOutputStream
 
 class UploadViewModel: ViewModel() {
     companion object {
@@ -32,8 +37,31 @@ class UploadViewModel: ViewModel() {
 
     val imageUri: List<String>
         get() = _imageList.value?.map { it.uri.toString() } ?: emptyList()
+    fun getImageUrisAsPngFilePaths(context: Context): List<String> {
+        return _imageList.value?.mapNotNull { imageItem ->
+            convertUriToPngFile(context, imageItem.uri)?.absolutePath
+        } ?: emptyList()
+    }
+    // 또는 파일로 저장하는 방법
+    private fun convertUriToPngFile(context: Context, uri: Uri): File? {
+        return try {
+            val inputStream = context.contentResolver.openInputStream(uri)
+            val bitmap = BitmapFactory.decodeStream(inputStream)
 
+            // 임시 파일 생성
+            val file = File(context.cacheDir, "temp_${System.currentTimeMillis()}.png")
+            val outputStream = FileOutputStream(file)
 
+            // PNG 형식으로 저장
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
+            outputStream.close()
+
+            file
+        } catch (e: Exception) {
+            Log.e("UploadViewModel", "PNG 파일 변환 실패: ${e.message}")
+            null
+        }
+    }
     fun addItem(item: ImageItem) {
         val currentList = _imageList.value?.toMutableList() ?: mutableListOf()
         if (currentList.size < MAX_IMAGE_COUNT) {
@@ -106,8 +134,11 @@ class UploadViewModel: ViewModel() {
 
     val isAllValid = MediatorLiveData<Boolean>().apply {
         val validator = {
+//            value = !imageList.value.isNullOrEmpty() &&
+//                    popupItem.value != null &&
+//                    !reviewContent.value.isNullOrBlank()
             value = !imageList.value.isNullOrEmpty() &&
-                    popupItem.value != null &&
+                    true &&
                     !reviewContent.value.isNullOrBlank()
         }
         addSource(imageList) { validator() }

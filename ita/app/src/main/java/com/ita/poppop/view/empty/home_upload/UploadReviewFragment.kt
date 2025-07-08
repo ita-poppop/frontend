@@ -117,12 +117,12 @@ class UploadReviewFragment : BaseFragment<FragmentUploadReviewBinding>(R.layout.
                     val result = withContext(Dispatchers.IO) {
                         val postReviewRequest = PostReviewRequest(
                             uploadViewModel.reviewContent.value.toString(),
-                            uploadViewModel.imageUri
+                            uploadViewModel.getImageUrisAsPngFilePaths(requireContext())
                         )
 
                         repository.postReview(
-                            "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiLsnoTspIDtmJUiLCJtZW1iZXJJZCI6NywicHJvdmlkZXJJZCI6InN0ZHpKdTlRNUdWRVFlNWZVVFpZdUYyQTRwazEiLCJuaWNrTmFtZSI6IuyehOykgO2YlSIsImVtYWlsIjoibGltanVuaHllbmdAZ21haWwuY29tIiwicHJvZmlsZUltYWdlIjoiaHR0cHM6Ly9saDMuZ29vZ2xldXNlcmNvbnRlbnQuY29tL2EvQUNnOG9jSlJnY0U1V25oWDNUUEU0NU1ZdjF3VFV6azhuNnVKWUFiT1BRVG9hZUFCY0NOT0hnPXM5Ni1jIiwiaWF0IjoxNzUxOTM5MDg4LCJleHAiOjE3NTE5NDI2ODh9.dCrTaAT8_B3lafZc4fOp804YbASztgASOtQ8vPRSc28",
-                            mainViewModel.selectItem.value?.id!!,
+                            "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiLsnoTspIDtmJUiLCJtZW1iZXJJZCI6NywicHJvdmlkZXJJZCI6InN0ZHpKdTlRNUdWRVFlNWZVVFpZdUYyQTRwazEiLCJuaWNrTmFtZSI6IuyehOykgO2YlSIsImVtYWlsIjoibGltanVuaHllbmdAZ21haWwuY29tIiwicHJvZmlsZUltYWdlIjoiaHR0cHM6Ly9saDMuZ29vZ2xldXNlcmNvbnRlbnQuY29tL2EvQUNnOG9jSlJnY0U1V25oWDNUUEU0NU1ZdjF3VFV6azhuNnVKWUFiT1BRVG9hZUFCY0NOT0hnPXM5Ni1jIiwiaWF0IjoxNzUxOTYwMzAyLCJleHAiOjE3NTE5NjM5MDJ9.0Lu5IAV0XQxSvdcKnZuO-72hiN0Emq0c6POO0-Qxg1U",
+                            2310,
                             postReviewRequest
                         )
                     }

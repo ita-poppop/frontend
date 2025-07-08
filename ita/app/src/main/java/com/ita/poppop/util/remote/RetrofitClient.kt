@@ -44,7 +44,7 @@ import java.util.concurrent.TimeUnit
 //}
 
 object RetrofitClient {
-    private const val BASE_URL = "http://43.200.189.197:8080/"
+    private const val BASE_URL = "https://poppop.site/"
 
     private val retrofit: Retrofit by lazy {
         val logging = HttpLoggingInterceptor().apply {
