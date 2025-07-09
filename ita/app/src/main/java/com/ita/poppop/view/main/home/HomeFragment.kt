@@ -5,6 +5,7 @@ import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavDirections
 import androidx.navigation.findNavController
@@ -32,6 +33,7 @@ import com.ita.poppop.view.main.home.upcoming.HomeUpcomingAdapter
 import com.ita.poppop.view.main.home.upcoming.HomeUpcomingItemDecoration
 import com.ita.poppop.view.main.home.waiting.HomeWaitingAdapter
 import com.ita.poppop.view.main.home.waiting.HomeWaitingItemDecoration
+import com.ita.poppop.viewmodel.MainAViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -42,7 +44,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
     private lateinit var fabOpen: Animation
     private lateinit var fabClose: Animation
     private lateinit var dimManager: DimManager
-
+    val mainViewModel: MainAViewModel by activityViewModels()
 
     private val repository: PopupsRepository = PopupsRepositoryImpl(RetrofitClient.popupApi)
     private val repository2: StoriesRepository = StoriesRepositoryImpl(RetrofitClient.storiesApi)
@@ -154,7 +156,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
         lifecycleScope.launch {
             try {
                 val result = withContext(Dispatchers.IO) {
-                    repository2.getStories(1, 4)
+                    repository2.getStories(mainViewModel.tokenPair.value.first.toString(),1, 10)
                 }
 
                 if (result.isSuccessful) {
@@ -173,7 +175,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
             }
             adapter = HomeWaitingAdapter(
                 onclick = { position ->
-                    navigateTo(MainFragmentDirections.actionMainFragmentToNaviHomeStory())
+                    navigateTo(MainFragmentDirections.actionMainFragmentToNaviHomeStory(position))
                 },waitingList)
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
             addItemDecoration(HomeWaitingItemDecoration(context,waitingList))

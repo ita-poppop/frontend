@@ -8,11 +8,15 @@ import retrofit2.Response
 class StoriesRepositoryImpl(
     private val api: StoriesApi
 ) : StoriesRepository {
+
+
     override suspend fun getStories(
-        page: Int, size: Int
+        accessToken: String,
+        page: Int,
+        size: Int
     ): Response<GetStoriesResponse> {
         try {
-            val response = api.getStories(page, size)
+            val response = api.getStories("Bearer $accessToken",page, size)
 
             if (response.code() == 200) {
                 return response

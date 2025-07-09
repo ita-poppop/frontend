@@ -32,7 +32,12 @@
             android:id="@+id/action_mainFragment_to_navi_home_story"
             app:destination="@id/navi_home_story"
             app:enterAnim="@anim/slide_in"
-            app:popExitAnim="@anim/slide_out" />
+            app:popExitAnim="@anim/slide_out" >
+            <argument
+                android:name="reviewId"
+                app:argType="integer" />
+
+        </action>
         <action
             android:id="@+id/action_mainFragment_to_navi_profile_edit"
             app:destination="@id/navi_profile_edit" />

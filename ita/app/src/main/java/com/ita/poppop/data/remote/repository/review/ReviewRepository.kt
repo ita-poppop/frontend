@@ -1,8 +1,12 @@
 package com.ita.poppop.data.remote.repository.review
 
+import com.ita.poppop.data.remote.api.EditRequest
 import com.ita.poppop.data.remote.dto.review.PostReviewResponse
 import com.ita.poppop.data.remote.dto.reviews.GetReviewListResponse
 import com.ita.poppop.data.remote.dto.reviews.GetReviewResponse
+import com.ita.poppop.data.remote.dto.reviews.PostDeleteReviewResponse
+import com.ita.poppop.data.remote.dto.reviews.PostEditReviewResponse
+import com.ita.poppop.data.remote.dto.reviews.PostReviewLikesResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Response
@@ -32,9 +36,29 @@ interface ReviewRepository {
         @Part images: List<MultipartBody.Part>
     ): Response<PostReviewResponse>
 
+    @POST("/api/v1/popups/{popupId}/reviews/{reviewId}/patch")
+    suspend fun postEditReview(
+        @Header("Authorization") accessToken: String,
+        @Path("reviewId") reviewId: Int,
+        @Body editRequest: EditRequest
+
+    ): Response<PostEditReviewResponse>
+
+    @POST("/api/v1/popups/{popupId}/reviews/{reviewId}/delete")
+    suspend fun postDeleteReview(
+        @Header("Authorization") accessToken: String,
+        @Path("reviewId") reviewId: Int,
+    ): Response<PostDeleteReviewResponse>
+
     @GET("/api/v1/popups/{popupId}/reviews/{reviewId}")
     suspend fun getReview(
         @Path("popupId") popupId: Int,
         @Path("reviewId") reviewId: Int,
     ): Response<GetReviewResponse>
+
+    @POST("/api/v1/popups/{popupId}/reviews/{reviewId}/likes/toggle")
+    suspend fun postReviewLikes(
+        @Header("Authorization") accessToken: String,
+        @Path("reviewId") reviewId: Int
+    ): Response<PostReviewLikesResponse>
 }
