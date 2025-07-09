@@ -76,7 +76,9 @@ class InfoReviewDetailFragment : BaseFragment<FragmentInfoReviewDetailBinding>(R
             reviewHeartClicked()
 
             ivReviewDetailHeart.setOnClickListener {
-                infoReviewDetailViewModel.clickHeart()
+                val accessToken = mainViewModel.tokenPair.value.first.toString()
+                val reviewId = infoReviewDetailArgs.review.itemId
+                infoReviewDetailViewModel.postReviewLikes(accessToken, reviewId)
             }
 
             ivInfoReviewDetailDot.setOnClickListener {

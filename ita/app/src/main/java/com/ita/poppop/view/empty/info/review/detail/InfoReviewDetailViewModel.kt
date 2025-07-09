@@ -33,15 +33,31 @@ class InfoReviewDetailViewModel(
         }
     }
 
-    fun clickHeart() {
-        val currentClicked = _isHeartClicked.value ?: false
-        val currentCount = _heartCount.value ?: 0
-        if (currentClicked) {
-            _heartCount.value = currentCount - 1
-            _isHeartClicked.value = false
-        } else {
-            _heartCount.value = currentCount + 1
-            _isHeartClicked.value = true
+    fun postReviewLikes(accessToken: String, reviewId: Int) {
+        viewModelScope.launch {
+            try {
+                val response = withContext(Dispatchers.IO) {
+                    repository.postReviewLikes(accessToken, reviewId)
+                }
+                if (response.isSuccessful) {
+                    response.body()?.let { responseBody ->
+                        val updatedReview = responseBody.data
+
+                        val oldCount = _heartCount.value ?: updatedReview.likeCount
+                        val newCount = updatedReview.likeCount
+
+                        val isNewLiked = newCount > oldCount
+                        _heartCount.value = newCount
+                        _isHeartClicked.value = isNewLiked
+
+                        Log.d("ReviewLike_SUCCESS", "Likes: ${updatedReview.likeCount}, Liked: $isNewLiked")
+                    }
+                } else {
+                    Log.e("ReviewLike_ERROR", "API error: ${response.message()} (${response.code()})")
+                }
+            } catch (e: Exception) {
+                Log.e("ReviewLike_ERROR", "Exception: ${e.message}", e)
+            }
         }
     }
 
@@ -56,6 +72,12 @@ class InfoReviewDetailViewModel(
                         val data: ReviewData = responseBody.data
                         val result = reviewDtoToAdapterItem(data)
                         _inforeviewdetailList.value = result
+
+                        /*firstHeartCount(
+                            count = data.likeCount,
+                            clicked = data.isLiked
+                        )*/
+
                         Log.d("ReviewDetailApi_SUCCESS", "Review: $result")
                     }
                 } else {
