@@ -2,21 +2,16 @@ package com.ita.poppop.util
 
 
 import android.content.Context
-import android.net.wifi.hotspot2.pps.Credential
 import android.util.Log
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.credentials.CredentialManager
 import androidx.credentials.CustomCredential
 import androidx.credentials.GetCredentialRequest
 import androidx.credentials.exceptions.GetCredentialException
-import androidx.lifecycle.lifecycleScope
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
-import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential.Companion.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.ita.poppop.R
-import com.ita.poppop.data.remote.api.SignupRequest
 import com.ita.poppop.data.remote.repository.Member.MemberRepository
 import com.ita.poppop.data.remote.repository.Member.MemberRepositoryImpl
 import com.ita.poppop.util.remote.RetrofitClient
@@ -29,8 +24,6 @@ import com.kakao.sdk.common.model.KakaoSdkError
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import retrofit2.HttpException
 
 /**
  * 카카오 로그인과 구글 로그인 상태를 통합적으로 관리하는 클래스
@@ -39,7 +32,6 @@ class LoginManager(
 ) {
     private lateinit var credentialManager: CredentialManager
     private lateinit var auth: FirebaseAuth
-    private val repository: MemberRepository = MemberRepositoryImpl(RetrofitClient.memberApi)
     init {
         auth = FirebaseAuth.getInstance()
     }
@@ -63,16 +55,20 @@ class LoginManager(
         fun onResult(isLoggedIn: User?)
     }
     fun signInWithKakao(callback: SignInStatusCallback,context: Context){
-        val callback: (OAuthToken?, Throwable?) -> Unit = { token, error ->
+
+        val kakaoCallback: (OAuthToken?, Throwable?) -> Unit = { token, error ->
             if (error != null) {
+                Log.d("checkLogin","11111111")
                 callback.onResult(null)
             } else if (token != null) {
                 getKakaoUserInfo { user ->
                     if (user != null) {
                         // 사용자 정보 사용
+                        Log.d("checkLogin","2222222")
                         callback.onResult(user)
                     } else {
                         // 에러 처리
+                        Log.d("checkLogin","3333333")
                         callback.onResult(null)
                     }
                 }
@@ -89,13 +85,23 @@ class LoginManager(
                         return@loginWithKakaoTalk
                     }
                     // 카카오톡에 연결된 카카오계정이 없는 경우, 카카오계정으로 로그인 시도
-                    UserApiClient.instance.loginWithKakaoAccount(context, callback = callback)
+                    UserApiClient.instance.loginWithKakaoAccount(context, callback = kakaoCallback)
                 } else if (token != null) {
-//                    Log.i(TAG, "카카오톡으로 로그인 성공 ${token.accessToken}")
+                    getKakaoUserInfo { user ->
+                        if (user != null) {
+                            // 사용자 정보 사용
+                            Log.d("checkLogin","2222222")
+                            callback.onResult(user)
+                        } else {
+                            // 에러 처리
+                            Log.d("checkLogin","3333333")
+                            callback.onResult(null)
+                        }
+                    }
                 }
             }
         } else {
-            UserApiClient.instance.loginWithKakaoAccount(context, callback = callback)
+            UserApiClient.instance.loginWithKakaoAccount(context, callback = kakaoCallback)
         }
     }
 
