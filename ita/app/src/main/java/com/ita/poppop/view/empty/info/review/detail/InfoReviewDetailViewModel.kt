@@ -61,11 +61,11 @@ class InfoReviewDetailViewModel(
         }
     }
 
-    fun getInfoReviewDetail(reviewId: Int) {
+    fun getInfoReviewDetail(popupId: Int, reviewId: Int) {
         viewModelScope.launch {
             try {
                 val response = withContext(Dispatchers.IO) {
-                    repository.getReview(1325, reviewId)
+                    repository.getReview(popupId, reviewId)
                 }
                 if (response.isSuccessful) {
                     response.body()?.let { responseBody ->

@@ -45,7 +45,7 @@ class InfoFragment: BaseFragment<FragmentInfoBinding>(R.layout.fragment_info) {
         setupWindowInsets()
         binding.apply {
 
-
+            val popupId = args.popupId
 
             // 상단 제목 상태 제어
             svInfo.setOnScrollChangeListener { _, _, scrollY, _, oldScrollY ->
@@ -76,7 +76,7 @@ class InfoFragment: BaseFragment<FragmentInfoBinding>(R.layout.fragment_info) {
 
             acbUploadReview.setOnClickListener{
                 val parentNavController = requireParentFragment().findNavController()
-                val action = InfoFragmentDirections.actionInfoFragmentToUploadFragment()
+                val action = InfoFragmentDirections.actionInfoFragmentToUploadFragment(popupId)
                 parentNavController.navigate(action)
             }
 
@@ -87,7 +87,6 @@ class InfoFragment: BaseFragment<FragmentInfoBinding>(R.layout.fragment_info) {
             val factory = ViewModelFactory { InfoViewModel(mainViewModel.tokenPair.value.first.toString(),repository) }
             infoViewModel = ViewModelProvider(this@InfoFragment, factory)[InfoViewModel::class.java]
 
-            val popupId = args.popupId
             Log.d("InfoFragment", "Received popupId from args: $popupId")
             infoViewHolder = InfoViewHolder(binding)
 

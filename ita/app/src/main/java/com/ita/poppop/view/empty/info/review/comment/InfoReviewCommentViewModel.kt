@@ -10,9 +10,7 @@ import com.ita.poppop.data.remote.dto.comments.CommentListData
 import com.ita.poppop.data.remote.dto.comments.PostCommentRequest
 import com.ita.poppop.data.remote.repository.popup.CommentRepository
 import com.ita.poppop.util.ConvertTimeUtil
-import com.ita.poppop.view.empty.info.review.detail.InfoReviewDetailViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -129,7 +127,9 @@ class InfoReviewCommentViewModel(
             username = data.writerName,
             time = convertTimeUtil,
             reply = data.children.size,
-            content = data.content
+            content = data.content,
+            isMine = false
+
         )
     }
 
@@ -143,7 +143,8 @@ class InfoReviewCommentViewModel(
             username = data.writerName,
             time = convertTimeUtil,
             reply = data.replyCount,
-            content = data.content
+            content = data.content,
+            isMine = false
         )
     }
 

@@ -153,7 +153,8 @@ class InfoReviewDetailReplyViewModel(
             username = data.writerName,
             time = convertTimeUtil,
             content = data.content,
-            reply = data.children.size
+            reply = data.children.size,
+            isMine = false
         )
     }
 }

@@ -10,6 +10,8 @@ data class InfoReviewCommentRVItem(
     var username: String,
     var time: String,
     var content: String,
-    var reply: Int?
+    var reply: Int?,
+    val writerId: String? = null,
+    var isMine: Boolean
 ) : Parcelable
 

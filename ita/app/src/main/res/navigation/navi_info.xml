@@ -15,7 +15,11 @@
 
         <action
             android:id="@+id/action_infoFragment_to_infoReviewDetailFragment"
-            app:destination="@id/infoReviewDetailFragment" />
+            app:destination="@id/infoReviewDetailFragment">
+            <argument
+                android:name="popupId"
+                app:argType="integer"/>
+        </action>
         <action
             android:id="@+id/action_infoFragment_to_uploadFragment"
             app:destination="@id/uploadFragment" />
@@ -25,6 +29,9 @@
         android:id="@+id/infoReviewDetailFragment"
         android:name="com.ita.poppop.view.empty.info.review.detail.InfoReviewDetailFragment"
         android:label="InfoReviewDetailFragment">
+        <argument
+            android:name="popupId"
+            app:argType="integer"/>
         <argument
             android:name="review"
             app:argType="com.ita.poppop.view.empty.info.review.InfoReviewRVItem" />
@@ -50,7 +57,11 @@
     <fragment
         android:id="@+id/uploadFragment"
         android:name="com.ita.poppop.view.empty.upload.UploadFragment"
-        android:label="UploadFragment" />
+        android:label="UploadFragment" >
+        <argument
+            android:name="popupId"
+            app:argType="integer"/>
+    </fragment>
     <fragment
         android:id="@+id/infoReviewEditFragment"
         android:name="com.ita.poppop.view.empty.info.review.edit.InfoReviewEditFragment"

@@ -19,11 +19,11 @@ class InfoReviewViewModel(
     private val _inforeviewList = MutableLiveData<MutableList<InfoReviewRVItem>>()
     val inforeviewList: LiveData<MutableList<InfoReviewRVItem>> = _inforeviewList
 
-    fun getInfoReview() {
+    fun getInfoReview(popupId: Int) {
         viewModelScope.launch {
             try {
                 val response = withContext(Dispatchers.IO) {
-                    repository.getReviewList(1325, 1, 20)
+                    repository.getReviewList(popupId, 1, 20)
                 }
                 if (response.isSuccessful) {
                     response.body()?.let { body ->

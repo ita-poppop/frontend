@@ -7,7 +7,7 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 data class InfoReviewRVItem(
     var itemId: Int,
-    var profileImage: String,
+    var profileImage: String?,
     var username: String,
     var time: String,
     var reviewImage: List<InfoReviewImageRVItem>,

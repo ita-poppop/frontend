@@ -22,6 +22,9 @@ class InfoReviewFragment: BaseFragment<FragmentInfoReviewBinding>(R.layout.fragm
 
     override fun initView() {
         binding.apply {
+
+            val popupId = arguments?.getInt("popupId") ?: 0
+
             //infoReviewViewModel = ViewModelProvider(this@InfoReviewFragment).get(InfoReviewViewModel::class.java)
             val repository = ReviewRepositoryImpl(RetrofitClient.reviewApi)
             val factory = ViewModelFactory { InfoReviewViewModel(repository) }
@@ -29,7 +32,7 @@ class InfoReviewFragment: BaseFragment<FragmentInfoReviewBinding>(R.layout.fragm
 
             // 리뷰
             rvInfoReview.apply {
-                infoReviewViewModel.getInfoReview()
+                infoReviewViewModel.getInfoReview(popupId)
 
                 val layoutmanager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
                 layoutManager = layoutmanager
@@ -44,14 +47,18 @@ class InfoReviewFragment: BaseFragment<FragmentInfoReviewBinding>(R.layout.fragm
                 }
             }
 
-            infoReviewViewModel.getInfoReview()
+            infoReviewViewModel.getInfoReview(popupId)
 
             infoReviewRVAdapter.setInfoReviewItemClickListener(object : InfoReviewRVAdapter.InfoReviewItemClickListener{
                 override fun onItemClick(position: Int) {
+                    val popupId = arguments?.getInt("popupId") ?: 0
                     // 선택된 리뷰 객체 전달
                     val selectedReview = infoReviewRVAdapter.currentList[position]
                     val parentNavController = requireParentFragment().findNavController()
-                    val action = InfoFragmentDirections.actionInfoFragmentToInfoReviewDetailFragment(selectedReview)
+                    val action = InfoFragmentDirections.actionInfoFragmentToInfoReviewDetailFragment(
+                        popupId = popupId,
+                        review = selectedReview
+                    )
                     parentNavController.navigate(action)
 
                 }

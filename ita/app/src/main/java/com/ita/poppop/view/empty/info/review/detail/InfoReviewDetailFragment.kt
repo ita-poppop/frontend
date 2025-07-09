@@ -17,6 +17,7 @@ import com.ita.poppop.util.ViewModelFactory
 import com.ita.poppop.util.remote.RetrofitClient
 import com.ita.poppop.view.empty.info.review.comment.InfoReviewCommentDeleteBottomSheet
 import com.ita.poppop.view.empty.info.review.comment.InfoReviewCommentRVAdapter
+import com.ita.poppop.view.empty.info.review.comment.InfoReviewCommentReportBottomSheet
 import com.ita.poppop.view.empty.info.review.comment.InfoReviewCommentViewModel
 import com.ita.poppop.view.empty.info.review.image.InfoReviewImageRVAdapter
 import com.ita.poppop.viewmodel.MainAViewModel
@@ -59,9 +60,9 @@ class InfoReviewDetailFragment : BaseFragment<FragmentInfoReviewDetailBinding>(R
             val reviewFactory = ViewModelFactory { InfoReviewDetailViewModel(reviewRepository) }
             infoReviewDetailViewModel = ViewModelProvider(this@InfoReviewDetailFragment, reviewFactory)[InfoReviewDetailViewModel::class.java]
             infoReviewDetailViewHolder = InfoReviewDetailViewHolder(binding, infoReviewImageRVAdapter)
-
+            val popupId = infoReviewDetailArgs.popupId
             // 리뷰 상세 요청
-            infoReviewDetailViewModel.getInfoReviewDetail(infoReviewDetailArgs.review.itemId)
+            infoReviewDetailViewModel.getInfoReviewDetail(popupId,infoReviewDetailArgs.review.itemId)
 
             // 이미지 리사이클러뷰 설정
             rvReviewDetailImage.apply {
@@ -91,7 +92,12 @@ class InfoReviewDetailFragment : BaseFragment<FragmentInfoReviewDetailBinding>(R
             infoReviewCommentViewModel = ViewModelProvider(this@InfoReviewDetailFragment, commentFactory)[InfoReviewCommentViewModel::class.java]
             infoReviewCommentViewModel.getInfoReviewCommentList(infoReviewDetailArgs.review.itemId)
             infoReviewCommentViewModel.inforeviewcommentList.observe(viewLifecycleOwner) { commentList ->
-                infoReviewCommentRVAdapter.submitList(commentList)
+                val currentUserId = getUserIdFromToken()
+                val updatedList = commentList.map { comment ->
+                    comment.apply { isMine = (writerId == currentUserId) }
+                }
+                infoReviewCommentRVAdapter.submitList(updatedList)
+                //infoReviewCommentRVAdapter.submitList(commentList)
             }
             rvReviewComment.apply {
                 val layoutmanager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
@@ -106,7 +112,7 @@ class InfoReviewDetailFragment : BaseFragment<FragmentInfoReviewDetailBinding>(R
                 val content = editUploadComment.text.toString().trim()
                 if (content.isNotEmpty()) {
                     infoReviewCommentViewModel.postComment(infoReviewDetailArgs.review.itemId, content){
-                        infoReviewDetailViewModel.getInfoReviewDetail(infoReviewDetailArgs.review.itemId)
+                        infoReviewDetailViewModel.getInfoReviewDetail(popupId,infoReviewDetailArgs.review.itemId)
                     }
                     infoReviewCommentViewModel.getInfoReviewCommentList(infoReviewDetailArgs.review.itemId)
 
@@ -133,22 +139,46 @@ class InfoReviewDetailFragment : BaseFragment<FragmentInfoReviewDetailBinding>(R
                 }
                 // 댓글 점 클릭 시
                 override fun onDotClick(position: Int) {
-                    val item = infoReviewCommentRVAdapter.currentList.getOrNull(position)
-                    if (item == null) {
-                        return
-                    }
-                    InfoReviewCommentDeleteBottomSheet(
-                        commentItemId = item.itemId,
-                        onDeleteConfirmed = { deleteItemId ->
-                            infoReviewCommentViewModel.deleteComment(deleteItemId){
-                                infoReviewDetailViewModel.getInfoReviewDetail(infoReviewDetailArgs.review.itemId)
+                    val item = infoReviewCommentRVAdapter.currentList.getOrNull(position) ?: return
+
+                    if (item.isMine == false) {
+                        InfoReviewCommentDeleteBottomSheet(
+                            commentItemId = item.itemId,
+                            onDeleteConfirmed = { deleteItemId ->
+                                infoReviewCommentViewModel.deleteComment(deleteItemId) {
+                                    infoReviewDetailViewModel.getInfoReviewDetail(
+                                        popupId,
+                                        infoReviewDetailArgs.review.itemId
+                                    )
+                                }
                             }
-                        }
-                    ).show(parentFragmentManager, "delete comment")
+                        ).show(parentFragmentManager, "delete comment")
+                    } else {
+                        InfoReviewCommentReportBottomSheet(
+                            commentItemId = item.itemId,
+                            onReportConfirmed = { reportedId ->
+                                // 신고 후 처리 (토스트 등)
+                            }
+                        ).show(parentFragmentManager, "report comment")
+                    }
                 }
             })
 
             handleCommentUploadArea()
+        }
+    }
+
+    private fun getUserIdFromToken(): String? {
+        val token = mainViewModel.tokenPair.value.first ?: return null
+        val parts = token.split(".")
+        if (parts.size < 2) return null
+        return try {
+            val payloadJson = String(android.util.Base64.decode(parts[1], android.util.Base64.DEFAULT))
+            //val payloadJson = String(android.util.Base64.decode(parts[1], android.util.Base64.URL_SAFE))
+            val jsonObj = org.json.JSONObject(payloadJson)
+            jsonObj.getString("sub")  // 토큰 payload에 userId가 "sub"에 있다고 가정
+        } catch (e: Exception) {
+            null
         }
     }
 
