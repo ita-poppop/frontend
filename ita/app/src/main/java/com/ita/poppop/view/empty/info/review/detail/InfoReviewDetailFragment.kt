@@ -1,6 +1,7 @@
 package com.ita.poppop.view.empty.info.review.detail
 
 import android.graphics.Rect
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -39,6 +40,8 @@ class InfoReviewDetailFragment : BaseFragment<FragmentInfoReviewDetailBinding>(R
 
     override fun initView() {
         setupWindowInsets()
+        setupBackPressedCallback()
+
         binding.apply {
 
             ivReviewDetailBack.setOnClickListener {
@@ -100,7 +103,9 @@ class InfoReviewDetailFragment : BaseFragment<FragmentInfoReviewDetailBinding>(R
             tvUploadComment.setOnClickListener {
                 val content = editUploadComment.text.toString().trim()
                 if (content.isNotEmpty()) {
-                    infoReviewCommentViewModel.postComment(infoReviewDetailArgs.review.itemId, content)
+                    infoReviewCommentViewModel.postComment(infoReviewDetailArgs.review.itemId, content){
+                        infoReviewDetailViewModel.getInfoReviewDetail(infoReviewDetailArgs.review.itemId)
+                    }
                     infoReviewCommentViewModel.getInfoReviewCommentList(infoReviewDetailArgs.review.itemId)
 
                     editUploadComment.text?.clear()
@@ -128,7 +133,9 @@ class InfoReviewDetailFragment : BaseFragment<FragmentInfoReviewDetailBinding>(R
                     InfoReviewCommentDeleteBottomSheet(
                         commentItemId = item.itemId,
                         onDeleteConfirmed = { deleteItemId ->
-                            infoReviewCommentViewModel.deleteComment(deleteItemId)
+                            infoReviewCommentViewModel.deleteComment(deleteItemId){
+                                infoReviewDetailViewModel.getInfoReviewDetail(infoReviewDetailArgs.review.itemId)
+                            }
                         }
                     ).show(parentFragmentManager, "delete comment")
                 }
@@ -156,6 +163,18 @@ class InfoReviewDetailFragment : BaseFragment<FragmentInfoReviewDetailBinding>(R
                 }
             }
         }
+    }
+
+    private fun setupBackPressedCallback() {
+        val callback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                findNavController().previousBackStackEntry
+                    ?.savedStateHandle
+                    ?.set("reviewTab", 1)
+                findNavController().popBackStack()
+            }
+        }
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
     }
 
     // 댓글 게시 입력창 위치 조정

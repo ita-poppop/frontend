@@ -26,7 +26,7 @@ InfoReviewDiffutillCallback()
         infoReviewItemClickListener = itemClickListener
     }
 
-    class InfoReviewViewHolder(val binding: ItemInfoReviewBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class InfoReviewViewHolder(val binding: ItemInfoReviewBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: InfoReviewRVItem) {
             binding.apply {
                 Glide.with(ivReviewProfile.context)
@@ -54,6 +54,13 @@ InfoReviewDiffutillCallback()
                         layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
                         adapter = imgAdapter
                     }
+
+                    // 이미지 클릭 리스너 연결
+                    imgAdapter.setInfoReviewImageItemClickListener(object : InfoReviewImageRVAdapter.InfoReviewImageItemClickListener {
+                        override fun onItemClick(position: Int) {
+                            infoReviewItemClickListener.onItemClick(bindingAdapterPosition)
+                        }
+                    })
                 }
             }
         }

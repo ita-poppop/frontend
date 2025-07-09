@@ -10,7 +10,9 @@ import com.ita.poppop.data.remote.dto.comments.CommentListData
 import com.ita.poppop.data.remote.dto.comments.PostCommentRequest
 import com.ita.poppop.data.remote.repository.popup.CommentRepository
 import com.ita.poppop.util.ConvertTimeUtil
+import com.ita.poppop.view.empty.info.review.detail.InfoReviewDetailViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -22,11 +24,11 @@ class InfoReviewCommentViewModel(
     val inforeviewcommentList: LiveData<MutableList<InfoReviewCommentRVItem>> = _inforeviewcommentList
 
     // 리뷰 상세 화면에서 댓글 추가
-    fun postComment(reviewId: Int, content: String) {
+    fun postComment(reviewId: Int, content: String, parentId: Int? = null, onSuccess: (() -> Unit)? = null) {
         viewModelScope.launch {
             try {
                 val response = withContext(Dispatchers.IO) {
-                    val request = PostCommentRequest(content, parentId = 0)
+                    val request = PostCommentRequest(content, parentId)
                     repository.postComment(accessToken, reviewId, request)
                 }
                 if (response.isSuccessful) {
@@ -35,9 +37,12 @@ class InfoReviewCommentViewModel(
                         val currentList = _inforeviewcommentList.value ?: mutableListOf()
                         val updatedList = currentList.toMutableList()
                         updatedList.add(newComment)
-                        _inforeviewcommentList.value = updatedList
+                        _inforeviewcommentList.postValue(updatedList)
+
                         Log.d("CommentApi_SUCCESS1", "comment: $updatedList")
                     }
+                    getInfoReviewCommentList(reviewId)
+                    onSuccess?.invoke()
                 } else {
                     Log.e("CommentApi_ERROR1", "API error: ${response.message()} (${response.code()})")
                 }
@@ -63,7 +68,7 @@ class InfoReviewCommentViewModel(
     }
     
     // 리뷰 상세 화면에서 댓글 삭제
-    fun deleteComment(commentId: Int) {
+    fun deleteComment(commentId: Int, onSuccess: (() -> Unit)? = null) {
         viewModelScope.launch {
             try {
                 val response = withContext(Dispatchers.IO) {
@@ -76,6 +81,7 @@ class InfoReviewCommentViewModel(
                         _inforeviewcommentList.value = updatedList
                         Log.d("CommentApi_SUCCESS2", "deletecomment: $updatedList")
                     }
+                    onSuccess?.invoke()
                 } else {
                     Log.e("CommentApi_ERROR2", "API error: ${response.message()} (${response.code()})")
                 }
@@ -95,7 +101,7 @@ class InfoReviewCommentViewModel(
         viewModelScope.launch {
             try {
                 val response = withContext(Dispatchers.IO) {
-                    repository.getCommentList(reviewId,1,5)
+                    repository.getCommentList(reviewId,1,20)
                 }
                 if (response.isSuccessful) {
                     response.body()?.let { body ->
@@ -115,19 +121,13 @@ class InfoReviewCommentViewModel(
     // 데이터 변환
     private fun commentDtoToAdapterItem(data: CommentData): InfoReviewCommentRVItem {
 
-        val convertTimeUtil = ConvertTimeUtil()
-
-        val relativeTime = if (data.createdAt != data.updatedAt) {
-            "${convertTimeUtil.convertRelativeTime(data.createdAt)} (수정됨)"
-        } else {
-            convertTimeUtil.convertRelativeTime(data.createdAt)
-        }
+        val convertTimeUtil = ConvertTimeUtil().convertRelativeTime(data.createdAt)
 
         return InfoReviewCommentRVItem(
             itemId = data.commentId,
-            profileImage = data.writerProfileUrl,
+            profileImage = data.writerProfileUrl ?: "",
             username = data.writerName,
-            time = relativeTime,
+            time = convertTimeUtil,
             reply = data.children.size,
             content = data.content
         )
@@ -135,19 +135,13 @@ class InfoReviewCommentViewModel(
 
     // 데이터 변환
     private fun commentListDtoToAdapterItem(data: CommentListData): InfoReviewCommentRVItem {
-        val convertTimeUtil = ConvertTimeUtil()
-
-        val relativeTime = if (data.createdAt != data.updatedAt) {
-            "${convertTimeUtil.convertRelativeTime(data.createdAt)} (수정됨)"
-        } else {
-            convertTimeUtil.convertRelativeTime(data.createdAt)
-        }
+        val convertTimeUtil = ConvertTimeUtil().convertRelativeTime(data.createdAt)
 
         return InfoReviewCommentRVItem(
             itemId = data.commentId,
-            profileImage = data.writerProfileUrl,
+            profileImage = data.writerProfileUrl ?: "",
             username = data.writerName,
-            time = relativeTime,
+            time = convertTimeUtil,
             reply = data.replyCount,
             content = data.content
         )
