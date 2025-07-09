@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.tabs.TabLayout
 import com.ita.poppop.R
 import com.ita.poppop.base.BaseFragment
+import com.ita.poppop.data.remote.repository.popup.BookmarkRepositoryImpl
 import com.ita.poppop.data.remote.repository.popups.PopupsRepositoryImpl
 import com.ita.poppop.databinding.FragmentInfoBinding
 import com.ita.poppop.util.ViewModelFactory
@@ -62,9 +63,9 @@ class InfoFragment: BaseFragment<FragmentInfoBinding>(R.layout.fragment_info) {
                 isFavorite = !isFavorite
 
                 val icStar = if (isFavorite) {
-                    R.drawable.info_favorites_star_icon_outlined
-                } else {
                     R.drawable.info_favorites_star_icon_filled
+                } else {
+                    R.drawable.info_favorites_star_icon_outlined
                 }
 
                 // drawable 교체
@@ -72,6 +73,7 @@ class InfoFragment: BaseFragment<FragmentInfoBinding>(R.layout.fragment_info) {
                     ContextCompat.getDrawable(requireContext(), icStar),
                     null, null, null
                 )
+                infoViewModel.postBookmark(popupId)
             }
 
             acbUploadReview.setOnClickListener{
@@ -84,7 +86,8 @@ class InfoFragment: BaseFragment<FragmentInfoBinding>(R.layout.fragment_info) {
             //val popupId = 1325
 
             val repository = PopupsRepositoryImpl(RetrofitClient.popupApi)
-            val factory = ViewModelFactory { InfoViewModel(mainViewModel.tokenPair.value.first.toString(),repository) }
+            val bookmarkRepository = BookmarkRepositoryImpl(RetrofitClient.bookmarkApi)
+            val factory = ViewModelFactory { InfoViewModel(mainViewModel.tokenPair.value.first.toString(), repository, bookmarkRepository) }
             infoViewModel = ViewModelProvider(this@InfoFragment, factory)[InfoViewModel::class.java]
 
             Log.d("InfoFragment", "Received popupId from args: $popupId")

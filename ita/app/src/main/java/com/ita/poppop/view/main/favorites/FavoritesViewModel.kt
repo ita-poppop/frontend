@@ -50,7 +50,7 @@ class FavoritesViewModel(
         viewModelScope.launch {
             try {
                 val response = withContext(Dispatchers.IO) {
-                    repository.getBookmarks(accessToken)
+                    repository.getBookmarks(accessToken,1,20)
                 }
                 if (response.isSuccessful) {
                     response.body()?.let { body ->
