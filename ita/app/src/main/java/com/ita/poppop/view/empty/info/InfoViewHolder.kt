@@ -15,7 +15,7 @@ class InfoViewHolder(
             val newDate = info.date.replace("-", ".")
 
             tvInfoTitle.text = info.title
-            tvInfoLocation.text = info.location
+            tvInfoLocation.text = info.location.substringBefore("\n").trim()
             tvInfoDate.text = newDate
 
             Glide.with(ivInfoImage.context)

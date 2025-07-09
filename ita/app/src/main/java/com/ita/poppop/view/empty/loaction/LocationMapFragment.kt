@@ -147,7 +147,9 @@ class LocationMapFragment: BaseFragment<FragmentLocationMapBinding>(R.layout.fra
     }
 
     private fun observeMapData() {
-        mapViewModel.getMap()
+        targetLatLng?.let {
+            mapViewModel.getLocationPopup(it.longitude, it.latitude)
+        }
         mapViewModel.mapList.observe(viewLifecycleOwner) { response ->
             mapRVAdapter.submitList(response)
             if (::naverMap.isInitialized) {

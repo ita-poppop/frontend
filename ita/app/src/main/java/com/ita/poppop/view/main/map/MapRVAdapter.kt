@@ -2,11 +2,11 @@ package com.ita.poppop.view.main.map
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.ita.poppop.databinding.ItemMapBinding
 
 class MapRVAdapter: ListAdapter<MapRVItem, MapRVAdapter.MapViewHolder>(MapDiffutillCallback()) {
@@ -23,7 +23,9 @@ class MapRVAdapter: ListAdapter<MapRVItem, MapRVAdapter.MapViewHolder>(MapDiffut
     class MapViewHolder(val binding: ItemMapBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: MapRVItem) {
             binding.apply {
-                ivMap.setImageResource(item.imageUrl)
+                Glide.with(itemView.context)
+                    .load(item.imageUrl)
+                    .into(ivMap)
                 tvMapTitle.text = item.title
                 tvMapPeriod.text = item.period
             }

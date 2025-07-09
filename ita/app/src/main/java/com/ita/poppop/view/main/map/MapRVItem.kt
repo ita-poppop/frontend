@@ -4,7 +4,7 @@ data class MapRVItem(
     var itemId: Int,
     var lat: Double,
     var lng: Double,
-    var imageUrl: Int,
+    var imageUrl: String,
     var title: String,
     var period: String
 )
