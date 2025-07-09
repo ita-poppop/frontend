@@ -40,7 +40,9 @@
         android:id="@+id/infoReviewDetailReplyFragment"
         android:name="com.ita.poppop.view.empty.info.review.detail.reply.InfoReviewDetailReplyFragment"
         android:label="InfoReviewDetailReplyFragment">
-
+        <argument
+            android:name="review"
+            app:argType="integer" />
         <argument
             android:name="comment"
             app:argType="com.ita.poppop.view.empty.info.review.comment.InfoReviewCommentRVItem" />

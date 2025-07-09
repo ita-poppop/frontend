@@ -120,8 +120,13 @@ class InfoReviewDetailFragment : BaseFragment<FragmentInfoReviewDetailBinding>(R
                 // 답글 화살표 클릭 시
                 override fun onArrowClick(position: Int) {
                     val selectedArrow = infoReviewCommentRVAdapter.currentList[position]
+                    val reviewId = infoReviewDetailArgs.review.itemId
+
                     val parentNavController = requireParentFragment().findNavController()
-                    val action = InfoReviewDetailFragmentDirections.actionInfoReviewDetailFragmentToInfoReviewDetailReplyFragment(selectedArrow)
+                    val action = InfoReviewDetailFragmentDirections.actionInfoReviewDetailFragmentToInfoReviewDetailReplyFragment(
+                        comment = selectedArrow,
+                        review = reviewId
+                    )
                     parentNavController.navigate(action)
                 }
                 // 댓글 점 클릭 시

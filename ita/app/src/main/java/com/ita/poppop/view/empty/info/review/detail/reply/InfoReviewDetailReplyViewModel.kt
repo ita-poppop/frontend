@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ita.poppop.data.remote.dto.comments.CommentData
+import com.ita.poppop.data.remote.dto.comments.PostCommentRequest
 import com.ita.poppop.data.remote.repository.popup.CommentRepository
 import com.ita.poppop.util.ConvertTimeUtil
 import com.ita.poppop.view.empty.info.review.InfoReviewDetailReplyRVItem
@@ -15,6 +16,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class InfoReviewDetailReplyViewModel(
+    private val accessToken: String,
     private val repository: CommentRepository
 ) : ViewModel(){
     private val _infocommentdetail = MutableLiveData<InfoReviewCommentRVItem>()
@@ -28,8 +30,31 @@ class InfoReviewDetailReplyViewModel(
     private val convertTimeUtil = ConvertTimeUtil()
 
     // 댓글 화면에서 대댓글 추가
-    fun addReply(reply: String) {
-        val currentList = _inforeviewdetailreplyList.value ?: mutableListOf()
+    fun postReply(reviewId: Int, reply: String, parentId: Int? = null, onSuccess: (() -> Unit)? = null) {
+        viewModelScope.launch {
+            try {
+                val response = withContext(Dispatchers.IO) {
+                    val request = PostCommentRequest(reply, parentId)
+                    repository.postComment(accessToken, reviewId, request)
+                }
+                if (response.isSuccessful) {
+                    response.body()?.data?.let { commentData  ->
+                        val newReply = replyDtoToAdapterItem(commentData)
+                        val currentList = _inforeviewdetailreplyList.value ?: mutableListOf()
+                        val updatedList = currentList.toMutableList()
+                        updatedList.add(newReply)
+                        _inforeviewdetailreplyList.postValue(updatedList)
+                        Log.d("ReplyApi_SUCCESS", "Replies: $updatedList")
+                    }
+                    onSuccess?.invoke()
+                } else {
+                    Log.e("ReplyApi_ERROR", "API error: ${response.message()} (${response.code()})")
+                }
+            } catch (e: Exception) {
+                Log.e("ReplyApi_ERROR", "Exception: ${e.message}", e)
+            }
+        }
+        /*val currentList = _inforeviewdetailreplyList.value ?: mutableListOf()
         val newId = (currentList.maxOfOrNull { it.itemId } ?: 0) + 1
         val newReply = InfoReviewDetailReplyRVItem(
             itemId = newId,
@@ -40,15 +65,33 @@ class InfoReviewDetailReplyViewModel(
         )
         val updatedList = currentList.toMutableList()
         updatedList.add(newReply)
-        _inforeviewdetailreplyList.value = updatedList
+        _inforeviewdetailreplyList.value = updatedList*/
 
     }
 
     // 댓글 화면에서 대댓글 삭제
-    fun deleteReply(replyItemId: Int) {
-        val currentList = _inforeviewdetailreplyList.value ?: return
+    fun deleteReply(replyId: Int, onSuccess: (() -> Unit)? = null) {
+        viewModelScope.launch {
+            try {
+                val response = withContext(Dispatchers.IO) {
+                    repository.deleteComment(accessToken, replyId)
+                }
+                if (response.isSuccessful) {
+                    val currentList = _inforeviewdetailreplyList.value ?: mutableListOf()
+                    val updatedList = currentList.filterNot { it.itemId == replyId }.toMutableList()
+                    _inforeviewdetailreplyList.value = updatedList
+                    Log.d("ReplyApi_SUCCESS_Delete", "Deleted replyId: $replyId")
+                    onSuccess?.invoke()
+                } else {
+                    Log.e("ReplyApi_ERROR_Delete", "API error: ${response.message()} (${response.code()})")
+                }
+            } catch (e: Exception) {
+                Log.e("ReplyApi_ERROR_Delete", "Exception: ${e.message}", e)
+            }
+        }
+        /*val currentList = _inforeviewdetailreplyList.value ?: return
         val updatedList = currentList.filterNot { it.itemId == replyItemId }.toMutableList()
-        _inforeviewdetailreplyList.value = updatedList
+        _inforeviewdetailreplyList.value = updatedList*/
     }
 
     fun getInfoCommentDetail(reviewId: Int, commentId: Int) {
@@ -68,7 +111,7 @@ class InfoReviewDetailReplyViewModel(
                             InfoReviewDetailReplyRVItem(
                                 itemId = it.commentId,
                                 username = it.writerName,
-                                profileImage = it.writerProfileUrl,
+                                profileImage = it.writerProfileUrl?: "",
                                 reply = it.content,
                                 time = convertTimeUtil.convertRelativeTime(it.createdAt)
                             )
@@ -86,19 +129,29 @@ class InfoReviewDetailReplyViewModel(
     }
 
     // 데이터 변환
+    private fun replyDtoToAdapterItem(data: CommentData): InfoReviewDetailReplyRVItem {
+
+        val convertTimeUtil = ConvertTimeUtil().convertRelativeTime(data.createdAt)
+
+        return InfoReviewDetailReplyRVItem (
+            itemId = data.commentId,
+            profileImage = data.writerProfileUrl ?: "",
+            username = data.writerName,
+            time = convertTimeUtil,
+            reply = data.content
+        )
+    }
+
+    // 데이터 변환
     private fun commentDtoToAdapterItem(data: CommentData): InfoReviewCommentRVItem {
 
-        val relativeTime = if (data.createdAt != data.updatedAt) {
-            "${convertTimeUtil.convertRelativeTime(data.createdAt)} (수정됨)"
-        } else {
-            convertTimeUtil.convertRelativeTime(data.createdAt)
-        }
+        val convertTimeUtil = ConvertTimeUtil().convertRelativeTime(data.createdAt)
 
         return InfoReviewCommentRVItem(
             itemId = data.commentId,
-            profileImage = data.writerProfileUrl,
+            profileImage = data.writerProfileUrl?: "",
             username = data.writerName,
-            time = relativeTime,
+            time = convertTimeUtil,
             content = data.content,
             reply = data.children.size
         )
