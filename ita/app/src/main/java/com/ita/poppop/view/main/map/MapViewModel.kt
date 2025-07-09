@@ -41,13 +41,17 @@ class MapViewModel(
 
     private fun locationPopupListDtoToAdapterItem(data: LocationData): MapRVItem {
 
+        val newDate = data.date
+            .replace("-", ".")
+            .replace("~", "-")
+
         return MapRVItem(
             itemId = data.id,
             lat = data.latitude,
             lng = data.longitude,
             imageUrl = data.imageUrl,
             title = data.title,
-            period = data.date,
+            period = newDate,
         )
     }
 }

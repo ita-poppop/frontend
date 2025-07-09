@@ -17,7 +17,8 @@ import retrofit2.http.Query
 interface StoryApi {
     @GET("/api/v1/popups/{popupId}/stories")
     suspend fun getStory(
-        @Query("popupId") popupId: Int,
+        @Header("Authorization") accessToken: String,
+        @Path("popupId") popupId: Int,
         @Query("page") page: Int,
         @Query("size") size: Int
     ): Response<GetStoryResponse>

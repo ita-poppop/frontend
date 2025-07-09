@@ -16,6 +16,7 @@ import com.ita.poppop.R
 import com.ita.poppop.base.BaseFragment
 import com.ita.poppop.data.remote.repository.popup.BookmarkRepositoryImpl
 import com.ita.poppop.data.remote.repository.popups.PopupsRepositoryImpl
+import com.ita.poppop.data.remote.repository.story.StoryRepositoryImpl
 import com.ita.poppop.databinding.FragmentInfoBinding
 import com.ita.poppop.util.ViewModelFactory
 import com.ita.poppop.util.remote.RetrofitClient
@@ -89,8 +90,7 @@ class InfoFragment: BaseFragment<FragmentInfoBinding>(R.layout.fragment_info) {
             val bookmarkRepository = BookmarkRepositoryImpl(RetrofitClient.bookmarkApi)
             val factory = ViewModelFactory { InfoViewModel(mainViewModel.tokenPair.value.first.toString(), repository, bookmarkRepository) }
             infoViewModel = ViewModelProvider(this@InfoFragment, factory)[InfoViewModel::class.java]
-
-            Log.d("InfoFragment", "Received popupId from args: $popupId")
+            
             infoViewHolder = InfoViewHolder(binding)
 
             infoViewModel.getInfo(popupId)
@@ -100,14 +100,15 @@ class InfoFragment: BaseFragment<FragmentInfoBinding>(R.layout.fragment_info) {
                 infoViewHolder.bind(info, infoViewModel)
             })
 
-            infoStoryViewModel = ViewModelProvider(this@InfoFragment).get(InfoStoryViewModel::class.java)
-
+            val storyRepository = StoryRepositoryImpl(RetrofitClient.storyApi)
+            val storyFactory = ViewModelFactory { InfoStoryViewModel(mainViewModel.tokenPair.value.first.toString(),storyRepository) }
+            infoStoryViewModel = ViewModelProvider(this@InfoFragment, storyFactory)[InfoStoryViewModel::class.java]
             // 스토리
             rvInfoStory.apply {
                 layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
                 adapter = infoStoryRVAdapter
             }
-            infoStoryViewModel.getInfoStory()
+            infoStoryViewModel.getInfoStory(popupId)
             infoStoryViewModel.infostoryList.observe(viewLifecycleOwner, Observer { response ->
                 infoStoryRVAdapter.submitList(response)
 

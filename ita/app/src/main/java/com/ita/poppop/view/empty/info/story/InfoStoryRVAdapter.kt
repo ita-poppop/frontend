@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.ita.poppop.databinding.ItemInfoStoryBinding
 
 class InfoStoryRVAdapter: ListAdapter<InfoStoryRVItem, InfoStoryRVAdapter.InfoStoryViewHolder>(
@@ -15,7 +16,9 @@ class InfoStoryRVAdapter: ListAdapter<InfoStoryRVItem, InfoStoryRVAdapter.InfoSt
     class InfoStoryViewHolder(val binding: ItemInfoStoryBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: InfoStoryRVItem) {
             binding.apply {
-                ibStoryProfile.setImageResource(item.imageUrl)
+                Glide.with(itemView.context)
+                    .load(item.imageUrl)
+                    .into(ibStoryProfile)
                 tvStoryName.text = item.name
             }
         }
