@@ -15,6 +15,7 @@ import com.ita.poppop.base.BaseFragment
 import com.ita.poppop.data.remote.repository.review.ReviewRepository
 import com.ita.poppop.data.remote.repository.review.ReviewRepositoryImpl
 import com.ita.poppop.databinding.FragmentUploadReviewBinding
+import com.ita.poppop.model.empty.search.SearchMode
 import com.ita.poppop.util.bottomsheet.UploadBottomSheet
 import com.ita.poppop.util.remote.RetrofitClient
 import com.ita.poppop.view.empty.home_upload.sub.ImageItem
@@ -56,7 +57,7 @@ class UploadReviewFragment : BaseFragment<FragmentUploadReviewBinding>(R.layout.
             uploadImageAdapter.submitList(uploadItemList)
         }
         uploadViewModel.popupItem.observe(viewLifecycleOwner) { seleteItem ->
-            binding.tvUploadLocation.text = seleteItem?.title ?: ""
+            binding.tvUploadLocation.text = seleteItem?.title ?: "팝업스토어 / 전시를 검색하세요"
         }
         mainViewModel.selectItem.observe(viewLifecycleOwner) { seleteItem ->
             uploadViewModel.setPopupItem(seleteItem)
@@ -111,7 +112,8 @@ class UploadReviewFragment : BaseFragment<FragmentUploadReviewBinding>(R.layout.
 
     private fun setClickListener() {
         binding.mcvSearchArea.setOnClickListener {
-            navigateTo(UploadReviewFragmentDirections.actionUploadReviewFragmentToSearchFragment())
+            navigateTo(UploadReviewFragmentDirections.actionUploadReviewFragmentToSearchFragment(
+                SearchMode.RETURN_TO_UPLOAD))
         }
         binding.btUploadReview.setOnClickListener{
             lifecycleScope.launch {
@@ -121,7 +123,7 @@ class UploadReviewFragment : BaseFragment<FragmentUploadReviewBinding>(R.layout.
 
                         repository.postReview(
                             mainAViewModel.tokenPair.value.first.toString(),
-                            2310,
+                            mainViewModel.selectItem.value!!.id,
                             uploadViewModel.reviewContent.value.toString(),
                             uploadViewModel.createMultipartListFromUris(requireContext())
                         )
@@ -130,6 +132,7 @@ class UploadReviewFragment : BaseFragment<FragmentUploadReviewBinding>(R.layout.
                     if (result.isSuccessful) {
                         Log.d("checkUploadData","result : ${result.body()}")
                         handleBackNavigation()
+                        mainViewModel.setSelectItem(null)
                     }
                 } catch (e: HttpException) {
                     // HTTP 에러 상세 정보
@@ -161,5 +164,10 @@ class UploadReviewFragment : BaseFragment<FragmentUploadReviewBinding>(R.layout.
         }else{
             UploadBottomSheet(uploadViewModel.getRemainingSlots()).show(parentFragmentManager, "upload_sheet")
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        uploadViewModel.setPopupItem(null)
     }
 }

@@ -7,6 +7,9 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavDirections
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
@@ -16,10 +19,13 @@ import com.ita.poppop.data.remote.dto.popups.SearchData
 import com.ita.poppop.data.remote.repository.popups.PopupsRepository
 import com.ita.poppop.data.remote.repository.popups.PopupsRepositoryImpl
 import com.ita.poppop.databinding.FragmentHomeSearchBinding
+import com.ita.poppop.model.empty.search.SearchMode
 import com.ita.poppop.util.SwipeHelper
 import com.ita.poppop.util.remote.RetrofitClient
 import com.ita.poppop.view.empty.search.holder.HomeSearchAdapter
 import com.ita.poppop.view.empty.search.holder.HomeSearchItemDecoration
+import com.ita.poppop.view.empty.story.StoryFragmentArgs
+import com.ita.poppop.view.main.MainFragmentDirections
 import com.ita.poppop.viewmodel.main.MainViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -28,17 +34,20 @@ import retrofit2.HttpException
 
 class SearchFragment: BaseFragment<FragmentHomeSearchBinding>(R.layout.fragment_home_search) {
     private lateinit var mainViewModel: MainViewModel
-
+    private val args: SearchFragmentArgs by navArgs()
     private val repository: PopupsRepository = PopupsRepositoryImpl(RetrofitClient.popupApi)
     private var currentPage = 1
     private var isLoading = false
     private var hasMoreData = true
     private var currentQuery = "팝업"
+    private lateinit var mode : SearchMode
     private val trendList = mutableListOf<SearchData>()
     private lateinit var adapter: HomeSearchAdapter
 
+
     override fun initView() {
         mainViewModel = ViewModelProvider(requireActivity())[MainViewModel::class.java]
+        mode = args.searchMode
         setupWindowInsets()
         setupToolbar()
         setInitView()
@@ -66,7 +75,7 @@ class SearchFragment: BaseFragment<FragmentHomeSearchBinding>(R.layout.fragment_
 
             if (result.isSuccessful) {
                 val newData = result.body()?.data ?: emptyList()
-
+                Log.d("checkSearch", "newData : ${newData}")
                 if (newData.isNotEmpty()) {
                     if (page == 1) {
                         trendList.clear()
@@ -145,11 +154,19 @@ class SearchFragment: BaseFragment<FragmentHomeSearchBinding>(R.layout.fragment_
         }
     }
 
+
     private fun setupSearchRecyclerView(searchResults: List<SearchData>) {
         adapter = HomeSearchAdapter(
             onAddClick = { item ->
                 mainViewModel.setSelectItem(item)
-                handleBackNavigation()
+                when(mode){
+                    SearchMode.RETURN_TO_DETAIL -> {
+                        val parentNavController = requireActivity().findNavController(R.id.fcv_main_activity_container)
+                        val action = SearchFragmentDirections.actionHomeSearchFragmentToNaviInfo(item.id)
+                        parentNavController.navigate(action)
+                    }
+                    SearchMode.RETURN_TO_UPLOAD -> {handleBackNavigation()}
+                }
         },searchResults)
 
         with(binding.rvHomeSearchResult) {

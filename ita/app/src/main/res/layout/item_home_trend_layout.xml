@@ -7,13 +7,15 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="154dp"
-        android:layout_height="wrap_content">
+        android:layout_height="@dimen/item_240">
 
         <ImageView
             android:id="@+id/iv_trend_poster"
             android:layout_width="match_parent"
-            android:layout_height="190dp"
+            android:layout_height="0dp"
             android:src="#D9D9D9"
+            android:layout_marginBottom="@dimen/margin_10"
+            app:layout_constraintBottom_toTopOf="@+id/tv_trend_title"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -22,28 +24,30 @@
         <TextView
             android:id="@+id/tv_trend_title"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
+            android:layout_marginBottom="@dimen/margin_2"
             android:ellipsize="end"
+            android:fontFamily="@font/pretendard_medium"
             android:gravity="center_horizontal|start"
             android:letterSpacing="-0.03"
             android:lineSpacingExtra="7.5sp"
             android:maxLines="1"
-            android:fontFamily="@font/pretendard_medium"
             android:text="르세라핌 2025 S/S 팝업스토어"
             android:textColor="@color/black"
             android:textSize="15sp"
+            app:layout_constraintBottom_toTopOf="@+id/constraintLayout3"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/iv_trend_poster" />
+            app:layout_constraintStart_toStartOf="parent"/>
+
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayout3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_trend_title" >
+            app:layout_constraintStart_toStartOf="parent">
 
             <ImageView
                 android:id="@+id/imageView4"
@@ -59,13 +63,13 @@
                 android:id="@+id/tv_trend_location"
                 android:layout_width="118dp"
                 android:layout_height="wrap_content"
-                android:text="성동구"
-                android:fontFamily="@font/pretendard_regular"
                 android:layout_marginStart="2dp"
-                android:textSize="12sp"
-                android:textColor="@color/gray_700"
+                android:fontFamily="@font/pretendard_regular"
                 android:letterSpacing="-0.03"
                 android:lineSpacingExtra="6sp"
+                android:text="성동구"
+                android:textColor="@color/gray_700"
+                android:textSize="12sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/imageView4"
                 app:layout_constraintTop_toTopOf="parent" />

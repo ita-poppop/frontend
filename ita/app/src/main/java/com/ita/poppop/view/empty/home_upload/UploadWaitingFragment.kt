@@ -11,6 +11,8 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.setFragmentResult
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavDirections
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.google.android.material.snackbar.Snackbar
@@ -21,6 +23,7 @@ import com.ita.poppop.data.remote.repository.review.ReviewRepositoryImpl
 import com.ita.poppop.data.remote.repository.story.StoryRepository
 import com.ita.poppop.data.remote.repository.story.StoryRepositoryImpl
 import com.ita.poppop.databinding.FragmentUploadWaitingBinding
+import com.ita.poppop.model.empty.search.SearchMode
 import com.ita.poppop.util.bottomsheet.UploadBottomSheet
 import com.ita.poppop.util.remote.RetrofitClient
 import com.ita.poppop.view.empty.home_upload.sub.ImageItem
@@ -29,6 +32,7 @@ import com.ita.poppop.view.empty.home_upload.sub.UploadImageItemDecoration
 import com.ita.poppop.viewmodel.MainAViewModel
 import com.ita.poppop.viewmodel.empty.upload.UploadViewModel
 import com.ita.poppop.viewmodel.empty.upload.UploadWaitingViewModel
+import com.ita.poppop.viewmodel.main.MainViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -37,18 +41,19 @@ import kotlin.math.absoluteValue
 
 
 class UploadWaitingFragment : BaseFragment<FragmentUploadWaitingBinding>(R.layout.fragment_upload_waiting) {
-    private lateinit var uploadViewModel: UploadViewModel
     private lateinit var uploadWaitingViewModel: UploadWaitingViewModel
     val mainAViewModel: MainAViewModel by activityViewModels()
+    private lateinit var mainViewModel: MainViewModel
     private val repository: StoryRepository = StoryRepositoryImpl(RetrofitClient.storyApi)
     private var uri : Uri? = null
 
     override fun initView() {
+        setViewModel()
         setupWindowInsets()
         setupToolbar()
         setFragmentResult()
         setClickListener()
-        setViewModel()
+
         binding.sbWaiting.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 binding.tvWaitingCount.text = "${progress}명"
@@ -74,12 +79,11 @@ class UploadWaitingFragment : BaseFragment<FragmentUploadWaitingBinding>(R.layou
 
     }
     private fun setViewModel() {
-        uploadViewModel = ViewModelProvider(this)[UploadViewModel::class.java]
+        mainViewModel = ViewModelProvider(requireActivity())[MainViewModel::class.java]
         uploadWaitingViewModel = ViewModelProvider(this)[UploadWaitingViewModel::class.java]
 
         binding.uploadWaitingViewModel = uploadWaitingViewModel
 
-        uploadWaitingViewModel.setPopupItem("ddd")
         uploadWaitingViewModel.isAllValid.observe(viewLifecycleOwner) { valid ->
             Log.d("checkViewModel","waitingImage : ${uploadWaitingViewModel.waitingImage.value}")
             Log.d("checkViewModel","popupItem : ${uploadWaitingViewModel.popupItem.value}")
@@ -110,11 +114,21 @@ class UploadWaitingFragment : BaseFragment<FragmentUploadWaitingBinding>(R.layou
         binding.mcvWImgEdit.setOnClickListener {
             showUploadBottomSheet()
         }
+        mainViewModel.selectItem.observe(viewLifecycleOwner) { seleteItem ->
+            uploadWaitingViewModel.setPopupItem(seleteItem)
+        }
+        uploadWaitingViewModel.popupItem.observe(viewLifecycleOwner) { seleteItem ->
+            binding.tvUploadLocation.text = seleteItem?.title ?: "팝업스토어 / 전시를 검색하세요"
+        }
         binding.mcvWImgDelete.setOnClickListener {
             uploadWaitingViewModel.removeWaitingImage()
         }
         binding.rvUploadReview.setOnClickListener {
             showUploadBottomSheet()
+        }
+        binding.mcvSearchArea.setOnClickListener {
+            navigateTo(UploadWaitingFragmentDirections.actionUploadWaitingFragmentToSearchFragment(
+                SearchMode.RETURN_TO_UPLOAD))
         }
         binding.btUploadWaiting.setOnClickListener{
 
@@ -125,7 +139,7 @@ class UploadWaitingFragment : BaseFragment<FragmentUploadWaitingBinding>(R.layou
 
                         repository.postUploadStory(
                             mainAViewModel.tokenPair.value.first.toString(),
-                            2310,
+                            mainViewModel.selectItem.value!!.id,
                             uploadWaitingViewModel.createMultipartFromWaitingImage(requireContext())!!,
                             0,
                             uploadWaitingViewModel.waitingCount.value!!.toInt()
@@ -135,6 +149,7 @@ class UploadWaitingFragment : BaseFragment<FragmentUploadWaitingBinding>(R.layou
                     if (result.isSuccessful) {
                         Log.d("checkUploadData","result : ${result.body()}")
                         handleBackNavigation()
+                        mainViewModel.setSelectItem(null)
                     }
                 } catch (e: HttpException) {
                     // HTTP 에러 상세 정보
@@ -165,9 +180,16 @@ class UploadWaitingFragment : BaseFragment<FragmentUploadWaitingBinding>(R.layou
             setNavigationOnClickListener { handleBackNavigation() }
         }
     }
-
+    private fun navigateTo(action: NavDirections) {
+        val navController = requireActivity().findNavController(R.id.fcv_main_activity_container)
+        navController.navigate(action)
+    }
 
     private fun showUploadBottomSheet() {
         UploadBottomSheet(1).show(parentFragmentManager, "upload_sheet")
+    }
+    override fun onResume() {
+        super.onResume()
+        uploadWaitingViewModel.setPopupItem(null)
     }
 }

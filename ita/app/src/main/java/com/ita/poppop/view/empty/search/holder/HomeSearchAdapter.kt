@@ -25,12 +25,12 @@ class HomeSearchAdapter(
                 onAddClick(item)
             }
             Glide.with(binding.root)
-                .load(item.image)
+                .load(item.imageUrl)
                 .centerCrop()
                 .into(binding.ivSearchPoster)
 
             binding.tvSearchTitle.text = item.title
-            binding.tvSearchLocation.text = item.location
+            binding.tvSearchLocation.text = item.date
         }
     }
 
@@ -52,13 +52,4 @@ class HomeSearchAdapter(
     // 아이템 개수 반환 메서
     override fun getItemCount(): Int = items.size
 
-    // 아이템 고유 ID 반환 메서드
-    override fun getItemId(position: Int): Long {
-        return if (position in items.indices) {
-            items[position].hashCode().toLong()
-        } else {
-            -1L // 아이디를 찾지 못했을 때 반환되는 기본값
-        }
-
-    }
 }

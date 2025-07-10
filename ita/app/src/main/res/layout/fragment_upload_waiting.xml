@@ -240,7 +240,7 @@
                     android:fontFamily="@font/pretendard_medium"
                     android:letterSpacing="-0.03"
                     android:lineSpacingExtra="7sp"
-                    android:text='@{uploadWaitingViewModel.popupItem != null ? uploadWaitingViewModel.popupItem : "팝업스토어 / 전시를 검색하세요"}'
+                    android:text="팝업스토어 / 전시를 검색하세요"
                     android:textColor="#3c3c3c"
                     android:textSize="14sp"
                     android:textStyle="normal"

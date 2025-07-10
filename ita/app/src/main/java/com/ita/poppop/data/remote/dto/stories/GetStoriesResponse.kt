@@ -19,6 +19,9 @@ data class StoryData(
     @SerializedName("storyId")
     val storyId: Int,
 
+    @SerializedName("popupId")
+    val popupId: Int,
+
     @SerializedName("photoUrl")
     val photoUrl: String,
 

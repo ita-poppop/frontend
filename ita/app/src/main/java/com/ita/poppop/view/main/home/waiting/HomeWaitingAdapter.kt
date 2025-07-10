@@ -1,6 +1,8 @@
 package com.ita.poppop.view.main.home.waiting
 
+import android.graphics.Color
 import android.util.Log
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.navigation.NavDirections
@@ -26,8 +28,22 @@ class HomeWaitingAdapter(
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item : StoryData) {
             binding.mcvStory.setOnClickListener {
-                onclick(1)
+                onclick(item.storyId)
             }
+            if (item.isRead) {
+                binding.mcvStory.strokeWidth = 0
+            } else {
+                val strokeWidthInPx = TypedValue.applyDimension(
+                    TypedValue.COMPLEX_UNIT_DIP,
+                    3f,  // 원하는 dp
+                    binding.root.context.resources.displayMetrics
+                ).toInt()
+
+                binding.mcvStory.strokeWidth = strokeWidthInPx
+            }
+
+
+
             Glide.with(binding.root)
                 .load(item.photoUrl)
                 .centerCrop()

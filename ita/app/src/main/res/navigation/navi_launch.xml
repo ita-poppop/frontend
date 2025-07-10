@@ -27,7 +27,12 @@
             app:destination="@id/navi_home_notification" />
         <action
             android:id="@+id/action_mainFragment_to_navi_home_search"
-            app:destination="@id/navi_home_search" />
+            app:destination="@id/navi_home_search" >
+            <argument
+                android:name="searchMode"
+                app:argType="com.ita.poppop.model.empty.search.SearchMode" />
+        </action>
+
         <action
             android:id="@+id/action_mainFragment_to_navi_home_story"
             app:destination="@id/navi_home_story"

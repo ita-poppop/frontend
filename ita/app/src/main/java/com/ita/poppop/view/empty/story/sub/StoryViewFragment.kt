@@ -9,6 +9,7 @@ import androidx.annotation.RequiresApi
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.NavHostFragment.Companion.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.TransformationUtils.centerCrop
 import com.ita.poppop.R
@@ -22,6 +23,9 @@ import com.ita.poppop.databinding.FragmentStoryViewBinding
 import com.ita.poppop.util.bottomsheet.WaitingBottomSheet
 import com.ita.poppop.util.remote.RetrofitClient
 import com.ita.poppop.view.empty.story.StoryFragment
+import com.ita.poppop.view.main.MainFragmentDirections
+import com.ita.poppop.view.main.home.waiting.HomeWaitingAdapter
+import com.ita.poppop.view.main.home.waiting.HomeWaitingItemDecoration
 import com.ita.poppop.viewmodel.MainAViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -53,8 +57,9 @@ class StoryViewFragment : BaseFragment<FragmentStoryViewBinding>(R.layout.fragme
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun initView() {
         loadArgs()
+        loadData()
         initListeners()
-        binding.tvStoryUser.text = storyData?.writerName
+        binding.tvStoryUser.text = storyData?.writerName?.replace("\"", "")
         binding.tvStoryDate.text = storyData?.createdAt
         binding.tvStoryContent.text = storyData?.popupTitle
         Glide.with(binding.root)
@@ -66,6 +71,26 @@ class StoryViewFragment : BaseFragment<FragmentStoryViewBinding>(R.layout.fragme
             .centerCrop()
             .into(binding.ivStory)
     }
+
+    private fun loadData(){
+        lifecycleScope.launch {
+            try {
+                val result = withContext(Dispatchers.IO) {
+                    repository.getStoryDetail(mainViewModel.tokenPair.value.first.toString(),storyData!!.popupId,storyData!!.storyId)
+                }
+                if (result.isSuccessful) {
+                    Log.d("checkDataClick","${storyData!!.popupId}.....${storyData!!.storyId}")
+                }
+            } catch (e: HttpException) {
+                // HTTP 에러 상세 정보
+                Log.e("API_ERROR", "HTTP ${e.code()}: ${e.response()?.errorBody()?.string()}")
+            } catch (e: Exception) {
+
+                Log.e("API_ERROR", "Exception: ${e.message}", e)
+            }
+        }
+    }
+
 
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)

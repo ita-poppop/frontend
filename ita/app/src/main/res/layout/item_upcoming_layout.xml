@@ -10,7 +10,7 @@
 
 
         <ImageView
-            android:id="@+id/iv_map"
+            android:id="@+id/iv_upcoming_poster"
             android:layout_width="@dimen/item_128"
             android:layout_height="@dimen/item_128"
             android:src="#D9D9D9"
@@ -32,7 +32,7 @@
             android:textColor="@color/gray_600"
             android:textSize="@dimen/text_13"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/iv_map"
+            app:layout_constraintStart_toEndOf="@id/iv_upcoming_poster"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
@@ -51,7 +51,7 @@
             android:textSize="@dimen/text_17"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toEndOf="@+id/iv_map"
+            app:layout_constraintStart_toEndOf="@+id/iv_upcoming_poster"
             app:layout_constraintTop_toBottomOf="@+id/tv_upcoming_location" />
 
         <TextView
@@ -70,7 +70,7 @@
             android:lineSpacingExtra="6.5sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toEndOf="@+id/iv_map"
+            app:layout_constraintStart_toEndOf="@+id/iv_upcoming_poster"
             app:layout_constraintTop_toBottomOf="@+id/tv_upcoming_title" />
 
 
@@ -83,9 +83,10 @@
             app:strokeColor="@color/transparent"
             app:cardBackgroundColor="@color/gray_400"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/iv_map">
+            app:layout_constraintStart_toEndOf="@+id/iv_upcoming_poster">
 
             <TextView
+                android:id="@+id/tv_upcoming_dday"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginVertical="@dimen/margin_2"

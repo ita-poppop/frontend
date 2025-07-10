@@ -9,6 +9,7 @@ import com.ita.poppop.data.remote.dto.popups.TrendData
 import com.ita.poppop.databinding.ItemHomeUpcomingLayoutBinding
 
 class HomeUpcomingAdapter(
+    private val onClick: (Int) -> Unit,
     private var items : List<PlannedData>,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     init {
@@ -19,6 +20,9 @@ class HomeUpcomingAdapter(
         private val binding: ItemHomeUpcomingLayoutBinding,
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item : PlannedData) {
+            binding.root.setOnClickListener{
+                onClick(item.id)
+            }
             Glide.with(binding.root)
                 .load(item.image)
                 .centerCrop()
