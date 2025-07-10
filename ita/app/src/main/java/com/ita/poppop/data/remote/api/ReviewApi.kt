@@ -8,6 +8,7 @@ import com.ita.poppop.data.remote.dto.review.PostReviewResponse
 import com.ita.poppop.data.remote.dto.reviews.DeleteReviewResponse
 import com.ita.poppop.data.remote.dto.reviews.ModifyReviewResponse
 import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Header
@@ -32,10 +33,10 @@ interface ReviewApi {
     suspend fun postReview(
         @Header("Authorization") accessToken: String,
         @Path("popupId") popupId: Int,
-        @Part("content") content: String,
+        @Part("content") content: RequestBody,
         @Part photo: List<MultipartBody.Part>,
 
-    ): Response<PostReviewResponse>
+        ): Response<PostReviewResponse>
 
 
     @GET("/api/v1/popups/{popupId}/reviews/{reviewId}")
@@ -62,7 +63,7 @@ interface ReviewApi {
     suspend fun modifyReview(
         @Header("Authorization") accessToken: String,
         @Path("reviewId") reviewId: Int,
-        @Part("content") content: String,
+        @Part("content") content: RequestBody,
         @Part photo: List<MultipartBody.Part>,
 
     ): Response<ModifyReviewResponse>

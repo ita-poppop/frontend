@@ -4,6 +4,7 @@ import com.ita.poppop.data.remote.dto.review.PostReviewResponse
 import com.ita.poppop.data.remote.dto.reviews.GetReviewListResponse
 import com.ita.poppop.data.remote.dto.reviews.GetReviewResponse
 import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Header
@@ -27,7 +28,7 @@ interface ReviewRepository {
     suspend fun postReview(
         @Header("Authorization") accessToken: String,
         @Path("popupId") popupId: Int,
-        @Part("content") content: String,
+        @Part("content") content: RequestBody,
         @Part images: List<MultipartBody.Part>
     ): Response<PostReviewResponse>
 

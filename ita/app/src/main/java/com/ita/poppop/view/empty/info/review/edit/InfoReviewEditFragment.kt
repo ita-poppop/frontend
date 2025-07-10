@@ -27,6 +27,8 @@ import com.ita.poppop.viewmodel.main.MainViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.RequestBody.Companion.toRequestBody
 import retrofit2.HttpException
 import kotlin.math.absoluteValue
 
@@ -134,10 +136,11 @@ class InfoReviewEditFragment: BaseFragment<FragmentInfoReviewEditBinding>(R.layo
             lifecycleScope.launch {
                 try {
                     val result = withContext(Dispatchers.IO) {
+                        val contentBody = editReviewViewModel.reviewContent.value.orEmpty().toRequestBody("text/plain".toMediaTypeOrNull())
                         repository.modifyReview(
                             mainAViewModel.tokenPair.value.first.toString(),
                             reviewId,
-                            editReviewViewModel.reviewContent.value.toString(),
+                            contentBody,
                             editReviewViewModel.createMultipartListFromUris(requireContext())
                         )
                     }

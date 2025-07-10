@@ -4,8 +4,10 @@ import com.ita.poppop.data.remote.api.ReviewApi
 import com.ita.poppop.data.remote.dto.review.PostReviewResponse
 import com.ita.poppop.data.remote.dto.reviews.GetReviewListResponse
 import com.ita.poppop.data.remote.dto.reviews.GetReviewResponse
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 import retrofit2.HttpException
 import retrofit2.Response
 
@@ -38,7 +40,7 @@ class ReviewRepositoryImpl(
     override suspend fun postReview(
         accessToken: String,
         popupId: Int,
-        content: String,
+        content: RequestBody,
         images: List<MultipartBody.Part>
     ): Response<PostReviewResponse> {
         try {

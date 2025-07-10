@@ -27,6 +27,8 @@ import com.ita.poppop.viewmodel.main.MainViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.RequestBody.Companion.toRequestBody
 import retrofit2.HttpException
 import kotlin.math.absoluteValue
 
@@ -127,10 +129,11 @@ class UploadFragment: BaseFragment<FragmentUploadBinding>(R.layout.fragment_uplo
             lifecycleScope.launch {
                 try {
                     val result = withContext(Dispatchers.IO) {
+                        val contentBody = uploadViewModel.reviewContent.value.orEmpty().toRequestBody("text/plain".toMediaTypeOrNull())
                         repository.postReview(
                             mainAViewModel.tokenPair.value.first.toString(),
                             popupId,
-                            uploadViewModel.reviewContent.value.toString(),
+                            contentBody,
                             uploadViewModel.createMultipartListFromUris(requireContext())
                         )
                     }

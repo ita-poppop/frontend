@@ -7,6 +7,7 @@ import com.ita.poppop.data.remote.dto.reviews.GetReviewResponse
 import com.ita.poppop.data.remote.dto.reviews.ModifyReviewResponse
 import com.ita.poppop.data.remote.dto.reviews.PostReviewLikesResponse
 import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.HttpException
 import retrofit2.Response
 
@@ -99,7 +100,7 @@ class ReviewRepositoryImpl(
     override suspend fun modifyReview(
         accessToken: String,
         reviewId: Int,
-        content: String,
+        content: RequestBody,
         images: List<MultipartBody.Part>
     ): Response<ModifyReviewResponse> {
         try {
