@@ -42,7 +42,8 @@ class InfoReviewDetailReplyFragment : BaseFragment<FragmentInfoReviewDetailReply
 
             // 댓글 삭제 신고 바텀 시트
             ivInfoReviewCommentDot.setOnClickListener {
-                showInfoReviewCommentDeleteBottomSheet(infoReviewDetailReplyArgs.comment.itemId)
+                val commentUserName = infoReviewDetailReplyViewModel.infocommentdetail.value?.username ?: ""
+                showInfoReviewCommentDeleteBottomSheet(infoReviewDetailReplyArgs.comment.itemId, commentUserName)
             }
 
             // 댓글 상세
@@ -124,13 +125,26 @@ class InfoReviewDetailReplyFragment : BaseFragment<FragmentInfoReviewDetailReply
         }
     }
 
-    private fun showInfoReviewCommentDeleteBottomSheet(commentItemId: Int) {
-        InfoReviewCommentDeleteBottomSheet(
-            commentItemId = commentItemId,
-            onDeleteConfirmed = { deleteItemId ->
-                infoReviewDetailReplyViewModel.deleteReply(deleteItemId)
-            }
-        ).show(parentFragmentManager, "delete comment")
+    private fun showInfoReviewCommentDeleteBottomSheet(commentItemId: Int, commentUserName: String) {
+        val currentUserName = infoReviewDetailReplyViewModel.getUserNameFromToken()
+        if (commentUserName.equals(currentUserName, ignoreCase = true)) {
+            InfoReviewCommentDeleteBottomSheet(
+                commentItemId = commentItemId,
+                onDeleteConfirmed = { deleteItemId ->
+                    infoReviewDetailReplyViewModel.deleteReply(deleteItemId){
+                        findNavController().popBackStack()
+                    }
+                }
+            ).show(parentFragmentManager, "delete comment")
+        } else {
+            // 본인이 아니면 신고 BottomSheet
+            InfoReviewCommentReportBottomSheet(
+                commentItemId = commentItemId,
+                onReportConfirmed = { reportedId ->
+                    // 신고 후 처리
+                }
+            ).show(parentFragmentManager, "report comment")
+        }
     }
 
     // 대댓글 게시 입력창 위치 조정
