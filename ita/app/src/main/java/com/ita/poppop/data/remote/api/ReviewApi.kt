@@ -5,6 +5,7 @@ import com.ita.poppop.data.remote.dto.reviews.GetReviewResponse
 import com.ita.poppop.data.remote.dto.reviews.PostReviewLikesResponse
 
 import com.ita.poppop.data.remote.dto.review.PostReviewResponse
+import com.ita.poppop.data.remote.dto.reviews.DeleteReviewResponse
 import okhttp3.MultipartBody
 import retrofit2.Response
 import retrofit2.http.GET
@@ -48,6 +49,15 @@ interface ReviewApi {
         @Header("Authorization") accessToken: String,
         @Path("reviewId") reviewId: Int
     ): Response<PostReviewLikesResponse>
+
+    @POST("/api/v1/popups/{popupId}/reviews/{reviewId}/delete")
+    suspend fun deleteReview(
+        @Header("Authorization") accessToken: String,
+        @Path("reviewId") reviewId: Int
+    ): Response<DeleteReviewResponse>
+
+
+
 
 
 }

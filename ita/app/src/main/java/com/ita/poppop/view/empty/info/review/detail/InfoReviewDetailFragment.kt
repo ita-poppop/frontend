@@ -83,7 +83,8 @@ class InfoReviewDetailFragment : BaseFragment<FragmentInfoReviewDetailBinding>(R
             }
 
             ivInfoReviewDetailDot.setOnClickListener {
-                showInfoReviewDeleteBottomSheet()
+                val commentUserName = infoReviewDetailViewModel.review.value?.username ?: ""
+                showInfoReviewDeleteBottomSheet(infoReviewDetailArgs.review.itemId, commentUserName)
             }
 
             // 리뷰 댓글
@@ -164,8 +165,26 @@ class InfoReviewDetailFragment : BaseFragment<FragmentInfoReviewDetailBinding>(R
         }
     }
 
-    private fun showInfoReviewDeleteBottomSheet() {
-        InfoReviewDeleteBottomSheet().show(parentFragmentManager, "delete review")
+    private fun showInfoReviewDeleteBottomSheet(reviewItemId: Int, commentUserName: String) {
+        val currentUserName = infoReviewDetailViewModel.getUserNameFromToken()
+        if (commentUserName.equals(currentUserName, ignoreCase = true)) {
+            InfoReviewDeleteBottomSheet(
+                reviewItemId = reviewItemId,
+                onDeleteConfirmed = { deleteItemId ->
+                    infoReviewDetailViewModel.deleteReview(deleteItemId){
+                        findNavController().popBackStack()
+                    }
+                }
+            ).show(parentFragmentManager, "delete review")
+        } else {
+            // 본인이 아니면 신고 BottomSheet
+            InfoReviewReportBottomSheet(
+                reviewItemId = reviewItemId,
+                onReportConfirmed = { reportedId ->
+                    // 신고 후 처리
+                }
+            ).show(parentFragmentManager, "report review")
+        }
     }
 
     private fun reviewHeartClicked() {

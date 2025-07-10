@@ -1,5 +1,6 @@
 package com.ita.poppop.data.remote.repository.popups
 
+import com.ita.poppop.data.remote.dto.reviews.DeleteReviewResponse
 import com.ita.poppop.data.remote.dto.reviews.GetReviewListResponse
 import com.ita.poppop.data.remote.dto.reviews.GetReviewResponse
 import com.ita.poppop.data.remote.dto.reviews.PostReviewLikesResponse
@@ -32,4 +33,10 @@ interface ReviewRepository {
         @Header("Authorization") accessToken: String,
         @Path("reviewId") reviewId: Int
     ): Response<PostReviewLikesResponse>
+
+    @POST("/api/v1/popups/{popupId}/reviews/{reviewId}/delete")
+    suspend fun deleteReview(
+        @Header("Authorization") accessToken: String,
+        @Path("reviewId") reviewId: Int
+    ): Response<DeleteReviewResponse>
 }

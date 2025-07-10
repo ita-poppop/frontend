@@ -62,6 +62,24 @@ class InfoReviewDetailViewModel(
         }
     }
 
+    fun deleteReview(reviewId: Int, onSuccess: (() -> Unit)? = null) {
+        viewModelScope.launch {
+            try {
+                val response = withContext(Dispatchers.IO) {
+                    repository.deleteReview(accessToken, reviewId)
+                }
+                if (response.isSuccessful) {
+                    Log.d("ReviewDelete_SUCCESS", "Deleted reviewId: $reviewId")
+                    onSuccess?.invoke()
+                } else {
+                    Log.e("ReviewDelete_ERROR", "API error: ${response.message()} (${response.code()})")
+                }
+            } catch (e: Exception) {
+                Log.e("ReviewDelete_ERROR", "Exception: ${e.message}", e)
+            }
+        }
+    }
+
     fun getInfoReviewDetail(popupId: Int, reviewId: Int) {
         viewModelScope.launch {
             try {
@@ -118,5 +136,24 @@ class InfoReviewDetailViewModel(
             reviewImage = reviewImages,
             likedByUser = data.likedByUser
         )
+    }
+
+    fun getUserNameFromToken(): String? {
+        val token = accessToken
+        val parts = token.split(".")
+        if (parts.size < 2) return null
+        return try {
+            val payloadJson = String(android.util.Base64.decode(parts[1], android.util.Base64.DEFAULT))
+            Log.d("TokenPayload", "payloadJson: $payloadJson")  // 이걸로 payload 확인
+            val jsonObj = org.json.JSONObject(payloadJson)
+            val name = jsonObj.optString("sub").takeIf { it.isNotEmpty() }
+                ?: jsonObj.optString("nickName").takeIf { it.isNotEmpty() }
+
+            Log.d("TokenUserName", "userName: $name")
+            name
+        } catch (e: Exception) {
+            Log.e("TokenUserName", "Error decoding token", e)
+            null
+        }
     }
 }

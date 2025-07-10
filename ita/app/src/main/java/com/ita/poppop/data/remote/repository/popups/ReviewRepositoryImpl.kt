@@ -1,6 +1,7 @@
 package com.ita.poppop.data.remote.repository.popups
 
 import com.ita.poppop.data.remote.api.ReviewApi
+import com.ita.poppop.data.remote.dto.reviews.DeleteReviewResponse
 import com.ita.poppop.data.remote.dto.reviews.GetReviewListResponse
 import com.ita.poppop.data.remote.dto.reviews.GetReviewResponse
 import com.ita.poppop.data.remote.dto.reviews.PostReviewLikesResponse
@@ -59,6 +60,26 @@ class ReviewRepositoryImpl(
     ): Response<PostReviewLikesResponse> {
         try {
             val response = api.postReviewLikes("Bearer $accessToken", reviewId)
+
+            if (response.code() == 200) {
+                return response
+            } else {
+                throw Exception("API 응답 오류: ${response.message()} (코드: ${response.code()})")
+            }
+        } catch (e: HttpException) {
+            // HTTP 500 에러 등을 명확하게 전달
+            throw Exception("HTTP ${e.code()}: ${e.message()}")
+        } catch (e: Exception) {
+            throw e
+        }
+    }
+
+    override suspend fun deleteReview(
+        accessToken: String,
+        reviewId: Int
+    ): Response<DeleteReviewResponse> {
+        try {
+            val response = api.deleteReview("Bearer $accessToken", reviewId)
 
             if (response.code() == 200) {
                 return response

@@ -8,7 +8,10 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.ita.poppop.databinding.FragmentInfoReviewDeleteBottomSheetBinding
 
-class InfoReviewDeleteBottomSheet : BottomSheetDialogFragment() {
+class InfoReviewDeleteBottomSheet(
+    private val reviewItemId: Int,
+    private val onDeleteConfirmed: (position: Int) -> Unit
+) : BottomSheetDialogFragment() {
 
     private var _binding: FragmentInfoReviewDeleteBottomSheetBinding? = null
     private val binding get() = _binding!!
@@ -39,7 +42,10 @@ class InfoReviewDeleteBottomSheet : BottomSheetDialogFragment() {
     private fun showReviewDeleteDialog() {
         InfoReviewDeleteDialog(requireContext()).apply {
             setItemClickListener(object : InfoReviewDeleteDialog.ItemClickListener {
-                override fun onClick(tel: String) {
+                override fun onClick(message: String) {
+                    onDeleteConfirmed(reviewItemId)  // 콜백 호출
+                    dismiss()
+                    this@InfoReviewDeleteBottomSheet.dismiss()
                 }
             })
             show()
