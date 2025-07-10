@@ -110,6 +110,20 @@ class InfoFragment: BaseFragment<FragmentInfoBinding>(R.layout.fragment_info) {
             infoViewModel.infoData.observe(viewLifecycleOwner, Observer { info ->
                 infoViewHolder.bind(info, infoViewModel)
                 popupItem = info
+
+                infoViewHolder.bind(info, infoViewModel)
+                popupItem = info
+
+                isFavorite = info.bookmarked  // 초기 상태 저장
+                val icStar = if (isFavorite) {
+                    R.drawable.info_favorites_star_icon_filled
+                } else {
+                    R.drawable.info_favorites_star_icon_outlined
+                }
+                binding.acbFavorites.setCompoundDrawablesWithIntrinsicBounds(
+                    ContextCompat.getDrawable(requireContext(), icStar),
+                    null, null, null
+                )
             })
 
             val storyRepository = StoryRepositoryImpl(RetrofitClient.storyApi)

@@ -17,5 +17,6 @@ data class PopupDetailData(
     val location: String,
     val date: String,
     val comment: String,
-    val detail:	String
+    val detail:	String,
+    val bookmarked: Boolean
 ) : Parcelable
