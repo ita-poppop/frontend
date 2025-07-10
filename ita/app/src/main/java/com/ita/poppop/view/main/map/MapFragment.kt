@@ -137,6 +137,9 @@ class MapFragment: BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnMa
                         val cameraUpdate = CameraUpdate.toCameraPosition(cameraPosition)
                             .animate(CameraAnimation.Easing)
                         naverMap.moveCamera(cameraUpdate)
+
+                        mapViewModel.getLocationPopup(latLng.longitude,latLng.latitude)
+
                         Log.d("MapFragment", "${address} 이동 완료")
 
                     } catch (e: Exception) {
@@ -289,6 +292,14 @@ class MapFragment: BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnMa
         }
         binding.acbRebrowse.setOnClickListener {
             it.visibility = View.GONE
+
+            if (::naverMap.isInitialized) {
+                val currentPosition = naverMap.cameraPosition.target
+                val longitude = currentPosition.longitude
+                val latitude = currentPosition.latitude
+
+                mapViewModel.getLocationPopup(longitude, latitude)
+            }
         }
 
         // naverMap 호출 후 데이터 있을시 마커 추가
@@ -423,6 +434,16 @@ class MapFragment: BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnMa
                             width = dpToPx(48)
                             height = dpToPx(63)
                             map = naverMap
+
+                            setOnClickListener {
+                                // 마커 클릭 시 팝업 상세 화면으로 이동
+                                val popupId = item.itemId
+                                val parentNavController = requireActivity().findNavController(R.id.fcv_main_activity_container)
+                                val action = MainFragmentDirections.actionMainFragmentToNaviInfo(popupId)
+                                parentNavController.navigate(action)
+
+                                true
+                            }
                         }
 
                         markers.add(marker)
