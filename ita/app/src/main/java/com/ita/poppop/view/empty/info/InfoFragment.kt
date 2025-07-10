@@ -154,8 +154,22 @@ class InfoFragment: BaseFragment<FragmentInfoBinding>(R.layout.fragment_info) {
                     }
                 }
         }
-
     }
+
+    fun recommendItemClicked(popupId: Int) {
+
+        binding.icInfoTablayout.tlInfo.getTabAt(0)?.select()
+
+        // 팝업 아이템 갱신
+        infoViewModel.getInfo(popupId)
+        binding.svInfo.smoothScrollTo(0, 0)
+        infoStoryViewModel.getInfoStory(popupId)
+        val currentFragment = childFragmentManager.findFragmentById(R.id.fl_info_tab)
+        if (currentFragment is InfoDetailFragment) {
+            currentFragment.updatePopup(popupId)
+        }
+    }
+
     private fun loadFragment(fragment: Fragment, popupId: Int): Boolean {
         fragment.arguments = Bundle().apply {
             putInt("popupId", popupId)

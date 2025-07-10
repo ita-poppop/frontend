@@ -41,6 +41,9 @@
         <action
             android:id="@+id/action_infoReviewDetailFragment_to_infoReviewEditFragment"
             app:destination="@id/infoReviewEditFragment" />
+        <action
+            android:id="@+id/action_infoReviewDetailFragment_to_infoFragment"
+            app:destination="@id/infoFragment" />
     </fragment>
 
     <fragment

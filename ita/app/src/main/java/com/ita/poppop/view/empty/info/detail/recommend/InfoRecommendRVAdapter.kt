@@ -13,6 +13,16 @@ import com.ita.poppop.databinding.ItemInfoRecommendBinding
 class InfoRecommendRVAdapter: ListAdapter<InfoRecommendRVItem, InfoRecommendRVAdapter.InfoRecommendViewHolder>(
     InfoRecommendDiffutillCallback()
 )  {
+
+    interface InfoRecommendItemClickListener{
+        fun onItemClick(position: Int)
+    }
+    private lateinit var infoRecommendItemClickListener : InfoRecommendItemClickListener
+
+    fun setInfoRecommendItemClickListener(itemClickListener: InfoRecommendItemClickListener){
+        infoRecommendItemClickListener = itemClickListener
+    }
+
     class InfoRecommendViewHolder(val binding: ItemInfoRecommendBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: InfoRecommendRVItem) {
             binding.apply {
@@ -23,6 +33,13 @@ class InfoRecommendRVAdapter: ListAdapter<InfoRecommendRVItem, InfoRecommendRVAd
                     .into(ivInfoRecommend)
                 tvInfoRecommendTitle.text = item.title
                 tvRecommendLocation.text = item.location
+            }
+        }
+        fun bindClickListeners(
+            onItemClick: (Int) -> Unit
+        ) {
+            binding.clInfoRecommend.setOnClickListener {
+                onItemClick(adapterPosition)
             }
         }
     }
@@ -50,5 +67,8 @@ class InfoRecommendRVAdapter: ListAdapter<InfoRecommendRVItem, InfoRecommendRVAd
     override fun onBindViewHolder(holder: InfoRecommendViewHolder, position: Int) {
         val item = getItem(position)
         holder.bind(item)
+        holder.bindClickListeners(
+            onItemClick = { infoRecommendItemClickListener.onItemClick(it) }
+        )
     }
 }
