@@ -48,21 +48,6 @@ class InfoReviewCommentViewModel(
                 Log.e("CommentApi_ERROR1", "Exception: ${e.message}", e)
             }
         }
-
-        /*val currentList = _inforeviewcommentList.value ?: mutableListOf()
-        val newId = (currentList.maxOfOrNull { it.itemId } ?: 0) + 1
-        val newComment = InfoReviewCommentRVItem(
-            itemId = newId,
-            username = "hello",
-            profileImage = "R.drawable._profile_load_icon",
-            content = content,
-            time = "방금 전",
-            reply = 0
-        )
-        val updatedList = currentList.toMutableList()
-        updatedList.add(newComment)
-        _inforeviewcommentList.value = updatedList*/
-
     }
     
     // 리뷰 상세 화면에서 댓글 삭제
@@ -87,12 +72,6 @@ class InfoReviewCommentViewModel(
                 Log.e("CommentApi_ERROR2", "Exception: ${e.message}", e)
             }
         }
-        /*val currentList = _inforeviewcommentList.value ?: return
-        Log.d("DeleteComment", "Deleting id: $commentItemId")
-        Log.d("DeleteComment", "Before delete: ${currentList.map { it.itemId }}")
-        val updatedList = currentList.filterNot { it.itemId == commentItemId }.toMutableList()
-        Log.d("DeleteComment", "After delete: ${updatedList.map { it.itemId }}")
-        _inforeviewcommentList.value = updatedList*/
     }
 
     fun getInfoReviewCommentList(reviewId: Int) {
@@ -103,7 +82,12 @@ class InfoReviewCommentViewModel(
                 }
                 if (response.isSuccessful) {
                     response.body()?.let { body ->
-                        val commentItems = body.data.map { commentListDtoToAdapterItem(it) }.toMutableList()
+                        val currentUserName = getUserNameFromToken() // 사용자 이름 파싱
+                        val commentItems = body.data.map { data ->
+                            val item = commentListDtoToAdapterItem(data)
+                            Log.d("CompareUserName", "item.username=${item.username}, currentUserName=$currentUserName")
+                            item.copy(isMine = item.username.equals(currentUserName, ignoreCase = true)) // 이름으로 비교
+                        }.toMutableList()
                         _inforeviewcommentList.value = commentItems
                         Log.d("CommentApi_SUCCESS", "ReviewCommentList: $commentItems")
                     }
@@ -127,9 +111,7 @@ class InfoReviewCommentViewModel(
             username = data.writerName,
             time = convertTimeUtil,
             reply = data.children.size,
-            content = data.content,
-            isMine = false
-
+            content = data.content
         )
     }
 
@@ -143,9 +125,27 @@ class InfoReviewCommentViewModel(
             username = data.writerName,
             time = convertTimeUtil,
             reply = data.replyCount,
-            content = data.content,
-            isMine = false
+            content = data.content
         )
+    }
+
+    fun getUserNameFromToken(): String? {
+        val token = accessToken
+        val parts = token.split(".")
+        if (parts.size < 2) return null
+        return try {
+            val payloadJson = String(android.util.Base64.decode(parts[1], android.util.Base64.DEFAULT))
+            Log.d("TokenPayload", "payloadJson: $payloadJson")  // 이걸로 payload 확인
+            val jsonObj = org.json.JSONObject(payloadJson)
+            val name = jsonObj.optString("sub").takeIf { it.isNotEmpty() }
+                ?: jsonObj.optString("nickName").takeIf { it.isNotEmpty() }
+
+            Log.d("TokenUserName", "userName: $name")
+            name
+        } catch (e: Exception) {
+            Log.e("TokenUserName", "Error decoding token", e)
+            null
+        }
     }
 
 

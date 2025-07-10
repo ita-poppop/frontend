@@ -16,6 +16,7 @@ import com.ita.poppop.databinding.FragmentInfoReviewDetailReplyBinding
 import com.ita.poppop.util.ViewModelFactory
 import com.ita.poppop.util.remote.RetrofitClient
 import com.ita.poppop.view.empty.info.review.comment.InfoReviewCommentDeleteBottomSheet
+import com.ita.poppop.view.empty.info.review.comment.InfoReviewCommentReportBottomSheet
 import com.ita.poppop.viewmodel.MainAViewModel
 
 class InfoReviewDetailReplyFragment : BaseFragment<FragmentInfoReviewDetailReplyBinding>(R.layout.fragment_info_review_detail_reply){
@@ -102,12 +103,21 @@ class InfoReviewDetailReplyFragment : BaseFragment<FragmentInfoReviewDetailReply
                     if (item == null) {
                         return
                     }
-                    InfoReviewCommentDeleteBottomSheet(
-                        commentItemId = item.itemId,
-                        onDeleteConfirmed = { deleteItemId ->
-                            infoReviewDetailReplyViewModel.deleteReply(deleteItemId)
-                        }
-                    ).show(parentFragmentManager, "delete reply")
+                    if (item.isMine) {
+                        InfoReviewCommentDeleteBottomSheet(
+                            commentItemId = item.itemId,
+                            onDeleteConfirmed = { deleteItemId ->
+                                infoReviewDetailReplyViewModel.deleteReply(deleteItemId)
+                            }
+                        ).show(parentFragmentManager, "delete reply")
+                    } else {
+                        InfoReviewCommentReportBottomSheet(
+                            commentItemId = item.itemId,
+                            onReportConfirmed = { reportedId ->
+                                // 신고 후 처리
+                            }
+                        ).show(parentFragmentManager, "report reply")
+                    }
                 }
             })
             handleReplyUploadArea()

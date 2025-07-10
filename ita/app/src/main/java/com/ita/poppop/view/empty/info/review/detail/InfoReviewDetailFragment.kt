@@ -92,12 +92,8 @@ class InfoReviewDetailFragment : BaseFragment<FragmentInfoReviewDetailBinding>(R
             infoReviewCommentViewModel = ViewModelProvider(this@InfoReviewDetailFragment, commentFactory)[InfoReviewCommentViewModel::class.java]
             infoReviewCommentViewModel.getInfoReviewCommentList(infoReviewDetailArgs.review.itemId)
             infoReviewCommentViewModel.inforeviewcommentList.observe(viewLifecycleOwner) { commentList ->
-                val currentUserId = getUserIdFromToken()
-                val updatedList = commentList.map { comment ->
-                    comment.apply { isMine = (writerId == currentUserId) }
-                }
-                infoReviewCommentRVAdapter.submitList(updatedList)
-                //infoReviewCommentRVAdapter.submitList(commentList)
+
+                infoReviewCommentRVAdapter.submitList(commentList)
             }
             rvReviewComment.apply {
                 val layoutmanager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
@@ -141,7 +137,7 @@ class InfoReviewDetailFragment : BaseFragment<FragmentInfoReviewDetailBinding>(R
                 override fun onDotClick(position: Int) {
                     val item = infoReviewCommentRVAdapter.currentList.getOrNull(position) ?: return
 
-                    if (item.isMine == false) {
+                    if (item.isMine) {
                         InfoReviewCommentDeleteBottomSheet(
                             commentItemId = item.itemId,
                             onDeleteConfirmed = { deleteItemId ->
@@ -157,7 +153,7 @@ class InfoReviewDetailFragment : BaseFragment<FragmentInfoReviewDetailBinding>(R
                         InfoReviewCommentReportBottomSheet(
                             commentItemId = item.itemId,
                             onReportConfirmed = { reportedId ->
-                                // 신고 후 처리 (토스트 등)
+                                // 신고 후 처리
                             }
                         ).show(parentFragmentManager, "report comment")
                     }
@@ -165,20 +161,6 @@ class InfoReviewDetailFragment : BaseFragment<FragmentInfoReviewDetailBinding>(R
             })
 
             handleCommentUploadArea()
-        }
-    }
-
-    private fun getUserIdFromToken(): String? {
-        val token = mainViewModel.tokenPair.value.first ?: return null
-        val parts = token.split(".")
-        if (parts.size < 2) return null
-        return try {
-            val payloadJson = String(android.util.Base64.decode(parts[1], android.util.Base64.DEFAULT))
-            //val payloadJson = String(android.util.Base64.decode(parts[1], android.util.Base64.URL_SAFE))
-            val jsonObj = org.json.JSONObject(payloadJson)
-            jsonObj.getString("sub")  // 토큰 payload에 userId가 "sub"에 있다고 가정
-        } catch (e: Exception) {
-            null
         }
     }
 

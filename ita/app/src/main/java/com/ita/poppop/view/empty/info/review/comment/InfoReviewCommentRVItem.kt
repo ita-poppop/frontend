@@ -11,7 +11,6 @@ data class InfoReviewCommentRVItem(
     var time: String,
     var content: String,
     var reply: Int?,
-    val writerId: String? = null,
-    var isMine: Boolean
+    var isMine: Boolean = false
 ) : Parcelable
 
