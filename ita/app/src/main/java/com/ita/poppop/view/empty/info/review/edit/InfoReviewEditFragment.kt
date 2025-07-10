@@ -3,7 +3,9 @@ package com.ita.poppop.view.empty.info.review.edit
 import android.net.Uri
 import android.util.Log
 import androidx.core.os.BundleCompat
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavDirections
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
@@ -11,44 +13,76 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import com.ita.poppop.R
 import com.ita.poppop.base.BaseFragment
+import com.ita.poppop.data.remote.repository.popups.ReviewRepository
+import com.ita.poppop.data.remote.repository.popups.ReviewRepositoryImpl
 import com.ita.poppop.databinding.FragmentInfoReviewEditBinding
 import com.ita.poppop.util.bottomsheet.UploadBottomSheet
+import com.ita.poppop.util.remote.RetrofitClient
 import com.ita.poppop.view.empty.home_upload.sub.ImageItem
 import com.ita.poppop.view.empty.home_upload.sub.UploadImageAdapter
 import com.ita.poppop.view.empty.home_upload.sub.UploadImageItemDecoration
-import com.ita.poppop.view.empty.info.review.detail.InfoReviewDetailFragmentArgs
+import com.ita.poppop.viewmodel.MainAViewModel
 import com.ita.poppop.viewmodel.empty.upload.UploadViewModel
+import com.ita.poppop.viewmodel.main.MainViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import retrofit2.HttpException
 import kotlin.math.absoluteValue
 
 class InfoReviewEditFragment: BaseFragment<FragmentInfoReviewEditBinding>(R.layout.fragment_info_review_edit) {
 
+    private val args: InfoReviewEditFragmentArgs by navArgs()
+    private var popupId: Int = -1
+    private var reviewId: Int = -1
+
     private lateinit var editReviewImageAdapter: UploadImageAdapter
     private lateinit var editReviewViewModel: UploadViewModel
-
+    private lateinit var mainViewModel: MainViewModel
+    val mainAViewModel: MainAViewModel by activityViewModels()
+    private val repository: ReviewRepository = ReviewRepositoryImpl(RetrofitClient.reviewApi)
     override fun initView() {
+        popupId = args.popupId
+        reviewId = args.reviewId
+
         setupWindowInsets()
         setupToolbar()
         setupUploadRecycler()
         setFragmentResult()
         setViewModel()
+        setupExistingContent()
+        setClickListener()
+
+        args.popupItem?.let {
+            editReviewViewModel.setPopupItem(it)
+        }
+
+
     }
 
 
     private fun setViewModel() {
         editReviewViewModel = ViewModelProvider(this)[UploadViewModel::class.java]
+        mainViewModel = ViewModelProvider(requireActivity())[MainViewModel::class.java]
         // 바인딩에 ViewModel 연결
         binding.editReviewViewModel = editReviewViewModel
+        binding.lifecycleOwner = viewLifecycleOwner
 
-        // EditItem 리스트를 관찰 (헤더가 포함된 리스트)
-        editReviewViewModel.uploadList.observe(viewLifecycleOwner) { uploadItemList ->
-            editReviewImageAdapter.submitList(uploadItemList)
+        // UploadItem 리스트를 관찰 (헤더가 포함된 리스트)
+        editReviewViewModel.uploadList.observe(viewLifecycleOwner) { editReviewItemList ->
+            Log.d("ImageList", "Current upload list size: ${editReviewItemList.size}")
+            editReviewImageAdapter.submitList(editReviewItemList.toList())
         }
-
+        editReviewViewModel.popupItem.observe(viewLifecycleOwner) { seleteItem ->
+            Log.d("editReviewFragment", "popupItem changed: $seleteItem")
+            //binding.tvUploadLocation.text = seleteItem?.title ?: ""
+        }
+        mainViewModel.selectItem.observe(viewLifecycleOwner) { seleteItem ->
+            editReviewViewModel.setPopupItem(seleteItem)
+        }
         editReviewViewModel.isAllValid.observe(viewLifecycleOwner) { valid ->
-            Log.d("checkViewModel","imageList : ${editReviewViewModel.imageList.value}")
-            Log.d("checkViewModel","popupItem : ${editReviewViewModel.popupItem.value}")
-            Log.d("checkViewModel","reviewContent : ${editReviewViewModel.reviewContent.value}")
-            binding.btEdit.isEnabled = valid
+            Log.d("editReviewFragment", "isAllValid changed: $valid")
+            binding.btnReviewEdit.isEnabled = valid
 
         }
     }
@@ -63,19 +97,19 @@ class InfoReviewEditFragment: BaseFragment<FragmentInfoReviewEditBinding>(R.layo
         }
     }
 
-    private fun setupUploadRecycler() = with(binding.rvEdit) {
+    private fun setupUploadRecycler() = with(binding.rvReviewEdit) {
         editReviewImageAdapter = UploadImageAdapter(
             onAddClick = {
-                android.util.Log.d("checkList", "Add button clicked")
+                Log.d("checkList", "Add button clicked")
                 showUploadBottomSheet()
             },
             onDeleteClick = { id ->
-                android.util.Log.d("checkList", "Delete clicked for id: $id")
+                Log.d("checkList", "Delete clicked for id: $id")
                 deleteImage(id)
             }
         )
         adapter = editReviewImageAdapter
-        layoutManager = LinearLayoutManager(context, androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL, false)
+        layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         addItemDecoration(UploadImageItemDecoration())
     }
 
@@ -95,23 +129,55 @@ class InfoReviewEditFragment: BaseFragment<FragmentInfoReviewEditBinding>(R.layo
         editReviewViewModel.removeItem(id)
     }
 
-    private fun setupToolbar() {
-        binding.mtEdit.apply {
-            setNavigationIcon(R.drawable.chevron_left)
-            setNavigationOnClickListener {
-                InfoReviewEditDialog(requireContext()).apply {
-                setItemClickListener(object : InfoReviewEditDialog.ItemClickListener {
-                    override fun onClick(message: String) {
-                        dismiss()
+    private fun setClickListener() {
+        binding.btnReviewEdit.setOnClickListener{
+            lifecycleScope.launch {
+                try {
+                    val result = withContext(Dispatchers.IO) {
+                        repository.modifyReview(
+                            mainAViewModel.tokenPair.value.first.toString(),
+                            reviewId,
+                            editReviewViewModel.reviewContent.value.toString(),
+                            editReviewViewModel.createMultipartListFromUris(requireContext())
+                        )
                     }
 
-                    override fun onCancel(message: String) {
-                        dismiss()
-                        parentFragmentManager.popBackStack()
+                    if (result.isSuccessful) {
+                        Log.d("ModifyReviewAPI_SUCCESS","result : ${result.body()}")
+                        handleBackNavigation()
                     }
-                })
-                show()
-            }}
+                } catch (e: HttpException) {
+                    // HTTP 에러 상세 정보
+                    Log.e("ModifyReviewAPI_ERROR", "HTTP ${e.code()}: ${e.response()?.errorBody()?.string()}")
+                } catch (e: Exception) {
+                    Log.e("ModifyReviewAPI_ERROR", "Exception: ${e.message}", e)
+                }
+            }
+
+
+        }
+    }
+
+    private fun setupExistingContent() {
+        editReviewViewModel.setReviewContent(args.reviewContent)
+
+        /*val existingImages = args.reviewImages?.toList() ?: emptyList()
+        Log.d("setupExistingContent", "기존 이미지 개수: ${existingImages.size}")
+
+        existingImages.forEach { imageUrl ->
+            val imageItem = ImageItem(
+                id = imageUrl.hashCode().toLong(),
+                uri = Uri.parse(imageUrl)
+            )
+            Log.d("setupExistingContent", "기존 이미지 추가 id: ${imageItem.id}")
+            editReviewViewModel.addItem(imageItem)
+        }*/
+    }
+
+    private fun setupToolbar() {
+        binding.mtReviewEdit.apply {
+            setNavigationIcon(R.drawable.icon_x_close_b)
+            setNavigationOnClickListener { handleBackNavigation() }
         }
     }
 
@@ -124,8 +190,7 @@ class InfoReviewEditFragment: BaseFragment<FragmentInfoReviewEditBinding>(R.layo
         if(editReviewViewModel.getRemainingSlots() <= 0){
             view?.let { Snackbar.make(it, "이미지는 최대 5장까지 첨부할 수 있습니다.", Snackbar.LENGTH_SHORT).show() }
         }else{
-            UploadBottomSheet(editReviewViewModel.getRemainingSlots()).show(parentFragmentManager, "Edit_sheet")
+            UploadBottomSheet(editReviewViewModel.getRemainingSlots()).show(parentFragmentManager, "upload_sheet")
         }
     }
-
 }

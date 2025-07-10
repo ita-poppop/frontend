@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ita.poppop.R
 import com.ita.poppop.base.BaseFragment
+import com.ita.poppop.data.remote.dto.popups.PopupDetailData
 import com.ita.poppop.data.remote.repository.popups.ReviewRepositoryImpl
 import com.ita.poppop.databinding.FragmentInfoReviewBinding
 import com.ita.poppop.util.remote.RetrofitClient
@@ -56,12 +57,14 @@ class InfoReviewFragment: BaseFragment<FragmentInfoReviewBinding>(R.layout.fragm
             infoReviewRVAdapter.setInfoReviewItemClickListener(object : InfoReviewRVAdapter.InfoReviewItemClickListener{
                 override fun onItemClick(position: Int) {
                     val popupId = arguments?.getInt("popupId") ?: 0
+                    val popupItem = arguments?.getParcelable<PopupDetailData>("popupItem")
                     // 선택된 리뷰 객체 전달
                     val selectedReview = infoReviewRVAdapter.currentList[position]
                     val parentNavController = requireParentFragment().findNavController()
                     val action = InfoFragmentDirections.actionInfoFragmentToInfoReviewDetailFragment(
                         popupId = popupId,
-                        review = selectedReview
+                        review = selectedReview,
+                        popupItem = popupItem
                     )
                     parentNavController.navigate(action)
 

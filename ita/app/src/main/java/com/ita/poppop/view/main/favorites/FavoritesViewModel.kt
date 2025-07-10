@@ -5,7 +5,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ita.poppop.R
 import com.ita.poppop.data.remote.dto.bookmarks.BookmarkData
 import com.ita.poppop.data.remote.repository.popup.BookmarkRepository
 import kotlinx.coroutines.Dispatchers
@@ -84,11 +83,10 @@ class FavoritesViewModel(
         return FavoritesRVItem(
             itemId = data.popupId,
             imageUrl = data.image,
-            location = data.location,
+            location = data.location.substringBefore("\n").trim(),
             title = data.title,
             period = popupPeriod,
             dday = dday
         )
     }
-
 }

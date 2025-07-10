@@ -19,6 +19,10 @@
             <argument
                 android:name="popupId"
                 app:argType="integer"/>
+            <argument
+                android:name="popupItem"
+                app:argType="com.ita.poppop.data.remote.dto.popups.PopupDetailData"
+                app:nullable="true" />
         </action>
         <action
             android:id="@+id/action_infoFragment_to_uploadFragment"
@@ -35,12 +39,25 @@
         <argument
             android:name="review"
             app:argType="com.ita.poppop.view.empty.info.review.InfoReviewRVItem" />
+        <argument
+            android:name="popupItem"
+            app:argType="com.ita.poppop.data.remote.dto.popups.PopupDetailData"
+            app:nullable="true" />
         <action
             android:id="@+id/action_infoReviewDetailFragment_to_infoReviewDetailReplyFragment"
             app:destination="@id/infoReviewDetailReplyFragment" />
         <action
             android:id="@+id/action_infoReviewDetailFragment_to_infoReviewEditFragment"
-            app:destination="@id/infoReviewEditFragment" />
+            app:destination="@id/infoReviewEditFragment" >
+            <argument
+                android:name="popupId"
+                app:argType="integer" />
+            <argument
+                android:name="popupItem"
+                app:argType="com.ita.poppop.data.remote.dto.popups.SearchData"
+                app:nullable="true" />
+
+        </action>
         <action
             android:id="@+id/action_infoReviewDetailFragment_to_infoFragment"
             app:destination="@id/infoFragment" />
@@ -72,5 +89,22 @@
     <fragment
         android:id="@+id/infoReviewEditFragment"
         android:name="com.ita.poppop.view.empty.info.review.edit.InfoReviewEditFragment"
-        android:label="InfoReviewEditFragment" />
+        android:label="InfoReviewEditFragment" >
+        <argument
+            android:name="popupId"
+            app:argType="integer" />
+        <argument
+            android:name="popupItem"
+            app:argType="com.ita.poppop.data.remote.dto.popups.SearchData"
+            app:nullable="true"/>
+        <argument
+            android:name="reviewContent"
+            app:argType="string"/>
+        <argument
+            android:name="reviewImages"
+            app:argType="string[]"/>
+        <argument
+            android:name="reviewId"
+            app:argType="integer" />
+    </fragment>
 </navigation>

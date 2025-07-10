@@ -1,6 +1,7 @@
 package com.ita.poppop.view.empty.info.review.detail
 
 import android.graphics.Rect
+import android.util.Log
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
@@ -10,6 +11,8 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ita.poppop.R
 import com.ita.poppop.base.BaseFragment
+import com.ita.poppop.data.remote.dto.popups.PopupDetailData
+import com.ita.poppop.data.remote.dto.popups.SearchData
 import com.ita.poppop.data.remote.repository.popup.CommentRepositoryImpl
 import com.ita.poppop.data.remote.repository.popups.ReviewRepositoryImpl
 import com.ita.poppop.databinding.FragmentInfoReviewDetailBinding
@@ -40,6 +43,8 @@ class InfoReviewDetailFragment : BaseFragment<FragmentInfoReviewDetailBinding>(R
     }
 
     override fun initView() {
+
+
         setupWindowInsets()
         setupBackPressedCallback()
 
@@ -53,8 +58,6 @@ class InfoReviewDetailFragment : BaseFragment<FragmentInfoReviewDetailBinding>(R
                 findNavController().popBackStack()
             }
 
-            //infoReviewDetailViewModel = ViewModelProvider(this@InfoReviewDetailFragment).get(InfoReviewDetailViewModel::class.java)
-            //infoReviewDetailViewModel.getInfoReviewDetail(infoReviewDetailArgs.review.itemId)
             // 리뷰 상세
             val reviewRepository = ReviewRepositoryImpl(RetrofitClient.reviewApi)
             val reviewFactory = ViewModelFactory { InfoReviewDetailViewModel(mainViewModel.tokenPair.value.first.toString(), reviewRepository) }
@@ -166,10 +169,36 @@ class InfoReviewDetailFragment : BaseFragment<FragmentInfoReviewDetailBinding>(R
     }
 
     private fun showInfoReviewDeleteBottomSheet(reviewItemId: Int, commentUserName: String) {
+        val popupId = infoReviewDetailArgs.popupId
+        val popupItem = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+            arguments?.getParcelable("popupItem", PopupDetailData::class.java)
+        } else {
+            @Suppress("DEPRECATION")
+            arguments?.getParcelable<PopupDetailData>("popupItem")
+        }
+
+        val convertedPopupItem = popupItem?.let {
+            val searchData = SearchData(
+                id = it.id,
+                title = it.title,
+                image = it.imageUrl,
+                location = it.location
+            )
+            searchData
+        }
+
+        val review = infoReviewDetailViewModel.review.value
+        val reviewContent = review?.content ?: ""
+        val reviewImages: Array<String> = review?.reviewImage?.map { it.imageUrl }?.toTypedArray() ?: emptyArray()
+
         val currentUserName = infoReviewDetailViewModel.getUserNameFromToken()
         if (commentUserName.equals(currentUserName, ignoreCase = true)) {
             InfoReviewDeleteBottomSheet(
                 reviewItemId = reviewItemId,
+                popupId = popupId,
+                popupItem = convertedPopupItem,
+                reviewContent = reviewContent,
+                reviewImages = reviewImages,
                 onDeleteConfirmed = { deleteItemId ->
                     infoReviewDetailViewModel.deleteReview(deleteItemId){
                         findNavController().popBackStack()

@@ -1,7 +1,6 @@
 package com.ita.poppop.view.empty.info
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -173,6 +172,7 @@ class InfoFragment: BaseFragment<FragmentInfoBinding>(R.layout.fragment_info) {
     private fun loadFragment(fragment: Fragment, popupId: Int): Boolean {
         fragment.arguments = Bundle().apply {
             putInt("popupId", popupId)
+            popupItem?.let { putParcelable("popupItem", it) }
         }
         childFragmentManager.beginTransaction()
             .replace(R.id.fl_info_tab, fragment)

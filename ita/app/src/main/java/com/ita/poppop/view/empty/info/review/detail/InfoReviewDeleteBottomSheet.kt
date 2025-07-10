@@ -6,10 +6,15 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.ita.poppop.data.remote.dto.popups.SearchData
 import com.ita.poppop.databinding.FragmentInfoReviewDeleteBottomSheetBinding
 
 class InfoReviewDeleteBottomSheet(
     private val reviewItemId: Int,
+    private val popupId: Int,
+    private val popupItem: SearchData?,
+    private val reviewContent: String,
+    private val reviewImages: Array<String>,
     private val onDeleteConfirmed: (position: Int) -> Unit
 ) : BottomSheetDialogFragment() {
 
@@ -55,7 +60,13 @@ class InfoReviewDeleteBottomSheet(
     private fun gotoReviewEditFragment() {
         dismiss()
         val parentNavController = requireParentFragment().findNavController()
-        val action = InfoReviewDetailFragmentDirections.actionInfoReviewDetailFragmentToInfoReviewEditFragment()
+        val action = InfoReviewDetailFragmentDirections.actionInfoReviewDetailFragmentToInfoReviewEditFragment(
+            popupId = popupId,
+            popupItem = popupItem,
+            reviewContent = reviewContent,
+            reviewImages = reviewImages,
+            reviewId = reviewItemId
+        )
         parentNavController.navigate(action)
     }
 
