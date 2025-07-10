@@ -20,8 +20,6 @@ class MainFragment: BaseFragment<FragmentMainBinding>(R.layout.fragment_main) {
     override fun initView() {
         Log.e("checkStartFlow", "MainFragment")
 
-
-
         binding.apply {
             // FragmentContainerView에 동적으로 navi 연결
             val navHostFragment = childFragmentManager

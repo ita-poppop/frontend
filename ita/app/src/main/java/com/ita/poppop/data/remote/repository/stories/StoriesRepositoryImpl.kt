@@ -9,7 +9,8 @@ class StoriesRepositoryImpl(
     private val api: StoriesApi
 ) : StoriesRepository {
     override suspend fun getStories(
-        page: Int, size: Int
+        page: Int,
+        size: Int
     ): Response<GetStoriesResponse> {
         try {
             val response = api.getStories(page, size)

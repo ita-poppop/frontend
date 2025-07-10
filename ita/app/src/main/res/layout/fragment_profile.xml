@@ -59,15 +59,23 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/materialToolbar">
-
-            <ImageView
-                android:id="@+id/iv_profile"
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cv_profile"
                 android:layout_width="@dimen/item_72"
                 android:layout_height="@dimen/item_72"
+                app:cardCornerRadius="@dimen/item_36"
+                app:cardElevation="0dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/_profile_load_icon" />
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                    android:id="@+id/iv_profile"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:srcCompat="@drawable/_profile_load_icon"/>
+            </androidx.cardview.widget.CardView>
+
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="0dp"
@@ -76,7 +84,7 @@
                 android:layout_marginStart="@dimen/margin_20"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/iv_profile"
+                app:layout_constraintStart_toEndOf="@+id/cv_profile"
                 app:layout_constraintTop_toTopOf="parent">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
@@ -89,6 +97,7 @@
                     app:layout_constraintTop_toTopOf="parent">
 
                     <TextView
+                        android:id="@+id/tv_user_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal|start"
@@ -145,7 +154,7 @@
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <TextView
-                        android:id="@+id/textView3"
+                        android:id="@+id/tv_user_review_count"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal|start"
@@ -176,10 +185,11 @@
                         android:lineSpacingExtra="7.5sp"
                         android:textSize="@dimen/text_15"
                         app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintStart_toEndOf="@+id/textView3"
+                        app:layout_constraintStart_toEndOf="@+id/tv_user_review_count"
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <TextView
+                        android:id="@+id/tv_user_likes_count"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal|start"
@@ -261,6 +271,7 @@
             android:id="@+id/rv_profile_my_review"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:minHeight="@dimen/item_148"
             android:layout_marginTop="@dimen/margin_2"
             android:paddingHorizontal="@dimen/padding_16"
             android:paddingTop="@dimen/padding_14"

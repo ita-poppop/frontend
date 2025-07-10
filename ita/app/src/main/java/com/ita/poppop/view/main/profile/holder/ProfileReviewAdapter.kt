@@ -3,14 +3,31 @@ package com.ita.poppop.view.main.profile.holder
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.ita.poppop.data.remote.dto.profile.ReviewItem
 import com.ita.poppop.databinding.ItemProfileReviewLayoutBinding
 
 
 class ProfileReviewAdapter(
-    private var items : MutableList<Int>,
+    private var items : List<ReviewItem>,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     init {
         setHasStableIds(true)
+    }
+
+    inner class ProfileReviewViewHolder(
+        private val binding: ItemProfileReviewLayoutBinding,
+    ) : RecyclerView.ViewHolder(binding.root) {
+        fun bind(item: ReviewItem) {
+            Glide.with(binding.root)
+                .load(item.popupImageUrl)
+                .centerCrop()
+                .into(binding.ivUserReviewPoster)
+
+            binding.tvUserReviewTitle.text = item.popupTitle
+            binding.tvUserReviewDate.text = item.startDate + "-" + item.endDate
+
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -19,12 +36,12 @@ class ProfileReviewAdapter(
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        (holder as ProfileReviewViewHolder).bind()
+        (holder as ProfileReviewViewHolder).bind(items[position])
     }
 
 
     // 아이템 반환 메서드
-    private fun getItem(position: Int): Int {
+    private fun getItem(position: Int): ReviewItem {
         return items[position]
     }
 

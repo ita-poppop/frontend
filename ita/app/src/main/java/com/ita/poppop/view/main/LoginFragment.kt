@@ -49,7 +49,6 @@ class LoginFragment: BaseFragment<FragmentLoginBinding>(R.layout.fragment_login)
                 LoginManager.getInstance().signInWithKakao(object : LoginManager.SignInStatusCallback {
                     override fun onResult(isSignIn: LoginManager.User?) {
                         if(isSignIn != null){
-                            Log.d("checkUser","Kakao isSignIn : ${isSignIn}")
                             lifecycleScope.launch {
                                 try {
                                     // SignupRequest 객체 생성
@@ -67,18 +66,20 @@ class LoginFragment: BaseFragment<FragmentLoginBinding>(R.layout.fragment_login)
 
                                     if (result.isSuccessful) {
                                         mainAViewModel.setTokenPair(result.body()!!.data.accessTocken,result.body()!!.data.refreshTocken)
-                                        Log.e("checkToken", "Token: ${mainAViewModel.tokenPair.value}")
+                                        Log.d("checkLogin", "Token: ${mainAViewModel.tokenPair.value}")
                                         mainAViewModel.onLoginSuccess()
                                     }
                                 } catch (e: HttpException) {
                                     // HTTP 에러 상세 정보
-                                    Log.e("API_ERROR", "HTTP ${e.code()}: ${e.response()?.errorBody()?.string()}")
+                                    Log.e("checkLogin", "HTTP ${e.code()}: ${e.response()?.errorBody()?.string()}")
                                 } catch (e: Exception) {
-                                    Log.e("API_ERROR", "Exception: ${e.message}", e)
+                                    Log.e("checkLogin", "Exception: ${e.message}", e)
                                 }
                             }
+
                         }else{
-                            Log.d("checkUser"," Kakao isSignIn : false")
+                            Log.d("checkLogin"," Kakao isSignIn : 카카오 로그인 실패")
+
                         }
                     }
                 },requireContext())
@@ -87,7 +88,7 @@ class LoginFragment: BaseFragment<FragmentLoginBinding>(R.layout.fragment_login)
                 LoginManager.getInstance().signInWithGoogle(object : LoginManager.SignInStatusCallback {
                     override fun onResult(isSignIn: LoginManager.User?) {
                         if(isSignIn != null){
-                            Log.d("checkUser","Google isSignIn : ${isSignIn}")
+                            Log.d("checkLogin","Google isSignIn : ${isSignIn}")
                             lifecycleScope.launch {
                                 try {
                                     // SignupRequest 객체 생성
@@ -105,18 +106,18 @@ class LoginFragment: BaseFragment<FragmentLoginBinding>(R.layout.fragment_login)
 
                                     if (result.isSuccessful) {
                                         mainAViewModel.setTokenPair(result.body()!!.data.accessTocken,result.body()!!.data.refreshTocken)
-                                        Log.e("checkToken", "Token: ${mainAViewModel.tokenPair.value}")
+                                        Log.d("checkLogin", "Token: ${mainAViewModel.tokenPair.value}")
                                         mainAViewModel.onLoginSuccess()
                                     }
                                 } catch (e: HttpException) {
                                     // HTTP 에러 상세 정보
-                                    Log.e("API_ERROR", "HTTP ${e.code()}: ${e.response()?.errorBody()?.string()}")
+                                    Log.e("checkLogin", "HTTP ${e.code()}: ${e.response()?.errorBody()?.string()}")
                                 } catch (e: Exception) {
-                                    Log.e("API_ERROR", "Exception: ${e.message}", e)
+                                    Log.e("checkLogin", "Exception: ${e.message}", e)
                                 }
                             }
                         }else{
-                            Log.d("checkUser"," Google isSignIn : false")
+                            Log.d("checkLogin"," Google isSignIn : false")
                         }
                     }
                 },requireContext())

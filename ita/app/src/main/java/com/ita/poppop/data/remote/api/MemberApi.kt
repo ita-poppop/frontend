@@ -20,25 +20,25 @@ interface MemberApi {
         @Body signupRequest: SignupRequest
     ): Response<PostSignupResponse>
 
-    @POST("/api/v1/member/refresh")
-    suspend fun postRefresh(
-        @Header("RefreshToken") refreshToken: String
-    ): Response<PostRefreshResponse>
+//    @POST("/api/v1/member/refresh")
+//    suspend fun postRefresh(
+//        @Header("RefreshToken") refreshToken: String
+//    ): Response<PostRefreshResponse>
 
     @POST("/api/v1/member/logout")
     suspend fun postLogout(
         @Header("Authorization") accessToken: String
     ): Response<PostLogoutResponse>
 
-    @GET("/api/v1/member/me")
+    @GET("/api/v1/member")
     suspend fun getMemberInfo(
         @Header("Authorization") accessToken: String
     ): Response<GetMemberInfoResponse>
 
-    @GET("/api/v1/member/exists")
-    suspend fun getMemberExists(
-        @Query("email") email: String
-    ): Response<GetMemberExistsResponse>
+//    @GET("/api/v1/member/exists")
+//    suspend fun getMemberExists(
+//        @Query("email") email: String
+//    ): Response<GetMemberExistsResponse>
 }
 
 // 요청 데이터 클래스

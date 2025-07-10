@@ -4,6 +4,7 @@ import com.ita.poppop.data.remote.api.BookmarkApi
 import com.ita.poppop.data.remote.api.CommentApi
 import com.ita.poppop.data.remote.api.MemberApi
 import com.ita.poppop.data.remote.api.PopupApi
+import com.ita.poppop.data.remote.api.ProfileApi
 import com.ita.poppop.data.remote.api.ReviewApi
 import com.ita.poppop.data.remote.api.StoriesApi
 import com.ita.poppop.data.remote.api.StoryApi
@@ -91,5 +92,9 @@ object RetrofitClient {
 
     val storiesApi: StoriesApi by lazy {
         retrofit.create(StoriesApi::class.java)
+    }
+
+    val profileApi: ProfileApi by lazy {
+        retrofit.create(ProfileApi::class.java)
     }
 }

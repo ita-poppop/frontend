@@ -136,7 +136,7 @@
                     android:layout_height="match_parent">
 
                     <EditText
-                        android:id="@+id/editText"
+                        android:id="@+id/et_profile_name"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:background="@null"
@@ -166,7 +166,7 @@
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView
-                android:id="@+id/button2"
+                android:id="@+id/mcv_edit_profile"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/item_40"
                 android:layout_marginBottom="@dimen/margin_16"
