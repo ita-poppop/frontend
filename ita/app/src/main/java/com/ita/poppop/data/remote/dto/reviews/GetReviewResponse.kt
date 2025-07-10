@@ -15,5 +15,5 @@ data class ReviewData(
     val updatedAt: String,
     val likeCount: Int,
     val commentCount: Int,
-    //val isLiked: Boolean
+    val likedByUser: Boolean
 )

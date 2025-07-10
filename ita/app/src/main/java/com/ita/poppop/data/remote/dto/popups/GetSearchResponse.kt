@@ -1,6 +1,8 @@
 package com.ita.poppop.data.remote.dto.popups
 
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import kotlinx.parcelize.Parcelize
 
 data class GetSearchResponse(
     @SerializedName("code")
@@ -13,6 +15,7 @@ data class GetSearchResponse(
     val data: List<SearchData>
 )
 
+@Parcelize
 data class SearchData(
     @SerializedName("id")
     val id: Int,
@@ -25,4 +28,4 @@ data class SearchData(
 
     @SerializedName("location")
     val location: String
-)
+) : Parcelable

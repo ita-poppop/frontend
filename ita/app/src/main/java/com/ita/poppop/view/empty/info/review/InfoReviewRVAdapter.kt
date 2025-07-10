@@ -43,6 +43,9 @@ InfoReviewDiffutillCallback()
                 tvReviewContent.text = item.content
 
                 // rvadapter 연결
+                ivReviewHeart.setImageResource(
+                    if (item.likedByUser) R.drawable.info_review_heart_icon_filled else R.drawable.info_review_heart_icon_outlined
+                )
                 // 이미지 리스트 비어 있을시 hide
                 if (item.reviewImage.isNullOrEmpty()) {
                     rvReviewImage.visibility = View.GONE

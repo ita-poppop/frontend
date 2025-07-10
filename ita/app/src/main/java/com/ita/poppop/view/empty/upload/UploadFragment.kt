@@ -18,7 +18,6 @@ import com.ita.poppop.data.remote.repository.review.ReviewRepositoryImpl
 import com.ita.poppop.databinding.FragmentUploadBinding
 import com.ita.poppop.util.bottomsheet.UploadBottomSheet
 import com.ita.poppop.util.remote.RetrofitClient
-import com.ita.poppop.view.empty.home_upload.UploadReviewFragmentDirections
 import com.ita.poppop.view.empty.home_upload.sub.ImageItem
 import com.ita.poppop.view.empty.home_upload.sub.UploadImageAdapter
 import com.ita.poppop.view.empty.home_upload.sub.UploadImageItemDecoration
@@ -50,6 +49,9 @@ class UploadFragment: BaseFragment<FragmentUploadBinding>(R.layout.fragment_uplo
         setFragmentResult()
         setClickListener()
         setViewModel()
+        val popupItem = args.popupItem
+        uploadViewModel.setPopupItem(popupItem)
+        Log.d("UploadFragment", "args.popupItem: ${args.popupItem}")
     }
 
 
@@ -58,13 +60,15 @@ class UploadFragment: BaseFragment<FragmentUploadBinding>(R.layout.fragment_uplo
         mainViewModel = ViewModelProvider(requireActivity())[MainViewModel::class.java]
         // 바인딩에 ViewModel 연결
         binding.uploadViewModel = uploadViewModel
+        binding.lifecycleOwner = viewLifecycleOwner
 
         // UploadItem 리스트를 관찰 (헤더가 포함된 리스트)
         uploadViewModel.uploadList.observe(viewLifecycleOwner) { uploadItemList ->
             uploadImageAdapter.submitList(uploadItemList)
         }
         uploadViewModel.popupItem.observe(viewLifecycleOwner) { seleteItem ->
-            binding.tvUploadLocation.text = seleteItem?.title ?: ""
+            Log.d("UploadFragment", "popupItem changed: $seleteItem")
+            //binding.tvUploadLocation.text = seleteItem?.title ?: ""
         }
         mainViewModel.selectItem.observe(viewLifecycleOwner) { seleteItem ->
             uploadViewModel.setPopupItem(seleteItem)
@@ -119,9 +123,6 @@ class UploadFragment: BaseFragment<FragmentUploadBinding>(R.layout.fragment_uplo
     }
 
     private fun setClickListener() {
-        binding.mcvSearchArea.setOnClickListener {
-            navigateTo(UploadReviewFragmentDirections.actionUploadReviewFragmentToSearchFragment())
-        }
         binding.btUpload.setOnClickListener{
             lifecycleScope.launch {
                 try {

@@ -1,4 +1,4 @@
-package com.ita.poppop.data.remote.repository.popup
+package com.ita.poppop.data.remote.repository.popups
 
 import com.ita.poppop.data.remote.api.ReviewApi
 import com.ita.poppop.data.remote.dto.reviews.GetReviewListResponse
@@ -11,12 +11,13 @@ class ReviewRepositoryImpl(
     private val api: ReviewApi
 ) : ReviewRepository {
     override suspend fun getReviewList(
+        accessToken: String,
         popupId: Int,
         page: Int,
         size: Int
     ): Response<GetReviewListResponse> {
         try {
-            val response = api.getReviewList(popupId, page, size)
+            val response = api.getReviewList("Bearer $accessToken", popupId, page, size)
 
             if (response.code() == 200) {
                 return response
@@ -32,11 +33,12 @@ class ReviewRepositoryImpl(
     }
 
     override suspend fun getReview(
+        accessToken: String,
         popupId: Int,
         reviewId: Int
     ): Response<GetReviewResponse> {
         try {
-            val response = api.getReview(popupId, reviewId)
+            val response = api.getReview("Bearer $accessToken", popupId, reviewId)
 
             if (response.code() == 200) {
                 return response

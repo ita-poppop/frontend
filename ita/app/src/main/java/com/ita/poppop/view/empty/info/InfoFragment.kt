@@ -14,6 +14,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.tabs.TabLayout
 import com.ita.poppop.R
 import com.ita.poppop.base.BaseFragment
+import com.ita.poppop.data.remote.dto.popups.PopupDetailData
+import com.ita.poppop.data.remote.dto.popups.SearchData
 import com.ita.poppop.data.remote.repository.popup.BookmarkRepositoryImpl
 import com.ita.poppop.data.remote.repository.popups.PopupsRepositoryImpl
 import com.ita.poppop.data.remote.repository.story.StoryRepositoryImpl
@@ -40,6 +42,7 @@ class InfoFragment: BaseFragment<FragmentInfoBinding>(R.layout.fragment_info) {
     }
     private lateinit var infoViewHolder: InfoViewHolder
 
+    private var popupItem: PopupDetailData? = null
 
     private var isFavorite = false
 
@@ -78,8 +81,17 @@ class InfoFragment: BaseFragment<FragmentInfoBinding>(R.layout.fragment_info) {
             }
 
             acbUploadReview.setOnClickListener{
+                val searchData = popupItem?.let {
+                    SearchData(
+                        id = it.id,
+                        image = it.imageUrl ?: "",
+                        title = it.title ?: "",
+                        location = it.location ?: ""
+                    )
+                }
+
                 val parentNavController = requireParentFragment().findNavController()
-                val action = InfoFragmentDirections.actionInfoFragmentToUploadFragment(popupId)
+                val action = InfoFragmentDirections.actionInfoFragmentToUploadFragment(searchData, popupId)
                 parentNavController.navigate(action)
             }
 
@@ -90,7 +102,7 @@ class InfoFragment: BaseFragment<FragmentInfoBinding>(R.layout.fragment_info) {
             val bookmarkRepository = BookmarkRepositoryImpl(RetrofitClient.bookmarkApi)
             val factory = ViewModelFactory { InfoViewModel(mainViewModel.tokenPair.value.first.toString(), repository, bookmarkRepository) }
             infoViewModel = ViewModelProvider(this@InfoFragment, factory)[InfoViewModel::class.java]
-            
+
             infoViewHolder = InfoViewHolder(binding)
 
             infoViewModel.getInfo(popupId)
@@ -98,6 +110,7 @@ class InfoFragment: BaseFragment<FragmentInfoBinding>(R.layout.fragment_info) {
 
             infoViewModel.infoData.observe(viewLifecycleOwner, Observer { info ->
                 infoViewHolder.bind(info, infoViewModel)
+                popupItem = info
             })
 
             val storyRepository = StoryRepositoryImpl(RetrofitClient.storyApi)

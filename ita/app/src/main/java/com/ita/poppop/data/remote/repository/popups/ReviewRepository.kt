@@ -1,4 +1,4 @@
-package com.ita.poppop.data.remote.repository.popup
+package com.ita.poppop.data.remote.repository.popups
 
 import com.ita.poppop.data.remote.dto.reviews.GetReviewListResponse
 import com.ita.poppop.data.remote.dto.reviews.GetReviewResponse
@@ -14,6 +14,7 @@ interface ReviewRepository {
 
     @GET("/api/v1/popups/{popupId}/reviews")
     suspend fun getReviewList(
+        @Header("Authorization") accessToken: String,
         @Path("popupId") popupId: Int,
         @Query("page") page: Int,
         @Query("size") size: Int
@@ -21,6 +22,7 @@ interface ReviewRepository {
 
     @GET("/api/v1/popups/{popupId}/reviews/{reviewId}")
     suspend fun getReview(
+        @Header("Authorization") accessToken: String,
         @Path("popupId") popupId: Int,
         @Path("reviewId") reviewId: Int,
     ): Response<GetReviewResponse>

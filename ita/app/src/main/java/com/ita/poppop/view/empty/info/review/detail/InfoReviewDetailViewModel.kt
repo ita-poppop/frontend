@@ -6,7 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ita.poppop.data.remote.dto.reviews.ReviewData
-import com.ita.poppop.data.remote.repository.popup.ReviewRepository
+import com.ita.poppop.data.remote.repository.popups.ReviewRepository
 import com.ita.poppop.util.ConvertTimeUtil
 import com.ita.poppop.view.empty.info.review.InfoReviewRVItem
 import com.ita.poppop.view.empty.info.review.image.InfoReviewImageRVItem
@@ -15,6 +15,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class InfoReviewDetailViewModel(
+    private val accessToken: String,
     private val repository: ReviewRepository
 ) : ViewModel() {
     private val _inforeviewdetailList = MutableLiveData<InfoReviewRVItem>()
@@ -26,7 +27,7 @@ class InfoReviewDetailViewModel(
     private val _isHeartClicked = MutableLiveData<Boolean>()
     val isHeartClicked: LiveData<Boolean> = _isHeartClicked
 
-    fun firstHeartCount(count: Int, clicked: Boolean = false) {
+    fun initHeartState(count: Int, clicked: Boolean) {
         if (_heartCount.value == null) {
             _heartCount.value = count
             _isHeartClicked.value = clicked
@@ -65,7 +66,7 @@ class InfoReviewDetailViewModel(
         viewModelScope.launch {
             try {
                 val response = withContext(Dispatchers.IO) {
-                    repository.getReview(popupId, reviewId)
+                    repository.getReview(accessToken, popupId, reviewId)
                 }
                 if (response.isSuccessful) {
                     response.body()?.let { responseBody ->
@@ -73,10 +74,10 @@ class InfoReviewDetailViewModel(
                         val result = reviewDtoToAdapterItem(data)
                         _inforeviewdetailList.value = result
 
-                        /*firstHeartCount(
+                        initHeartState(
                             count = data.likeCount,
-                            clicked = data.isLiked
-                        )*/
+                            clicked = data.likedByUser
+                        )
 
                         Log.d("ReviewDetailApi_SUCCESS", "Review: $result")
                     }
@@ -114,7 +115,8 @@ class InfoReviewDetailViewModel(
             hearts = data.likeCount,
             comments = data.commentCount,
             content = data.content,
-            reviewImage = reviewImages
+            reviewImage = reviewImages,
+            likedByUser = data.likedByUser
         )
     }
 }

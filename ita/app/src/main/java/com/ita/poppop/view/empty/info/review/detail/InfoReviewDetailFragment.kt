@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.ita.poppop.R
 import com.ita.poppop.base.BaseFragment
 import com.ita.poppop.data.remote.repository.popup.CommentRepositoryImpl
-import com.ita.poppop.data.remote.repository.popup.ReviewRepositoryImpl
+import com.ita.poppop.data.remote.repository.popups.ReviewRepositoryImpl
 import com.ita.poppop.databinding.FragmentInfoReviewDetailBinding
 import com.ita.poppop.util.ViewModelFactory
 import com.ita.poppop.util.remote.RetrofitClient
@@ -57,7 +57,7 @@ class InfoReviewDetailFragment : BaseFragment<FragmentInfoReviewDetailBinding>(R
             //infoReviewDetailViewModel.getInfoReviewDetail(infoReviewDetailArgs.review.itemId)
             // 리뷰 상세
             val reviewRepository = ReviewRepositoryImpl(RetrofitClient.reviewApi)
-            val reviewFactory = ViewModelFactory { InfoReviewDetailViewModel(reviewRepository) }
+            val reviewFactory = ViewModelFactory { InfoReviewDetailViewModel(mainViewModel.tokenPair.value.first.toString(), reviewRepository) }
             infoReviewDetailViewModel = ViewModelProvider(this@InfoReviewDetailFragment, reviewFactory)[InfoReviewDetailViewModel::class.java]
             infoReviewDetailViewHolder = InfoReviewDetailViewHolder(binding, infoReviewImageRVAdapter)
             val popupId = infoReviewDetailArgs.popupId

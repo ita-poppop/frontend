@@ -59,8 +59,12 @@
         android:name="com.ita.poppop.view.empty.upload.UploadFragment"
         android:label="UploadFragment" >
         <argument
+            android:name="popupItem"
+            app:argType="com.ita.poppop.data.remote.dto.popups.SearchData"
+            app:nullable="true"/>
+        <argument
             android:name="popupId"
-            app:argType="integer"/>
+            app:argType="integer" />
     </fragment>
     <fragment
         android:id="@+id/infoReviewEditFragment"

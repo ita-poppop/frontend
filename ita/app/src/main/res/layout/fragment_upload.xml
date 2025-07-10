@@ -97,10 +97,11 @@
                     android:letterSpacing="-0.03"
                     android:lineSpacingExtra="7sp"
                     android:maxLines="1"
-                    android:text='@{uploadViewModel.popupItem != null ? uploadViewModel.popupItem : "팝업스토어 / 전시를 검색하세요"}'
+                    android:text="@{uploadViewModel.popupItem != null ? uploadViewModel.popupItem.title : `팝업스토어 / 전시를 검색하세요`}"
                     android:textColor="#3c3c3c"
                     android:textSize="14sp"
                     android:textStyle="normal"
+                    android:elevation="5dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"

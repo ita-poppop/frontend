@@ -10,9 +10,11 @@ data class ReviewListData(
     val reviewId: Int,
     val content: String,
     val imageUrls: List<String>,
+    val writerProfileUrl: String,
     val writerName: String,
     val createdAt: String,
     val updatedAt: String,
     val likeCount: Int,
-    val commentCount: Int
+    val commentCount: Int,
+    val likedByUser: Boolean
 )

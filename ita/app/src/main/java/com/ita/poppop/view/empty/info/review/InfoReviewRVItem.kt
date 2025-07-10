@@ -13,5 +13,6 @@ data class InfoReviewRVItem(
     var reviewImage: List<InfoReviewImageRVItem>,
     var hearts: Int,
     var comments: Int,
-    var content: String
+    var content: String,
+    val likedByUser: Boolean
 ) : Parcelable
