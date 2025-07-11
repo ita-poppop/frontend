@@ -34,8 +34,10 @@ class StoryFragment : BaseFragment<FragmentStoryBinding>(R.layout.fragment_story
     //args.location
 
     override fun initView() {
+
         mainViewModel = ViewModelProvider(requireActivity())[MainViewModel::class.java]
         var waitingList = mainViewModel.getStoriesFromStoryIdInOrder(args.reviewId)
+
         setupViewPager(waitingList)
     }
 

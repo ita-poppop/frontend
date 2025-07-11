@@ -1,6 +1,7 @@
 package com.ita.poppop.view.empty.home_upload
 
 import android.net.Uri
+import android.os.Bundle
 import android.util.Log
 import androidx.core.os.BundleCompat
 import androidx.fragment.app.activityViewModels
@@ -37,12 +38,13 @@ class UploadReviewFragment : BaseFragment<FragmentUploadReviewBinding>(R.layout.
     val mainAViewModel: MainAViewModel by activityViewModels()
     private val repository: ReviewRepository = ReviewRepositoryImpl(RetrofitClient.reviewApi)
     override fun initView() {
+        setViewModel()
         setupWindowInsets()
         setupToolbar()
         setupUploadRecycler()
         setFragmentResult()
         setClickListener()
-        setViewModel()
+
     }
 
 
@@ -56,11 +58,11 @@ class UploadReviewFragment : BaseFragment<FragmentUploadReviewBinding>(R.layout.
         uploadViewModel.uploadList.observe(viewLifecycleOwner) { uploadItemList ->
             uploadImageAdapter.submitList(uploadItemList)
         }
-        uploadViewModel.popupItem.observe(viewLifecycleOwner) { seleteItem ->
-            binding.tvUploadLocation.text = seleteItem?.title ?: "팝업스토어 / 전시를 검색하세요"
+        uploadViewModel.popupItem.observe(viewLifecycleOwner) { selectedItem ->
+            binding.tvUploadLocation.text = selectedItem?.title ?: "팝업스토어 / 전시를 검색하세요"
         }
-        mainViewModel.selectItem.observe(viewLifecycleOwner) { seleteItem ->
-            uploadViewModel.setPopupItem(seleteItem)
+        mainViewModel.selectItem.observe(viewLifecycleOwner) { selectItem ->
+            uploadViewModel.setPopupItem(selectItem)
         }
         uploadViewModel.isAllValid.observe(viewLifecycleOwner) { valid ->
             binding.btUploadReview.isEnabled = valid
@@ -166,8 +168,15 @@ class UploadReviewFragment : BaseFragment<FragmentUploadReviewBinding>(R.layout.
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-        uploadViewModel.setPopupItem(null)
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.d("UploadReviewFragment","onDestroy")
+        mainViewModel.setSelectItem(null)
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        Log.d("UploadReviewFragment","onDetach")
+        mainViewModel.setSelectItem(null)
     }
 }

@@ -1,5 +1,6 @@
 package com.ita.poppop.viewmodel.main
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -8,12 +9,22 @@ import com.ita.poppop.data.remote.dto.stories.StoryData
 import com.ita.poppop.view.empty.home_upload.sub.ImageItem
 
 class MainViewModel: ViewModel() {
+
+    // 업로드시 사용하는 아이템 선택
     private val _selectItem = MutableLiveData<SearchData?>()
     val selectItem: LiveData<SearchData?> get() = _selectItem
 
     // set 함수
     fun setSelectItem(item: SearchData?) {
         _selectItem.value = item
+    }
+    // 아이템 정보확인시 사용하는 아이템 선택
+    private val _selectItemDetail = MutableLiveData<SearchData?>()
+    val selectItemDetail: LiveData<SearchData?> get() = _selectItemDetail
+
+    // set 함수
+    fun setSelectItemDetail(item: SearchData?) {
+        _selectItemDetail.value = item
     }
 
 

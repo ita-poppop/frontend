@@ -1,6 +1,7 @@
 package com.ita.poppop.view.empty.home_upload
 
 import android.net.Uri
+import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.SeekBar
@@ -188,8 +189,15 @@ class UploadWaitingFragment : BaseFragment<FragmentUploadWaitingBinding>(R.layou
     private fun showUploadBottomSheet() {
         UploadBottomSheet(1).show(parentFragmentManager, "upload_sheet")
     }
-    override fun onResume() {
-        super.onResume()
-        uploadWaitingViewModel.setPopupItem(null)
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.d("UploadReviewFragment","onDestroy")
+        mainViewModel.setSelectItem(null)
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        Log.d("UploadReviewFragment","onDetach")
+        mainViewModel.setSelectItem(null)
     }
 }

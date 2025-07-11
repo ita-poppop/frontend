@@ -157,14 +157,18 @@ class SearchFragment: BaseFragment<FragmentHomeSearchBinding>(R.layout.fragment_
     private fun setupSearchRecyclerView(searchResults: List<SearchData>) {
         adapter = HomeSearchAdapter(
             onAddClick = { item ->
-                mainViewModel.setSelectItem(item)
+
                 when(mode){
                     SearchMode.RETURN_TO_DETAIL -> {
+                        mainViewModel.setSelectItemDetail(item)
                         val parentNavController = requireActivity().findNavController(R.id.fcv_main_activity_container)
                         val action = SearchFragmentDirections.actionHomeSearchFragmentToNaviInfo(item.id)
                         parentNavController.navigate(action)
                     }
-                    SearchMode.RETURN_TO_UPLOAD -> {handleBackNavigation()}
+                    SearchMode.RETURN_TO_UPLOAD -> {
+                        mainViewModel.setSelectItem(item)
+                        handleBackNavigation()
+                    }
                 }
         },searchResults)
 

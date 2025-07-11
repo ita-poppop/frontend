@@ -37,9 +37,12 @@ import com.ita.poppop.view.main.home.waiting.HomeWaitingAdapter
 import com.ita.poppop.view.main.home.waiting.HomeWaitingItemDecoration
 import com.ita.poppop.viewmodel.MainAViewModel
 import com.ita.poppop.viewmodel.main.MainViewModel
+import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withTimeout
 import retrofit2.HttpException
+
 
 class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
 
@@ -70,76 +73,88 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
     private fun setViewModel(){
         mainViewModel = ViewModelProvider(requireActivity())[MainViewModel::class.java]
         mainViewModel.storyList.observe(this, Observer {
-            loadData()
+            binding.rvWaiting.adapter?.notifyDataSetChanged()
         })
     }
 
     private fun loadData() {
         lifecycleScope.launch {
+            showSampleData(isLoading = true)
+
+            var trendList = listOf<TrendData>() // 적절한 타입으로 변경
+            var waitingList = listOf<StoryData>() // 적절한 타입으로 변경
+            var plannedList = listOf<PlannedData>() // 적절한 타입으로 변경
+
             try {
-                showSampleData(isLoading = true)
-
-                // 1. 병렬 요청 시작
-                val trendDeferred = async {
-                    try {
-                        repository.getTrendPopups((1..5).random(), 10).body()?.data
-                    } catch (e: Exception) {
-                        Log.e("Home", "Trend 에러: ${e.message}")
-                        null
+                // 타임아웃 설정으로 무한 대기 방지
+                withTimeout(3000) { // 30초 타임아웃
+                    // 1. 병렬 요청 시작
+                    val trendDeferred = async {
+                        try {
+                            Log.d("Home", "Trend 요청")
+                            repository.getTrendPopups((1..5).random(), 10).body()?.data
+                        } catch (e: Exception) {
+                            Log.e("Home", "Trend 에러: ${e.message}")
+                            null
+                        }
                     }
+
+                    val waitingDeferred = async {
+                        try {
+                            Log.d("Home", "Waiting 요청")
+                            repository2.getStories(
+                                mainAViewModel.tokenPair.value.first.toString(),
+                                1,
+                                10
+                            ).body()?.data?.sortedBy { it.isRead }
+                        } catch (e: Exception) {
+                            Log.e("Home", "Waiting 에러: ${e.message}")
+                            null
+                        }
+                    }
+
+                    val plannedDeferred = async {
+                        try {
+                            Log.d("Home", "Planned 요청")
+                            repository.getPlannedPopups((1..4).random(), 4).body()?.data
+
+                        } catch (e: Exception) {
+                            Log.e("Home", "Planned 에러: ${e.message}")
+                            null
+                        }
+                    }
+
+                    // 2. 요청의 결과를 기다림 (await)
+                    trendList = trendDeferred.await() ?: emptyList()
+                    waitingList = waitingDeferred.await() ?: emptyList()
+                    plannedList = plannedDeferred.await() ?: emptyList()
                 }
 
-                val waitingDeferred = async {
-                    try {
-                        repository2.getStories(mainAViewModel.tokenPair.value.first.toString(),1, 10).body()?.data?.sortedBy { it.isRead }
-                    } catch (e: Exception) {
-                        Log.e("Home", "Waiting 에러: ${e.message}")
-                        null
-                    }
-                }
-
-                val plannedDeferred = async {
-                    try {
-                        repository.getPlannedPopups((1..4).random(), 4).body()?.data
-                    } catch (e: Exception) {
-                        Log.e("Home", "Planned 에러: ${e.message}")
-                        null
-                    }
-                }
-
-                // 2. 두 요청의 결과를 기다림 (await)
-                val trendList = trendDeferred.await() ?: emptyList()
-//                val waitingList = waitingDeferred.await() ?: emptyList()
-                val plannedList = plannedDeferred.await() ?: emptyList()
-
-
-
-                // 3. 요청 모두 완료된 상태
+            } catch (e: TimeoutCancellationException) {
+                Log.e("API_ERROR", "요청 타임아웃")
+            } catch (e: HttpException) {
+                Log.e("API_ERROR", "HTTP ${e.code()}: ${e.response()?.errorBody()?.string()}")
+            } catch (e: Exception) {
+                Log.e("API_ERROR", "Exception: ${e.message}", e)
+            } finally {
+                // 에러 발생 여부와 상관없이 무조건 실행
                 setupTrendRecycler(trendList)
-//                setupWaitingRecycler(waitingList)
+                setupWaitingRecycler(waitingList)
                 setupUpcomingRecycler(plannedList)
                 setupDirectionRecycler()
 
-
                 showSampleData(isLoading = false)
-
-            } catch (e: HttpException) {
-                // 예외가 catch 안에서 잡히지 않은 경우 여기에 걸림
-                Log.e("API_ERROR", "HTTP ${e.code()}: ${e.response()?.errorBody()?.string()}")
-            } catch (e: Exception) {
-                // 기타 예외
-                Log.e("API_ERROR", "Exception: ${e.message}", e)
             }
         }
     }
+
+
 
 
     private fun setupAnimations() {
         fabOpen = AnimationUtils.loadAnimation(requireContext(), R.anim.fab_open)
         fabClose = AnimationUtils.loadAnimation(requireContext(), R.anim.fab_close)
     }
-
-
 
 
     private fun setupDimFab() = with(binding) {
@@ -168,13 +183,14 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
     }
 
     private fun setupWaitingRecycler(waitingList: List<StoryData>) = with(binding.rvWaiting) {
-        mainViewModel.setStoryList(waitingList)
         adapter = HomeWaitingAdapter(
             onclick = { position ->
                 navigateTo(MainFragmentDirections.actionMainFragmentToNaviHomeStory(position))
-            },mainViewModel.storyList.value)
+            },waitingList)
         layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         addItemDecoration(HomeWaitingItemDecoration(context,waitingList))
+
+        mainViewModel.setStoryList(waitingList)
     }
 
     private fun setupUpcomingRecycler(upcomingList: List<PlannedData>) = with(binding.rvUpcoming) {
@@ -260,5 +276,4 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
 
 
 }
-
 
