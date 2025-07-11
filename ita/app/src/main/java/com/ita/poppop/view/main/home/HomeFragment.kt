@@ -222,7 +222,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
             navigateTo(MainFragmentDirections.actionMainFragmentToNaviHomeSearch(SearchMode.RETURN_TO_DETAIL))
         }
         ibNotification.setOnClickListener {
-            navigateTo(MainFragmentDirections.actionMainFragmentToNaviHomeNotification())
+//            navigateTo(MainFragmentDirections.actionMainFragmentToNaviHomeNotification())
         }
         ibUpcomingDetail.setOnClickListener {
             navigateTo(MainFragmentDirections.actionMainFragmentToNaviHomeUpcoming())
