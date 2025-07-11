@@ -24,6 +24,7 @@ class InfoViewHolder(
             Glide.with(ivInfoImage.context)
                 .load(info.imageUrl)
                 .centerCrop()
+                .error(R.drawable.icon_error)
                 .into(ivInfoImage)
         }
     }
