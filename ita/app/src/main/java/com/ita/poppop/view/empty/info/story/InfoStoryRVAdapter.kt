@@ -1,6 +1,7 @@
 package com.ita.poppop.view.empty.info.story
 
 import android.annotation.SuppressLint
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
@@ -28,22 +29,22 @@ class InfoStoryRVAdapter: ListAdapter<InfoStoryRVItem, InfoStoryRVAdapter.InfoSt
         fun bind(item: InfoStoryRVItem) {
             binding.apply {
                 Glide.with(itemView.context)
-                    .load(item.imageUrl)
+                    .load(item.profileUrl)
                     .circleCrop()
-                    .into(ibStoryProfile)
+                    .into(ivStoryProfile)
                 tvStoryName.text = item.name.replace("\"", "")
 
-                val profileBackground = if (item.isRead) {
-                    R.drawable.info_story_profile_background
+                val strokeColor = if (item.isRead) {
+                    android.R.color.transparent  // 읽었으면 투명
                 } else {
-                    R.drawable.info_story_profile_unread_background
+                    R.color.primary_blue  // 안읽었으면 파랑
                 }
                 val usernameColor = if (item.isRead) {
                     R.color.gray_900
                 } else {
                     R.color.primary_blue
                 }
-                ibStoryProfile.setBackgroundResource(profileBackground)
+                mcvStoryProfile.strokeColor = ContextCompat.getColor(itemView.context, strokeColor)
                 tvStoryName.setTextColor(ContextCompat.getColor(itemView.context, usernameColor))
             }
         }
@@ -51,7 +52,11 @@ class InfoStoryRVAdapter: ListAdapter<InfoStoryRVItem, InfoStoryRVAdapter.InfoSt
             onItemClick: (Int) -> Unit
         ) {
             binding.clItemInfoStory.setOnClickListener {
-                onItemClick(adapterPosition)
+                Log.d("InfoStoryRVAdapter", "Clicked clItemInfoStory, adapterPosition=$adapterPosition")
+                val pos = adapterPosition
+                if (pos != RecyclerView.NO_POSITION) {
+                    onItemClick(pos)
+                }
             }
         }
     }
@@ -80,8 +85,8 @@ class InfoStoryRVAdapter: ListAdapter<InfoStoryRVItem, InfoStoryRVAdapter.InfoSt
         val item = getItem(position)
         holder.bind(item)
         holder.bindClickListeners(
-            onItemClick = { infoStoryItemClickListener.onItemClick(it) },
-            )
+            onItemClick = { infoStoryItemClickListener.onItemClick(it) }
+        )
     }
 }
 

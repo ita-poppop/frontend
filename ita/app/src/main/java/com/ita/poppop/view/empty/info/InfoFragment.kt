@@ -1,12 +1,14 @@
 package com.ita.poppop.view.empty.info
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -15,6 +17,7 @@ import com.ita.poppop.R
 import com.ita.poppop.base.BaseFragment
 import com.ita.poppop.data.remote.dto.popups.PopupDetailData
 import com.ita.poppop.data.remote.dto.popups.SearchData
+import com.ita.poppop.data.remote.dto.story.StoryData
 import com.ita.poppop.data.remote.repository.popup.BookmarkRepositoryImpl
 import com.ita.poppop.data.remote.repository.popups.PopupsRepositoryImpl
 import com.ita.poppop.data.remote.repository.story.StoryRepositoryImpl
@@ -24,6 +27,7 @@ import com.ita.poppop.util.remote.RetrofitClient
 import com.ita.poppop.view.empty.info.detail.InfoDetailFragment
 import com.ita.poppop.view.empty.info.review.InfoReviewFragment
 import com.ita.poppop.view.empty.info.story.InfoStoryRVAdapter
+import com.ita.poppop.view.empty.info.story.InfoStoryRVItem
 import com.ita.poppop.view.empty.info.story.InfoStoryViewModel
 import com.ita.poppop.view.main.favorites.FavoritesRVAdapter
 import com.ita.poppop.viewmodel.MainAViewModel
@@ -144,14 +148,24 @@ class InfoFragment: BaseFragment<FragmentInfoBinding>(R.layout.fragment_info) {
             }
             infoStoryViewModel.getInfoStory(popupId)
             infoStoryViewModel.infostoryList.observe(viewLifecycleOwner, Observer { response ->
-                infoStoryRVAdapter.submitList(response)
+                val sortedList = response?.sortedBy { it.isRead }
+                infoStoryRVAdapter.submitList(sortedList)
 
                 //binding.emptyStateLayout.root.run { if(response.isNullOrEmpty()) show() else hide()}
             })
 
             infoStoryRVAdapter.setInfoStoryItemClickListener(object : InfoStoryRVAdapter.InfoStoryItemClickListener{
                 override fun onItemClick(position: Int) {
-                    TODO("Not yet implemented")
+                    Log.d("InfoStoryRVAdapter", "Item clicked at position: $position")
+                    val item = infoStoryRVAdapter.currentList.getOrNull(position) ?: return
+
+                    val storyData = item.toStoryData()
+                    val action = InfoFragmentDirections.actionInfoFragmentToInfoStoryViewFragment(
+                        data = storyData,
+                        popupId = args.popupId,
+                        popupTitle = popupItem?.title ?: ""
+                    )
+                    findNavController().navigate(action)
                 }
             })
 
@@ -181,6 +195,16 @@ class InfoFragment: BaseFragment<FragmentInfoBinding>(R.layout.fragment_info) {
                     }
                 }
         }
+    }
+    fun InfoStoryRVItem.toStoryData(): StoryData {
+        return StoryData(
+            storyId = this.itemId,
+            photoUrl = this.imageUrl,
+            writerName = this.name,
+            profileUrl = this.profileUrl,
+            isRead = this.isRead,
+            createdAt = this.createdAt
+        )
     }
 
     fun recommendItemClicked(popupId: Int) {

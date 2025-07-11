@@ -10,7 +10,9 @@
         android:id="@+id/cl_item_info_story"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="13dp">
+        android:layout_marginEnd="13dp"
+        android:clickable="true"
+        android:focusable="true">
 
         <FrameLayout
             android:id="@+id/fl_story_profile_wrapper"
@@ -21,19 +23,24 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
 
-            <View
-                android:id="@+id/v_story_profile_background"
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/mcv_story_profile"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@drawable/info_story_profile_background" />
+                app:cardCornerRadius="32dp"
+                app:strokeColor="@color/primary_blue"
+                app:strokeWidth="3dp"
+                app:cardElevation="0dp"
+                android:background="@android:color/transparent">
 
-            <androidx.appcompat.widget.AppCompatImageButton
-                android:id="@+id/ib_story_profile"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:padding="3.5dp"
-                android:background="@android:color/transparent"
-                android:scaleType="centerCrop" />
+                <ImageView
+                    android:id="@+id/iv_story_profile"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    android:background="@android:color/transparent" />
+
+            </com.google.android.material.card.MaterialCardView>
         </FrameLayout>
 
         <TextView

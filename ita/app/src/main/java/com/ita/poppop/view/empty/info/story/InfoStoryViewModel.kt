@@ -27,7 +27,7 @@ class InfoStoryViewModel(
                 }
                 if (response.isSuccessful) {
                     response.body()?.let { body ->
-                        val StoryListItems = body.data?.map { InfoStoryListDtoToAdapterItem(it) }?.toMutableList()
+                        val StoryListItems = body.data?.map { InfoStoryListDtoToAdapterItem(it, popupId) }?.toMutableList()
                         _infostoryList.value = StoryListItems
                         Log.d("StoryListApi_SUCCESS", "LocationPopupList: $StoryListItems")
                     }
@@ -40,13 +40,16 @@ class InfoStoryViewModel(
         }
     }
 
-    private fun InfoStoryListDtoToAdapterItem(data: StoryData): InfoStoryRVItem {
+    private fun InfoStoryListDtoToAdapterItem(data: StoryData, popupId: Int): InfoStoryRVItem {
 
         return InfoStoryRVItem(
             itemId = data.storyId,
             imageUrl = data.photoUrl,
             name = data.writerName,
-            isRead = data.isRead
+            profileUrl = data.profileUrl,
+            isRead = data.isRead,
+            createdAt = data.createdAt,
+            popupId = popupId
         )
     }
 }
