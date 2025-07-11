@@ -4,13 +4,20 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import androidx.lifecycle.lifecycleScope
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceManager
 import com.ita.poppop.R
 import com.ita.poppop.view.empty.setting.SettingFragment
 import com.ita.poppop.util.NotificationSettingsManager
+import com.ita.poppop.util.dialog.LogoutDialog
+import com.ita.poppop.util.dialog.WithdrawNotiDialog
 import com.ita.poppop.util.preference.EndSwitchPreference
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import retrofit2.HttpException
 
 class NotificationSettingFragment : PreferenceFragmentCompat(),
     SharedPreferences.OnSharedPreferenceChangeListener {
@@ -28,7 +35,7 @@ class NotificationSettingFragment : PreferenceFragmentCompat(),
         super.onViewCreated(view, savedInstanceState)
         updateToolbarTitle("알림 설정")
         setupPreferenceClickListeners()
-        // loadPreferenceStates() 제거 - EndSwitchPreference가 자동으로 처리
+
         checkNotificationPermission()
         applyAllSettings() // 한 번만 호출
     }
@@ -81,6 +88,8 @@ class NotificationSettingFragment : PreferenceFragmentCompat(),
         }
     }
 
+
+
     private fun setupEndSwitchPreference(key: String, title: String) {
         findPreference<EndSwitchPreference>(key)?.apply {
             this.title = title
@@ -88,6 +97,13 @@ class NotificationSettingFragment : PreferenceFragmentCompat(),
             setDefaultValue(true)
             // 스위치 상태 변경 리스너 설정
             setOnPreferenceChangeListener { _, newValue ->
+                val dialog = WithdrawNotiDialog(requireContext())
+                dialog.setItemClickListener(object : WithdrawNotiDialog.ItemClickListener {
+                    override fun onClick() {
+
+                    }
+                })
+                dialog.show()
                 val isEnabled = newValue as Boolean
                 handleSwitchChange(key, isEnabled)
                 true
