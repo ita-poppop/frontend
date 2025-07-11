@@ -46,6 +46,7 @@ class InfoStoryViewModel(
             itemId = data.storyId,
             imageUrl = data.photoUrl,
             name = data.writerName,
+            isRead = data.isRead
         )
     }
 }
