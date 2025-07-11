@@ -108,6 +108,9 @@ dependencies {
 
 
     //구글 로그인
+    
+
+    implementation("com.google.firebase:firebase-messaging")
 
     // Also add the dependencies for the Credential Manager libraries and specify their versions
     implementation("com.google.android.gms:play-services-auth:20.1.0")

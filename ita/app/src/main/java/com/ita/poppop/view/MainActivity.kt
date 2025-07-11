@@ -1,14 +1,21 @@
 package com.ita.poppop.view
 
+import android.content.ContentValues.TAG
+import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import android.util.Log
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph
 import androidx.navigation.fragment.NavHostFragment
+import com.google.firebase.messaging.FirebaseMessaging
 import com.ita.poppop.R
 import com.ita.poppop.base.BaseActivity
 import com.ita.poppop.databinding.ActivityMainBinding
@@ -24,6 +31,16 @@ class MainActivity: BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
     private lateinit var mainAViewModel: MainAViewModel
     private lateinit var tokenManager: TokenManager
 
+    private val requestPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted: Boolean ->
+        if (isGranted) {
+            Log.d(TAG, "알림 권한이 허용되었습니다.")
+        } else {
+            Log.d(TAG, "알림 권한이 거부되었습니다.")
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.e("checkStartFlow", "MainActivity")
@@ -31,6 +48,24 @@ class MainActivity: BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
         tokenManager = TokenManager(this)
         Log.e("checkToken", "getAccessToken: ${tokenManager.getAccessToken()},getRefreshToken:  ${tokenManager.getRefreshToken()}")
         mainAViewModel.setTokenPair(tokenManager.getAccessToken(),tokenManager.getRefreshToken())
+
+        // Android 13+ 알림 권한 요청
+        askNotificationPermission()
+
+        // FCM 토큰 획득
+        FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
+            if (!task.isSuccessful) {
+                Log.w(TAG, "토큰 획득 실패", task.exception)
+                return@addOnCompleteListener
+            }
+
+            // 새로운 FCM 등록 토큰 획득
+            val token = task.result
+            Log.d(TAG, "FCM 토큰: $token")
+
+            // 서버에 토큰 전송
+            sendTokenToServer(token)
+        }
 
 
 
@@ -79,6 +114,29 @@ class MainActivity: BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
         }
         initializeNotificationSettings()
     }
+
+    private fun askNotificationPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.POST_NOTIFICATIONS) ==
+                PackageManager.PERMISSION_GRANTED) {
+                // 권한이 이미 허용됨
+            } else {
+                // 권한 요청
+                requestPermissionLauncher.launch(android.Manifest.permission.POST_NOTIFICATIONS)
+            }
+        }
+    }
+
+    private fun sendTokenToServer(token: String) {
+        // 서버에 토큰 전송 로직
+        Log.d(TAG, "서버에 토큰 전송: $token")
+    }
+
+    companion object {
+        private const val TAG = "MainActivity"
+    }
+
+
 
     private fun initializeNotificationSettings() {
         try {
