@@ -107,7 +107,7 @@ class InfoReviewCommentViewModel(
 
         return InfoReviewCommentRVItem(
             itemId = data.commentId,
-            profileImage = data.writerProfileUrl ?: "",
+            profileImage = data.writerProfileUrl,
             username = data.writerName,
             time = convertTimeUtil,
             reply = data.children.size,

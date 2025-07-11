@@ -3,7 +3,6 @@ package com.ita.poppop.data.remote.repository.popups
 import com.ita.poppop.data.remote.dto.popups.GetLocationPopupResponse
 import com.ita.poppop.data.remote.dto.popups.GetPlannedResponse
 import com.ita.poppop.data.remote.dto.popups.GetPopupDetailResponse
-import com.ita.poppop.data.remote.dto.popups.GetSearchMapResponse
 import com.ita.poppop.data.remote.dto.popups.GetSearchResponse
 import com.ita.poppop.data.remote.dto.popups.GetTrendResponse
 import retrofit2.Response
