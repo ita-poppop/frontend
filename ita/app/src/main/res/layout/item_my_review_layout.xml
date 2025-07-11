@@ -10,7 +10,7 @@
 
 
         <ImageView
-            android:id="@+id/iv_map"
+            android:id="@+id/iv_review_poster"
             android:layout_width="@dimen/item_128"
             android:layout_height="@dimen/item_128"
             android:src="#D9D9D9"
@@ -19,7 +19,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/tv_upcoming_location"
+            android:id="@+id/tv_review_location"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin_16"
@@ -32,11 +32,11 @@
             android:textColor="@color/gray_600"
             android:textSize="@dimen/text_13"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/iv_map"
+            app:layout_constraintStart_toEndOf="@id/iv_review_poster"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/tv_upcoming_title"
+            android:id="@+id/tv_review_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin_16"
@@ -51,11 +51,11 @@
             android:textSize="@dimen/text_17"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toEndOf="@+id/iv_map"
-            app:layout_constraintTop_toBottomOf="@+id/tv_upcoming_location" />
+            app:layout_constraintStart_toEndOf="@+id/iv_review_poster"
+            app:layout_constraintTop_toBottomOf="@+id/tv_review_location" />
 
         <TextView
-            android:id="@+id/tv_upcoming_date"
+            android:id="@+id/tv_review_date"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_4"
@@ -70,11 +70,11 @@
             android:lineSpacingExtra="6.5sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toEndOf="@+id/iv_map"
-            app:layout_constraintTop_toBottomOf="@+id/tv_upcoming_title" />
+            app:layout_constraintStart_toEndOf="@+id/iv_review_poster"
+            app:layout_constraintTop_toBottomOf="@+id/tv_review_title" />
 
         <TextView
-            android:id="@+id/tv_upcoming_date2"
+            android:id="@+id/tv_review_comment"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin_16"
@@ -90,7 +90,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toEndOf="@+id/iv_map" />
+            app:layout_constraintStart_toEndOf="@+id/iv_review_poster" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

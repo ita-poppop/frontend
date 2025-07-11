@@ -10,7 +10,7 @@
         android:layout_height="wrap_content">
 
         <ImageView
-            android:id="@+id/imageView"
+            android:id="@+id/iv_user_review_poster"
             android:layout_width="@dimen/item_118"
             android:layout_height="@dimen/item_148"
             android:src="@color/gray_400"
@@ -20,7 +20,7 @@
 
 
         <TextView
-            android:id="@+id/textView5"
+            android:id="@+id/tv_user_review_title"
             android:layout_width="@dimen/item_118"
             android:layout_height="match_parent"
             android:layout_marginTop="@dimen/margin_6"
@@ -35,9 +35,10 @@
             android:textColor="@color/gray_900"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageView" />
+            app:layout_constraintTop_toBottomOf="@+id/iv_user_review_poster" />
 
         <TextView
+            android:id="@+id/tv_user_review_date"
             android:layout_width="@dimen/item_118"
             android:layout_height="wrap_content"
             android:text="25.03.01 - 25.03.31"
@@ -49,7 +50,7 @@
             android:lineSpacingExtra="@dimen/text_7"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView5" />
+            app:layout_constraintTop_toBottomOf="@+id/tv_user_review_title" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

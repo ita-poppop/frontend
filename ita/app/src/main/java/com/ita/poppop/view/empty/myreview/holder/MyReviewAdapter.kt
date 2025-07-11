@@ -3,12 +3,15 @@ package com.ita.poppop.view.empty.myreview.holder
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.ita.poppop.data.remote.dto.profile.ReviewItem
 import com.ita.poppop.databinding.ItemMyReviewLayoutBinding
 
 
 
 class MyReviewAdapter(
-    private var items : MutableList<Int>,
+    private val onClick: (Int) -> Unit,
+    private var items : List<ReviewItem>,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     init {
         setHasStableIds(true)
@@ -17,8 +20,19 @@ class MyReviewAdapter(
     inner class MyReviewViewHolder(
         private val binding: ItemMyReviewLayoutBinding,
     ) : RecyclerView.ViewHolder(binding.root) {
-        fun bind() {
+        fun bind(item: ReviewItem) {
+            binding.root.setOnClickListener {
+                onClick(item.popupId)
+            }
 
+            Glide.with(binding.root)
+                .load(item.popupImageUrl)
+                .centerCrop()
+                .into(binding.ivReviewPoster)
+
+            binding.tvReviewTitle.text = item.popupTitle
+            binding.tvReviewDate.text = item.startDate + "-" + item.endDate
+            binding.tvReviewComment.text = "12212"
         }
     }
 
@@ -28,12 +42,12 @@ class MyReviewAdapter(
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        (holder as MyReviewViewHolder).bind()
+        (holder as MyReviewViewHolder).bind(items[position])
     }
 
 
     // 아이템 반환 메서드
-    private fun getItem(position: Int): Int {
+    private fun getItem(position: Int): ReviewItem {
         return items[position]
     }
 

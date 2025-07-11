@@ -7,5 +7,14 @@
     <fragment
         android:id="@+id/myReviewFragment"
         android:name="com.ita.poppop.view.empty.myreview.MyReviewFragment"
-        android:label="MyReviewFragment" />
+        android:label="MyReviewFragment" >
+        <action
+            android:id="@+id/action_myReviewFragment_to_navi_info"
+            app:destination="@id/navi_info" >
+            <argument
+                android:name="popupId"
+                app:argType="integer" />
+        </action>
+    </fragment>
+    <include app:graph="@navigation/navi_info" />
 </navigation>

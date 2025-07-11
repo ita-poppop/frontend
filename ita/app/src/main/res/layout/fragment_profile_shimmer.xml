@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <com.ita.poppop.util.StatusBarSpaceView
-            android:id="@+id/statusBarSpaceView"
+            android:id="@+id/sh_statusBarSpaceView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             tools:layout_height="24dp"
@@ -18,13 +18,13 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/materialToolbar"
+            android:id="@+id/sh_materialToolbar"
             android:layout_width="match_parent"
             android:layout_height="@dimen/item_52"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/statusBarSpaceView">
+            app:layout_constraintTop_toBottomOf="@+id/sh_statusBarSpaceView">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -39,7 +39,7 @@
                 android:textSize="@dimen/text_16" />
 
             <ImageButton
-                android:id="@+id/ib_setting"
+                android:id="@+id/sh_ib_setting"
                 android:layout_width="@dimen/item_24"
                 android:layout_height="@dimen/item_24"
                 android:layout_gravity="end"
@@ -51,17 +51,17 @@
         </com.google.android.material.appbar.MaterialToolbar>
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/constraintLayout"
+            android:id="@+id/sh_constraintLayout"
             android:layout_width="match_parent"
             android:layout_height="@dimen/item_82"
             android:layout_marginTop="@dimen/margin_10"
             android:layout_marginHorizontal="@dimen/margin_16"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/materialToolbar">
+            app:layout_constraintTop_toBottomOf="@+id/sh_materialToolbar">
 
             <com.google.android.material.card.MaterialCardView
-                android:id="@+id/iv_profile"
+                android:id="@+id/sh_iv_profile"
                 android:layout_width="@dimen/item_72"
                 android:layout_height="@dimen/item_72"
                 app:cardElevation="0dp"
@@ -80,11 +80,11 @@
                 android:layout_marginStart="@dimen/margin_20"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/iv_profile"
+                app:layout_constraintStart_toEndOf="@+id/sh_iv_profile"
                 app:layout_constraintTop_toTopOf="parent">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/linearLayout2"
+                    android:id="@+id/sh_linearLayout2"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:orientation="horizontal"
@@ -118,7 +118,7 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/linearLayout2" />
+                    app:layout_constraintTop_toBottomOf="@+id/sh_linearLayout2" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -128,7 +128,7 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <LinearLayout
-            android:id="@+id/linearLayout"
+            android:id="@+id/sh_linearLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
@@ -137,7 +137,7 @@
             android:paddingVertical="@dimen/padding_10"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/constraintLayout">
+            app:layout_constraintTop_toBottomOf="@+id/sh_constraintLayout">
 
             <View
                 android:layout_width="match_parent"
@@ -146,17 +146,17 @@
         </LinearLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/constraintLayout2"
+            android:id="@+id/sh_constraintLayout2"
             android:layout_width="match_parent"
             android:layout_height="@dimen/item_36"
             android:layout_marginHorizontal="@dimen/margin_16"
             android:layout_marginTop="@dimen/margin_10"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayout">
+            app:layout_constraintTop_toBottomOf="@+id/sh_linearLayout">
 
             <View
-                android:id="@+id/textView"
+                android:id="@+id/sh_textView"
                 android:layout_width="79dp"
                 android:layout_height="24dp"
                 android:background="#dedede"
@@ -167,7 +167,7 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.appcompat.widget.LinearLayoutCompat
-            android:id="@+id/rv_profile_my_review"
+            android:id="@+id/sh_rv_profile_my_review"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:minHeight="@dimen/item_240"
@@ -177,21 +177,27 @@
             android:clipToPadding="false"
             android:orientation="horizontal"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/constraintLayout2" >
+            app:layout_constraintTop_toBottomOf="@+id/sh_constraintLayout2" >
 
-            <include layout="@layout/item_home_trend_shimmer" />
-
-            <Space
-                android:layout_width="@dimen/item_10"
-                android:layout_height="match_parent"/>
-
-            <include layout="@layout/item_home_trend_shimmer" />
+            <include layout="@layout/item_profile_myreview_shimmer" />
 
             <Space
                 android:layout_width="@dimen/item_10"
                 android:layout_height="match_parent"/>
 
-            <include layout="@layout/item_home_trend_shimmer" />
+            <include layout="@layout/item_profile_myreview_shimmer" />
+
+            <Space
+                android:layout_width="@dimen/item_10"
+                android:layout_height="match_parent"/>
+
+            <include layout="@layout/item_profile_myreview_shimmer" />
+
+            <Space
+                android:layout_width="@dimen/item_10"
+                android:layout_height="match_parent"/>
+
+            <include layout="@layout/item_profile_myreview_shimmer" />
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 

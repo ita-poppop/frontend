@@ -106,6 +106,9 @@ dependencies {
     implementation("com.kakao.sdk:v2-cert:${kakaoSdkVersion}") // 카카오톡 인증 서비스 API 모듈
 
 
+    implementation("com.facebook.shimmer:shimmer:0.5.0")
+
+
     //구글 로그인
 
     // Also add the dependencies for the Credential Manager libraries and specify their versions
