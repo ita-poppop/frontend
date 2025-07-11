@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.ita.poppop.R
 import com.ita.poppop.data.remote.dto.popups.PlannedData
 import com.ita.poppop.databinding.ItemUpcomingLayoutBinding
 
@@ -26,6 +27,7 @@ class UpcomingAdapter(
             Glide.with(binding.root)
                 .load(item.image)
                 .centerCrop()
+                .error(R.drawable.icon_error)
                 .into(binding.ivUpcomingPoster)
 
             binding.tvUpcomingTitle.text = item.title

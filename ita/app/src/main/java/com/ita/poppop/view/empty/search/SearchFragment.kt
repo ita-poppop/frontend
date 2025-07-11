@@ -109,7 +109,6 @@ class SearchFragment: BaseFragment<FragmentHomeSearchBinding>(R.layout.fragment_
         binding.etSearch.setOnKeyListener { _, keyCode, event ->
             if (keyCode == KeyEvent.KEYCODE_ENTER && event.action == KeyEvent.ACTION_DOWN) {
                 val inputText = binding.etSearch.text.toString()
-                Toast.makeText(requireContext(), "inputTex222t : ${inputText}, keyCode : ${keyCode}", Toast.LENGTH_SHORT).show()
 
                 Log.d("checkSearch", "1. Toast 이후 실행됨")
 

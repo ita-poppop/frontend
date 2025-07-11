@@ -5,8 +5,10 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.ita.poppop.R
 import com.ita.poppop.data.remote.dto.popups.SearchData
 import com.ita.poppop.databinding.ItemHomeSearchLayoutBinding
+import com.ita.poppop.util.DateFormatUtil
 
 
 class HomeSearchAdapter(
@@ -27,10 +29,11 @@ class HomeSearchAdapter(
             Glide.with(binding.root)
                 .load(item.imageUrl)
                 .centerCrop()
+                .error(R.drawable.icon_error)
                 .into(binding.ivSearchPoster)
 
             binding.tvSearchTitle.text = item.title
-            binding.tvSearchLocation.text = item.date
+            binding.tvSearchLocation.text = DateFormatUtil.convertDateRange(item.date)
         }
     }
 

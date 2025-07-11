@@ -4,7 +4,6 @@ import android.util.Log
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
-import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
@@ -16,7 +15,6 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ita.poppop.R
 import com.ita.poppop.base.BaseFragment
-import com.ita.poppop.data.remote.api.StoriesApi
 import com.ita.poppop.data.remote.dto.popups.PlannedData
 import com.ita.poppop.data.remote.dto.popups.TrendData
 import com.ita.poppop.data.remote.dto.stories.StoryData
@@ -28,7 +26,6 @@ import com.ita.poppop.databinding.FragmentHomeBinding
 import com.ita.poppop.model.empty.search.SearchMode
 import com.ita.poppop.util.DimManager
 import com.ita.poppop.util.remote.RetrofitClient
-import com.ita.poppop.view.empty.search.SearchFragmentDirections
 import com.ita.poppop.view.main.MainFragmentDirections
 import com.ita.poppop.view.main.home.direction.HomeDirectionAdapter
 import com.ita.poppop.view.main.home.direction.HomeDirectionItemDecoration
@@ -40,10 +37,8 @@ import com.ita.poppop.view.main.home.waiting.HomeWaitingAdapter
 import com.ita.poppop.view.main.home.waiting.HomeWaitingItemDecoration
 import com.ita.poppop.viewmodel.MainAViewModel
 import com.ita.poppop.viewmodel.main.MainViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import retrofit2.HttpException
 
 class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
@@ -87,7 +82,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
                 // 1. 병렬 요청 시작
                 val trendDeferred = async {
                     try {
-                        repository.getTrendPopups(1, 10).body()?.data
+                        repository.getTrendPopups((1..5).random(), 10).body()?.data
                     } catch (e: Exception) {
                         Log.e("Home", "Trend 에러: ${e.message}")
                         null
@@ -105,7 +100,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
 
                 val plannedDeferred = async {
                     try {
-                        repository.getPlannedPopups(1, 4).body()?.data
+                        repository.getPlannedPopups((1..4).random(), 4).body()?.data
                     } catch (e: Exception) {
                         Log.e("Home", "Planned 에러: ${e.message}")
                         null
@@ -114,14 +109,14 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
 
                 // 2. 두 요청의 결과를 기다림 (await)
                 val trendList = trendDeferred.await() ?: emptyList()
-                val waitingList = waitingDeferred.await() ?: emptyList()
+//                val waitingList = waitingDeferred.await() ?: emptyList()
                 val plannedList = plannedDeferred.await() ?: emptyList()
 
 
 
                 // 3. 요청 모두 완료된 상태
                 setupTrendRecycler(trendList)
-                setupWaitingRecycler(waitingList)
+//                setupWaitingRecycler(waitingList)
                 setupUpcomingRecycler(plannedList)
                 setupDirectionRecycler()
 
@@ -262,7 +257,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
             binding.clHome.visibility = View.VISIBLE
         }
     }
-
 
 
 }
