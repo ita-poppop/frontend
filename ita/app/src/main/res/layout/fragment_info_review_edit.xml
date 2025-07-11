@@ -22,7 +22,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/mt_edit"
+            android:id="@+id/mt_review_edit"
             android:layout_width="match_parent"
             android:layout_height="@dimen/item_52"
             app:layout_constraintEnd_toEndOf="parent"
@@ -45,7 +45,7 @@
         </com.google.android.material.appbar.MaterialToolbar>
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_edit"
+            android:id="@+id/rv_review_edit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:clipToPadding="false"
@@ -53,7 +53,7 @@
             android:layout_marginTop="@dimen/margin_12"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/mt_edit" />
+            app:layout_constraintTop_toBottomOf="@+id/mt_review_edit" />
 
         <TextView
             android:id="@+id/textView9"
@@ -69,7 +69,7 @@
             android:textSize="15sp"
             android:textStyle="normal"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/rv_edit" />
+            app:layout_constraintTop_toBottomOf="@+id/rv_review_edit" />
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/mcv_search_area"
@@ -89,7 +89,7 @@
                 android:layout_margin="@dimen/margin_12">
 
                 <TextView
-                    android:id="@+id/tv_edit_location"
+                    android:id="@+id/tv_review_edit_location"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
@@ -97,10 +97,11 @@
                     android:letterSpacing="-0.03"
                     android:lineSpacingExtra="7sp"
                     android:maxLines="1"
-                    android:text='@{editReviewViewModel.popupItem != null ? editReviewViewModel.popupItem : "팝업스토어 / 전시를 검색하세요"}'
+                    android:text="@{editReviewViewModel.popupItem != null ? editReviewViewModel.popupItem.title : `팝업스토어 / 전시를 검색하세요`}"
                     android:textColor="#3c3c3c"
                     android:textSize="14sp"
                     android:textStyle="normal"
+                    android:elevation="5dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -127,7 +128,7 @@
             app:layout_constraintTop_toBottomOf="@+id/mcv_search_area" />
 
         <com.google.android.material.card.MaterialCardView
-            android:id="@+id/mcv_edit_content"
+            android:id="@+id/mcv_review_edit_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_10"
@@ -139,7 +140,7 @@
             app:layout_constraintTop_toBottomOf="@+id/textView10">
 
             <EditText
-                android:id="@+id/edit_edit_content"
+                android:id="@+id/edit_review_edit_content"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@android:color/transparent"
@@ -164,9 +165,9 @@
 
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- 리뷰 수정 버튼 -->
+        <!-- 리뷰 업로드 버튼 -->
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/cl_edit_btn"
+            android:id="@+id/cl_review_edit_btn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/white"
@@ -180,10 +181,10 @@
                 android:background="@color/gray_300"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/cl_edit_btn" />
+                app:layout_constraintTop_toTopOf="@+id/cl_review_edit_btn" />
 
             <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/bt_edit"
+                android:id="@+id/btn_review_edit"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_marginTop="12dp"

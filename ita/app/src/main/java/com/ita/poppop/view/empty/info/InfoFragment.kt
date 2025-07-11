@@ -1,7 +1,6 @@
 package com.ita.poppop.view.empty.info
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -14,7 +13,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.tabs.TabLayout
 import com.ita.poppop.R
 import com.ita.poppop.base.BaseFragment
+import com.ita.poppop.data.remote.dto.popups.PopupDetailData
+import com.ita.poppop.data.remote.dto.popups.SearchData
+import com.ita.poppop.data.remote.repository.popup.BookmarkRepositoryImpl
 import com.ita.poppop.data.remote.repository.popups.PopupsRepositoryImpl
+import com.ita.poppop.data.remote.repository.story.StoryRepositoryImpl
 import com.ita.poppop.databinding.FragmentInfoBinding
 import com.ita.poppop.util.ViewModelFactory
 import com.ita.poppop.util.remote.RetrofitClient
@@ -38,6 +41,7 @@ class InfoFragment: BaseFragment<FragmentInfoBinding>(R.layout.fragment_info) {
     }
     private lateinit var infoViewHolder: InfoViewHolder
 
+    private var popupItem: PopupDetailData? = null
 
     private var isFavorite = false
 
@@ -45,7 +49,7 @@ class InfoFragment: BaseFragment<FragmentInfoBinding>(R.layout.fragment_info) {
         setupWindowInsets()
         binding.apply {
 
-
+            val popupId = args.popupId
 
             // 상단 제목 상태 제어
             svInfo.setOnScrollChangeListener { _, _, scrollY, _, oldScrollY ->
@@ -62,9 +66,9 @@ class InfoFragment: BaseFragment<FragmentInfoBinding>(R.layout.fragment_info) {
                 isFavorite = !isFavorite
 
                 val icStar = if (isFavorite) {
-                    R.drawable.info_favorites_star_icon_outlined
-                } else {
                     R.drawable.info_favorites_star_icon_filled
+                } else {
+                    R.drawable.info_favorites_star_icon_outlined
                 }
 
                 // drawable 교체
@@ -72,11 +76,21 @@ class InfoFragment: BaseFragment<FragmentInfoBinding>(R.layout.fragment_info) {
                     ContextCompat.getDrawable(requireContext(), icStar),
                     null, null, null
                 )
+                infoViewModel.postBookmark(popupId)
             }
 
             acbUploadReview.setOnClickListener{
+                val searchData = popupItem?.let {
+                    SearchData(
+                        id = it.id,
+                        image = it.imageUrl ?: "",
+                        title = it.title ?: "",
+                        location = it.location ?: ""
+                    )
+                }
+
                 val parentNavController = requireParentFragment().findNavController()
-                val action = InfoFragmentDirections.actionInfoFragmentToUploadFragment()
+                val action = InfoFragmentDirections.actionInfoFragmentToUploadFragment(searchData, popupId)
                 parentNavController.navigate(action)
             }
 
@@ -84,11 +98,10 @@ class InfoFragment: BaseFragment<FragmentInfoBinding>(R.layout.fragment_info) {
             //val popupId = 1325
 
             val repository = PopupsRepositoryImpl(RetrofitClient.popupApi)
-            val factory = ViewModelFactory { InfoViewModel(mainViewModel.tokenPair.value.first.toString(),repository) }
+            val bookmarkRepository = BookmarkRepositoryImpl(RetrofitClient.bookmarkApi)
+            val factory = ViewModelFactory { InfoViewModel(mainViewModel.tokenPair.value.first.toString(), repository, bookmarkRepository) }
             infoViewModel = ViewModelProvider(this@InfoFragment, factory)[InfoViewModel::class.java]
 
-            val popupId = args.popupId
-            Log.d("InfoFragment", "Received popupId from args: $popupId")
             infoViewHolder = InfoViewHolder(binding)
 
             infoViewModel.getInfo(popupId)
@@ -96,16 +109,32 @@ class InfoFragment: BaseFragment<FragmentInfoBinding>(R.layout.fragment_info) {
 
             infoViewModel.infoData.observe(viewLifecycleOwner, Observer { info ->
                 infoViewHolder.bind(info, infoViewModel)
+                popupItem = info
+
+                infoViewHolder.bind(info, infoViewModel)
+                popupItem = info
+
+                isFavorite = info.bookmarked  // 초기 상태 저장
+                val icStar = if (isFavorite) {
+                    R.drawable.info_favorites_star_icon_filled
+                } else {
+                    R.drawable.info_favorites_star_icon_outlined
+                }
+                binding.acbFavorites.setCompoundDrawablesWithIntrinsicBounds(
+                    ContextCompat.getDrawable(requireContext(), icStar),
+                    null, null, null
+                )
             })
 
-            infoStoryViewModel = ViewModelProvider(this@InfoFragment).get(InfoStoryViewModel::class.java)
-
+            val storyRepository = StoryRepositoryImpl(RetrofitClient.storyApi)
+            val storyFactory = ViewModelFactory { InfoStoryViewModel(mainViewModel.tokenPair.value.first.toString(),storyRepository) }
+            infoStoryViewModel = ViewModelProvider(this@InfoFragment, storyFactory)[InfoStoryViewModel::class.java]
             // 스토리
             rvInfoStory.apply {
                 layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
                 adapter = infoStoryRVAdapter
             }
-            infoStoryViewModel.getInfoStory()
+            infoStoryViewModel.getInfoStory(popupId)
             infoStoryViewModel.infostoryList.observe(viewLifecycleOwner, Observer { response ->
                 infoStoryRVAdapter.submitList(response)
 
@@ -138,11 +167,26 @@ class InfoFragment: BaseFragment<FragmentInfoBinding>(R.layout.fragment_info) {
                     }
                 }
         }
-
     }
+
+    fun recommendItemClicked(popupId: Int) {
+
+        binding.icInfoTablayout.tlInfo.getTabAt(0)?.select()
+
+        // 팝업 아이템 갱신
+        infoViewModel.getInfo(popupId)
+        binding.svInfo.smoothScrollTo(0, 0)
+        infoStoryViewModel.getInfoStory(popupId)
+        val currentFragment = childFragmentManager.findFragmentById(R.id.fl_info_tab)
+        if (currentFragment is InfoDetailFragment) {
+            currentFragment.updatePopup(popupId)
+        }
+    }
+
     private fun loadFragment(fragment: Fragment, popupId: Int): Boolean {
         fragment.arguments = Bundle().apply {
             putInt("popupId", popupId)
+            popupItem?.let { putParcelable("popupItem", it) }
         }
         childFragmentManager.beginTransaction()
             .replace(R.id.fl_info_tab, fragment)

@@ -1,6 +1,7 @@
 package com.ita.poppop.view.main.map
 
 import android.Manifest
+import android.app.ProgressDialog.show
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Canvas
@@ -14,6 +15,7 @@ import android.view.View
 import android.view.ViewTreeObserver
 import android.view.inputmethod.InputMethodManager
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
@@ -26,9 +28,15 @@ import com.google.android.gms.location.LocationServices
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.ita.poppop.R
 import com.ita.poppop.base.BaseFragment
+import com.ita.poppop.data.remote.repository.popups.PopupsRepositoryImpl
 import com.ita.poppop.databinding.FragmentMapBinding
 import com.ita.poppop.databinding.ItemMapCustomMarkerBinding
+import com.ita.poppop.util.ViewModelFactory
+import com.ita.poppop.util.remote.RetrofitClient
 import com.ita.poppop.view.main.MainFragmentDirections
+import com.ita.poppop.view.main.hide
+import com.ita.poppop.view.main.show
+import com.ita.poppop.viewmodel.MainAViewModel
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.CameraAnimation
 import com.naver.maps.map.CameraPosition
@@ -44,6 +52,8 @@ class MapFragment: BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnMa
 
     private lateinit var mapViewModel: MapViewModel
 
+    val mainViewModel: MainAViewModel by activityViewModels()
+
     private val mapRVAdapter by lazy {
         MapRVAdapter()
     }
@@ -58,8 +68,10 @@ class MapFragment: BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnMa
 
     override fun initView() {
         binding.apply {
-
-            mapViewModel = ViewModelProvider(this@MapFragment).get(MapViewModel::class.java)
+            val mapRepository = PopupsRepositoryImpl(RetrofitClient.popupApi)
+            val mapFactory = ViewModelFactory { MapViewModel(mapRepository) }
+            mapViewModel = ViewModelProvider(this@MapFragment, mapFactory)[MapViewModel::class.java]
+            //mapViewModel = ViewModelProvider(this@MapFragment).get(MapViewModel::class.java)
             linearLayoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
 
             // 지도 설정
@@ -70,12 +82,12 @@ class MapFragment: BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnMa
                 /*val dividerItemDecoration = DividerItemDecoration(context, linearLayoutManager.orientation)
                 addItemDecoration(dividerItemDecoration)*/
             }
-            
-            mapViewModel.getMap()
+
             mapViewModel.mapList.observe(viewLifecycleOwner, Observer { response ->
                 mapRVAdapter.submitList(response)
                 if (::naverMap.isInitialized) {
                     Log.d("MapFragment", "맵 초기화 후 호출")
+                    emptyStateLayout.root.run { if(response.isNullOrEmpty()) show() else hide()}
                     addCustomMarkers(response)
                 } else {
 
@@ -129,6 +141,9 @@ class MapFragment: BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnMa
                         val cameraUpdate = CameraUpdate.toCameraPosition(cameraPosition)
                             .animate(CameraAnimation.Easing)
                         naverMap.moveCamera(cameraUpdate)
+
+                        mapViewModel.getLocationPopup(latLng.longitude,latLng.latitude)
+
                         Log.d("MapFragment", "${address} 이동 완료")
 
                     } catch (e: Exception) {
@@ -155,7 +170,7 @@ class MapFragment: BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnMa
                 val bottomSheetBehavior = BottomSheetBehavior.from(binding.nsvBottomSheet)
 
                 // dp 값을 픽셀로 변환
-                val topMarginPx = dpToPx(55)
+                val topMarginPx = dpToPx(50)
                 val bottomMarginPx = dpToPx(48)
 
                 // 바텀시트 최소 높이
@@ -281,6 +296,14 @@ class MapFragment: BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnMa
         }
         binding.acbRebrowse.setOnClickListener {
             it.visibility = View.GONE
+
+            if (::naverMap.isInitialized) {
+                val currentPosition = naverMap.cameraPosition.target
+                val longitude = currentPosition.longitude
+                val latitude = currentPosition.latitude
+
+                mapViewModel.getLocationPopup(longitude, latitude)
+            }
         }
 
         // naverMap 호출 후 데이터 있을시 마커 추가
@@ -293,7 +316,7 @@ class MapFragment: BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnMa
         // 줌 일정 레벨 이하일 경우 마커 숨기기
         naverMap.addOnCameraChangeListener { reason, animated ->
             val zoom = naverMap.cameraPosition.zoom
-            val shouldShow = zoom >= 14.5
+            val shouldShow = zoom >= 13
             markers.forEach { it.isVisible = shouldShow }
         }
 
@@ -333,6 +356,7 @@ class MapFragment: BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnMa
                     val cameraUpdate = CameraUpdate.scrollTo(latLng).animate(CameraAnimation.Easing)
                     naverMap.moveCamera(cameraUpdate)
                     Log.d("MapFragment", "현재 위치: $latLng")
+                    mapViewModel.getLocationPopup(location.longitude, location.latitude)
                 } else {
                     Log.w("MapFragment", "현재 위치 정보 없음")
                 }
@@ -414,6 +438,16 @@ class MapFragment: BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnMa
                             width = dpToPx(48)
                             height = dpToPx(63)
                             map = naverMap
+
+                            setOnClickListener {
+                                // 마커 클릭 시 팝업 상세 화면으로 이동
+                                val popupId = item.itemId
+                                val parentNavController = requireActivity().findNavController(R.id.fcv_main_activity_container)
+                                val action = MainFragmentDirections.actionMainFragmentToNaviInfo(popupId)
+                                parentNavController.navigate(action)
+
+                                true
+                            }
                         }
 
                         markers.add(marker)

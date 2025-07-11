@@ -84,7 +84,7 @@ class MainAViewModel: ViewModel() {
 
                             if (result.isSuccessful) {
                                 setTokenPair(result.body()!!.data.accessTocken,result.body()!!.data.refreshTocken)
-                                Log.e("checkToken", "Token: ${tokenPair.value}")
+                                Log.e("checkLogin", "Token: ${tokenPair.value}")
                                 _loginState.value = LoginState.LoggedIn
                             } else {
                                 _loginState.value = LoginState.LoggedOut
@@ -92,9 +92,9 @@ class MainAViewModel: ViewModel() {
                         } catch (e: HttpException) {
                             // HTTP 에러 상세 정보
                             _loginState.value = LoginState.LoggedOut
-                            Log.e("API_ERROR", "HTTP ${e.code()}: ${e.response()?.errorBody()?.string()}")
+                            Log.e("checkLogin", "HTTP ${e.code()}: ${e.response()?.errorBody()?.string()}")
                         } catch (e: Exception) {
-                            Log.e("API_ERROR", "Exception: ${e.message}", e)
+                            Log.e("checkLogin", "Exception: ${e.message}", e)
                             _loginState.value = LoginState.LoggedOut
                         }
                     }

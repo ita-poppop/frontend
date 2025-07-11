@@ -6,7 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ita.poppop.data.remote.dto.reviews.ReviewData
-import com.ita.poppop.data.remote.repository.popup.ReviewRepository
+import com.ita.poppop.data.remote.repository.popups.ReviewRepository
 import com.ita.poppop.util.ConvertTimeUtil
 import com.ita.poppop.view.empty.info.review.InfoReviewRVItem
 import com.ita.poppop.view.empty.info.review.image.InfoReviewImageRVItem
@@ -15,6 +15,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class InfoReviewDetailViewModel(
+    private val accessToken: String,
     private val repository: ReviewRepository
 ) : ViewModel() {
     private val _inforeviewdetailList = MutableLiveData<InfoReviewRVItem>()
@@ -26,36 +27,76 @@ class InfoReviewDetailViewModel(
     private val _isHeartClicked = MutableLiveData<Boolean>()
     val isHeartClicked: LiveData<Boolean> = _isHeartClicked
 
-    fun firstHeartCount(count: Int, clicked: Boolean = false) {
+    fun initHeartState(count: Int, clicked: Boolean) {
         if (_heartCount.value == null) {
             _heartCount.value = count
             _isHeartClicked.value = clicked
         }
     }
 
-    fun clickHeart() {
-        val currentClicked = _isHeartClicked.value ?: false
-        val currentCount = _heartCount.value ?: 0
-        if (currentClicked) {
-            _heartCount.value = currentCount - 1
-            _isHeartClicked.value = false
-        } else {
-            _heartCount.value = currentCount + 1
-            _isHeartClicked.value = true
-        }
-    }
-
-    fun getInfoReviewDetail(reviewId: Int) {
+    fun postReviewLikes(accessToken: String, reviewId: Int) {
         viewModelScope.launch {
             try {
                 val response = withContext(Dispatchers.IO) {
-                    repository.getReview(1325, reviewId)
+                    repository.postReviewLikes(accessToken, reviewId)
+                }
+                if (response.isSuccessful) {
+                    response.body()?.let { responseBody ->
+                        val updatedReview = responseBody.data
+
+                        val oldCount = _heartCount.value ?: updatedReview.likeCount
+                        val newCount = updatedReview.likeCount
+
+                        val isNewLiked = newCount > oldCount
+                        _heartCount.value = newCount
+                        _isHeartClicked.value = isNewLiked
+
+                        Log.d("ReviewLike_SUCCESS", "Likes: ${updatedReview.likeCount}, Liked: $isNewLiked")
+                    }
+                } else {
+                    Log.e("ReviewLike_ERROR", "API error: ${response.message()} (${response.code()})")
+                }
+            } catch (e: Exception) {
+                Log.e("ReviewLike_ERROR", "Exception: ${e.message}", e)
+            }
+        }
+    }
+
+    fun deleteReview(reviewId: Int, onSuccess: (() -> Unit)? = null) {
+        viewModelScope.launch {
+            try {
+                val response = withContext(Dispatchers.IO) {
+                    repository.deleteReview(accessToken, reviewId)
+                }
+                if (response.isSuccessful) {
+                    Log.d("ReviewDelete_SUCCESS", "Deleted reviewId: $reviewId")
+                    onSuccess?.invoke()
+                } else {
+                    Log.e("ReviewDelete_ERROR", "API error: ${response.message()} (${response.code()})")
+                }
+            } catch (e: Exception) {
+                Log.e("ReviewDelete_ERROR", "Exception: ${e.message}", e)
+            }
+        }
+    }
+
+    fun getInfoReviewDetail(popupId: Int, reviewId: Int) {
+        viewModelScope.launch {
+            try {
+                val response = withContext(Dispatchers.IO) {
+                    repository.getReview(accessToken, popupId, reviewId)
                 }
                 if (response.isSuccessful) {
                     response.body()?.let { responseBody ->
                         val data: ReviewData = responseBody.data
                         val result = reviewDtoToAdapterItem(data)
                         _inforeviewdetailList.value = result
+
+                        initHeartState(
+                            count = data.likeCount,
+                            clicked = data.likedByUser
+                        )
+
                         Log.d("ReviewDetailApi_SUCCESS", "Review: $result")
                     }
                 } else {
@@ -92,7 +133,27 @@ class InfoReviewDetailViewModel(
             hearts = data.likeCount,
             comments = data.commentCount,
             content = data.content,
-            reviewImage = reviewImages
+            reviewImage = reviewImages,
+            likedByUser = data.likedByUser
         )
+    }
+
+    fun getUserNameFromToken(): String? {
+        val token = accessToken
+        val parts = token.split(".")
+        if (parts.size < 2) return null
+        return try {
+            val payloadJson = String(android.util.Base64.decode(parts[1], android.util.Base64.DEFAULT))
+            Log.d("TokenPayload", "payloadJson: $payloadJson")
+            val jsonObj = org.json.JSONObject(payloadJson)
+            val name = jsonObj.optString("sub").takeIf { it.isNotEmpty() }
+                ?: jsonObj.optString("nickName").takeIf { it.isNotEmpty() }
+
+            Log.d("TokenUserName", "userName: $name")
+            name
+        } catch (e: Exception) {
+            Log.e("TokenUserName", "Error decoding token", e)
+            null
+        }
     }
 }

@@ -1,7 +1,7 @@
 package com.ita.poppop.data.remote.dto.reviews
 
-data class PostReviewLikeResponse(
+data class DeleteReviewResponse(
     val code: String,
     val message: String,
-    val data: ReviewData 
+    val data: ReviewData
 )

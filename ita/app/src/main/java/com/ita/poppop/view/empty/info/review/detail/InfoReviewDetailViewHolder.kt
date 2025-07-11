@@ -40,8 +40,13 @@ class InfoReviewDetailViewHolder(
                 .circleCrop()
                 .into(ivReviewDetailProfile)
 
+            ivReviewDetailHeart.setImageResource(
+                if (review.likedByUser) R.drawable.info_review_heart_icon_filled
+                else R.drawable.info_review_heart_icon_outlined
+            )
+
             // 기존 개수 전달
-            viewModel.firstHeartCount(review.hearts)
+            viewModel.initHeartState(review.hearts, review.likedByUser)
         }
     }
 }

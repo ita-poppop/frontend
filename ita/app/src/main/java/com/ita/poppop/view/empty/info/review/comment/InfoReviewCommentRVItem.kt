@@ -6,10 +6,11 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 data class InfoReviewCommentRVItem(
     var itemId: Int,
-    var profileImage: String,
+    var profileImage: String?,
     var username: String,
     var time: String,
     var content: String,
-    var reply: Int?
+    var reply: Int?,
+    var isMine: Boolean = false
 ) : Parcelable
 

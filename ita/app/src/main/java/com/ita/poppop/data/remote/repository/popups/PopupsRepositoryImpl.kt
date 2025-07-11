@@ -1,6 +1,7 @@
 package com.ita.poppop.data.remote.repository.popups
 
 import com.ita.poppop.data.remote.api.PopupApi
+import com.ita.poppop.data.remote.dto.popups.GetLocationPopupResponse
 import com.ita.poppop.data.remote.dto.popups.GetPlannedResponse
 import com.ita.poppop.data.remote.dto.popups.GetPopupDetailResponse
 import com.ita.poppop.data.remote.dto.popups.GetSearchResponse
@@ -79,6 +80,28 @@ class PopupsRepositoryImpl(
     ): Response<GetPlannedResponse> {
         try {
             val response = api.getPlanned(page, size)
+
+            if (response.code() == 200) {
+                return response
+            } else {
+                throw Exception("API 응답 오류: ${response.message()} (코드: ${response.code()})")
+            }
+        } catch (e: HttpException) {
+            // HTTP 500 에러 등을 명확하게 전달
+            throw Exception("HTTP ${e.code()}: ${e.message()}")
+        } catch (e: Exception) {
+            throw e
+        }
+    }
+
+    override suspend fun getLocationPopup(
+        longitude: Double,
+        latitude: Double,
+        page: Int,
+        size: Int
+    ): Response<GetLocationPopupResponse> {
+        try {
+            val response = api.getLocationPopup(longitude, latitude, page, size)
 
             if (response.code() == 200) {
                 return response

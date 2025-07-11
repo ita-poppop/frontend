@@ -5,7 +5,10 @@ import com.ita.poppop.data.remote.dto.reviews.GetReviewResponse
 import com.ita.poppop.data.remote.dto.reviews.PostReviewLikesResponse
 
 import com.ita.poppop.data.remote.dto.review.PostReviewResponse
+import com.ita.poppop.data.remote.dto.reviews.DeleteReviewResponse
+import com.ita.poppop.data.remote.dto.reviews.ModifyReviewResponse
 import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Header
@@ -19,6 +22,7 @@ interface ReviewApi {
 
     @GET("/api/v1/popups/{popupId}/reviews")
     suspend fun getReviewList(
+        @Header("Authorization") accessToken: String,
         @Path("popupId") popupId: Int,
         @Query("page") page: Int,
         @Query("size") size: Int
@@ -29,14 +33,15 @@ interface ReviewApi {
     suspend fun postReview(
         @Header("Authorization") accessToken: String,
         @Path("popupId") popupId: Int,
-        @Part("content") content: String,
+        @Part("content") content: RequestBody,
         @Part photo: List<MultipartBody.Part>,
 
-    ): Response<PostReviewResponse>
+        ): Response<PostReviewResponse>
 
 
     @GET("/api/v1/popups/{popupId}/reviews/{reviewId}")
     suspend fun getReview(
+        @Header("Authorization") accessToken: String,
         @Path("popupId") popupId: Int,
         @Path("reviewId") reviewId: Int,
     ): Response<GetReviewResponse>
@@ -46,6 +51,27 @@ interface ReviewApi {
         @Header("Authorization") accessToken: String,
         @Path("reviewId") reviewId: Int
     ): Response<PostReviewLikesResponse>
+
+    @POST("/api/v1/popups/{popupId}/reviews/{reviewId}/delete")
+    suspend fun deleteReview(
+        @Header("Authorization") accessToken: String,
+        @Path("reviewId") reviewId: Int
+    ): Response<DeleteReviewResponse>
+
+    @Multipart
+    @POST("/api/v1/popups/{popupId}/reviews/{reviewId}/patch")
+    suspend fun modifyReview(
+        @Header("Authorization") accessToken: String,
+        @Path("reviewId") reviewId: Int,
+        @Part("content") content: RequestBody,
+        @Part photo: List<MultipartBody.Part>,
+
+    ): Response<ModifyReviewResponse>
+
+
+
+
+
 
 
 }

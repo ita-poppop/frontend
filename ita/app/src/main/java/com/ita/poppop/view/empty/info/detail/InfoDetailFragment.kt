@@ -3,6 +3,7 @@ package com.ita.poppop.view.empty.info.detail
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ita.poppop.R
 import com.ita.poppop.base.BaseFragment
@@ -10,6 +11,7 @@ import com.ita.poppop.data.remote.repository.popups.PopupsRepositoryImpl
 import com.ita.poppop.databinding.FragmentInfoDetailBinding
 import com.ita.poppop.util.ViewModelFactory
 import com.ita.poppop.util.remote.RetrofitClient
+import com.ita.poppop.view.empty.info.InfoFragment
 import com.ita.poppop.view.empty.info.detail.recommend.InfoRecommendRVAdapter
 import com.ita.poppop.view.empty.info.detail.recommend.InfoRecommendViewModel
 import com.ita.poppop.viewmodel.MainAViewModel
@@ -58,6 +60,19 @@ class InfoDetailFragment: BaseFragment<FragmentInfoDetailBinding>(R.layout.fragm
 
                 //binding.emptyStateLayout.root.run { if(response.isNullOrEmpty()) show() else hide()}
             })
+
+            infoRecommendRVAdapter.setInfoRecommendItemClickListener(object : InfoRecommendRVAdapter.InfoRecommendItemClickListener{
+                override fun onItemClick(position: Int) {
+                    //val popupId = 1
+                    val item = infoRecommendRVAdapter.currentList.getOrNull(position) ?: return
+                    val popupId = item.itemId
+
+                    (parentFragment as? InfoFragment)?.recommendItemClicked(popupId)
+                }
+            })
         }
+    }
+    fun updatePopup(popupId: Int) {
+        infoDetailViewModel.getInfoDetail(popupId)
     }
 }

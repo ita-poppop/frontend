@@ -15,7 +15,15 @@
 
         <action
             android:id="@+id/action_infoFragment_to_infoReviewDetailFragment"
-            app:destination="@id/infoReviewDetailFragment" />
+            app:destination="@id/infoReviewDetailFragment">
+            <argument
+                android:name="popupId"
+                app:argType="integer"/>
+            <argument
+                android:name="popupItem"
+                app:argType="com.ita.poppop.data.remote.dto.popups.PopupDetailData"
+                app:nullable="true" />
+        </action>
         <action
             android:id="@+id/action_infoFragment_to_uploadFragment"
             app:destination="@id/uploadFragment" />
@@ -26,21 +34,42 @@
         android:name="com.ita.poppop.view.empty.info.review.detail.InfoReviewDetailFragment"
         android:label="InfoReviewDetailFragment">
         <argument
+            android:name="popupId"
+            app:argType="integer"/>
+        <argument
             android:name="review"
             app:argType="com.ita.poppop.view.empty.info.review.InfoReviewRVItem" />
+        <argument
+            android:name="popupItem"
+            app:argType="com.ita.poppop.data.remote.dto.popups.PopupDetailData"
+            app:nullable="true" />
         <action
             android:id="@+id/action_infoReviewDetailFragment_to_infoReviewDetailReplyFragment"
             app:destination="@id/infoReviewDetailReplyFragment" />
         <action
             android:id="@+id/action_infoReviewDetailFragment_to_infoReviewEditFragment"
-            app:destination="@id/infoReviewEditFragment" />
+            app:destination="@id/infoReviewEditFragment" >
+            <argument
+                android:name="popupId"
+                app:argType="integer" />
+            <argument
+                android:name="popupItem"
+                app:argType="com.ita.poppop.data.remote.dto.popups.SearchData"
+                app:nullable="true" />
+
+        </action>
+        <action
+            android:id="@+id/action_infoReviewDetailFragment_to_infoFragment"
+            app:destination="@id/infoFragment" />
     </fragment>
 
     <fragment
         android:id="@+id/infoReviewDetailReplyFragment"
         android:name="com.ita.poppop.view.empty.info.review.detail.reply.InfoReviewDetailReplyFragment"
         android:label="InfoReviewDetailReplyFragment">
-
+        <argument
+            android:name="review"
+            app:argType="integer" />
         <argument
             android:name="comment"
             app:argType="com.ita.poppop.view.empty.info.review.comment.InfoReviewCommentRVItem" />
@@ -48,9 +77,34 @@
     <fragment
         android:id="@+id/uploadFragment"
         android:name="com.ita.poppop.view.empty.upload.UploadFragment"
-        android:label="UploadFragment" />
+        android:label="UploadFragment" >
+        <argument
+            android:name="popupItem"
+            app:argType="com.ita.poppop.data.remote.dto.popups.SearchData"
+            app:nullable="true"/>
+        <argument
+            android:name="popupId"
+            app:argType="integer" />
+    </fragment>
     <fragment
         android:id="@+id/infoReviewEditFragment"
         android:name="com.ita.poppop.view.empty.info.review.edit.InfoReviewEditFragment"
-        android:label="InfoReviewEditFragment" />
+        android:label="InfoReviewEditFragment" >
+        <argument
+            android:name="popupId"
+            app:argType="integer" />
+        <argument
+            android:name="popupItem"
+            app:argType="com.ita.poppop.data.remote.dto.popups.SearchData"
+            app:nullable="true"/>
+        <argument
+            android:name="reviewContent"
+            app:argType="string"/>
+        <argument
+            android:name="reviewImages"
+            app:argType="string[]"/>
+        <argument
+            android:name="reviewId"
+            app:argType="integer" />
+    </fragment>
 </navigation>

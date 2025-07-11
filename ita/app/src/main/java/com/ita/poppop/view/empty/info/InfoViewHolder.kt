@@ -12,10 +12,13 @@ class InfoViewHolder(
     fun bind(info: PopupDetailData, viewModel: InfoViewModel) {
         binding.apply {
 
-            val newDate = info.date.replace("-", ".")
+            val newDate = info.date
+                .replace("-", ".")
+                .replace("~", "-")
 
+            tvInfoTopTitle.text = info.title
             tvInfoTitle.text = info.title
-            tvInfoLocation.text = info.location
+            tvInfoLocation.text = info.location.substringBefore("\n").trim()
             tvInfoDate.text = newDate
 
             Glide.with(ivInfoImage.context)

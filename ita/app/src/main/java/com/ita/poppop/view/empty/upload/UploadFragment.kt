@@ -3,54 +3,80 @@ package com.ita.poppop.view.empty.upload
 import android.net.Uri
 import android.util.Log
 import androidx.core.os.BundleCompat
-import androidx.lifecycle.Observer
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavDirections
 import androidx.navigation.findNavController
-import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import com.ita.poppop.R
 import com.ita.poppop.base.BaseFragment
+import com.ita.poppop.data.remote.repository.review.ReviewRepository
+import com.ita.poppop.data.remote.repository.review.ReviewRepositoryImpl
 import com.ita.poppop.databinding.FragmentUploadBinding
 import com.ita.poppop.util.bottomsheet.UploadBottomSheet
-import com.ita.poppop.view.empty.home_upload.UploadReviewFragmentDirections
+import com.ita.poppop.util.remote.RetrofitClient
 import com.ita.poppop.view.empty.home_upload.sub.ImageItem
 import com.ita.poppop.view.empty.home_upload.sub.UploadImageAdapter
 import com.ita.poppop.view.empty.home_upload.sub.UploadImageItemDecoration
-import com.ita.poppop.view.empty.info.review.InfoReviewRVAdapter
-import com.ita.poppop.view.empty.info.review.InfoReviewViewModel
+import com.ita.poppop.viewmodel.MainAViewModel
 import com.ita.poppop.viewmodel.empty.upload.UploadViewModel
+import com.ita.poppop.viewmodel.main.MainViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.RequestBody.Companion.toRequestBody
+import retrofit2.HttpException
 import kotlin.math.absoluteValue
 
 class UploadFragment: BaseFragment<FragmentUploadBinding>(R.layout.fragment_upload) {
 
+    private val args: UploadFragmentArgs by navArgs()
+    private var popupId: Int = -1
+
     private lateinit var uploadImageAdapter: UploadImageAdapter
     private lateinit var uploadViewModel: UploadViewModel
-
+    private lateinit var mainViewModel: MainViewModel
+    val mainAViewModel: MainAViewModel by activityViewModels()
+    private val repository: ReviewRepository = ReviewRepositoryImpl(RetrofitClient.reviewApi)
     override fun initView() {
+        popupId = args.popupId
+
         setupWindowInsets()
         setupToolbar()
         setupUploadRecycler()
         setFragmentResult()
+        setClickListener()
         setViewModel()
+        val popupItem = args.popupItem
+        uploadViewModel.setPopupItem(popupItem)
+        Log.d("UploadFragment", "args.popupItem: ${args.popupItem}")
     }
 
 
     private fun setViewModel() {
         uploadViewModel = ViewModelProvider(this)[UploadViewModel::class.java]
+        mainViewModel = ViewModelProvider(requireActivity())[MainViewModel::class.java]
         // 바인딩에 ViewModel 연결
         binding.uploadViewModel = uploadViewModel
+        binding.lifecycleOwner = viewLifecycleOwner
 
         // UploadItem 리스트를 관찰 (헤더가 포함된 리스트)
         uploadViewModel.uploadList.observe(viewLifecycleOwner) { uploadItemList ->
             uploadImageAdapter.submitList(uploadItemList)
         }
-
+        uploadViewModel.popupItem.observe(viewLifecycleOwner) { seleteItem ->
+            Log.d("UploadFragment", "popupItem changed: $seleteItem")
+            //binding.tvUploadLocation.text = seleteItem?.title ?: ""
+        }
+        mainViewModel.selectItem.observe(viewLifecycleOwner) { seleteItem ->
+            uploadViewModel.setPopupItem(seleteItem)
+        }
         uploadViewModel.isAllValid.observe(viewLifecycleOwner) { valid ->
-            Log.d("checkViewModel","imageList : ${uploadViewModel.imageList.value}")
-            Log.d("checkViewModel","popupItem : ${uploadViewModel.popupItem.value}")
-            Log.d("checkViewModel","reviewContent : ${uploadViewModel.reviewContent.value}")
+            Log.d("UploadFragment", "isAllValid changed: $valid")
             binding.btUpload.isEnabled = valid
 
         }
@@ -69,16 +95,16 @@ class UploadFragment: BaseFragment<FragmentUploadBinding>(R.layout.fragment_uplo
     private fun setupUploadRecycler() = with(binding.rvUpload) {
         uploadImageAdapter = UploadImageAdapter(
             onAddClick = {
-                android.util.Log.d("checkList", "Add button clicked")
+                Log.d("checkList", "Add button clicked")
                 showUploadBottomSheet()
             },
             onDeleteClick = { id ->
-                android.util.Log.d("checkList", "Delete clicked for id: $id")
+                Log.d("checkList", "Delete clicked for id: $id")
                 deleteImage(id)
             }
         )
         adapter = uploadImageAdapter
-        layoutManager = LinearLayoutManager(context, androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL, false)
+        layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         addItemDecoration(UploadImageItemDecoration())
     }
 
@@ -98,9 +124,39 @@ class UploadFragment: BaseFragment<FragmentUploadBinding>(R.layout.fragment_uplo
         uploadViewModel.removeItem(id)
     }
 
+    private fun setClickListener() {
+        binding.btUpload.setOnClickListener{
+            lifecycleScope.launch {
+                try {
+                    val result = withContext(Dispatchers.IO) {
+                        val contentBody = uploadViewModel.reviewContent.value.orEmpty().toRequestBody("text/plain".toMediaTypeOrNull())
+                        repository.postReview(
+                            mainAViewModel.tokenPair.value.first.toString(),
+                            popupId,
+                            contentBody,
+                            uploadViewModel.createMultipartListFromUris(requireContext())
+                        )
+                    }
+
+                    if (result.isSuccessful) {
+                        Log.d("checkUploadData","result : ${result.body()}")
+                        handleBackNavigation()
+                    }
+                } catch (e: HttpException) {
+                    // HTTP 에러 상세 정보
+                    Log.e("API_ERROR", "HTTP ${e.code()}: ${e.response()?.errorBody()?.string()}")
+                } catch (e: Exception) {
+                    Log.e("API_ERROR", "Exception: ${e.message}", e)
+                }
+            }
+
+
+        }
+    }
+
     private fun setupToolbar() {
         binding.mtUpload.apply {
-            setNavigationIcon(R.drawable.chevron_left)
+            setNavigationIcon(R.drawable.icon_x_close_b)
             setNavigationOnClickListener { handleBackNavigation() }
         }
     }

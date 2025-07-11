@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/white_round_top_border_20">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/item_24"
+            android:padding="@dimen/padding_10"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" >
+            <ImageView
+                android:layout_width="@dimen/item_36"
+                android:layout_height="@dimen/item_4"
+                android:background="@drawable/map_bottomsheet_bar_icon"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="47dp"
+            android:background="@drawable/background_line_2"
+            android:paddingStart="@dimen/padding_16"
+            android:paddingVertical="10dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="리뷰"
+                android:fontFamily="@font/pretendard_semibold"
+                android:textStyle="normal"
+                android:textSize="18sp"
+                android:textColor="@color/black"
+                android:letterSpacing="-0.03"
+                android:lineSpacingExtra="9sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_review_report"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:background="@drawable/background_line_1"
+            android:paddingStart="@dimen/padding_16"
+            android:paddingVertical="12dp"
+            android:layout_marginBottom="44dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/iv_review_report"
+                android:layout_width="@dimen/item_24"
+                android:layout_height="@dimen/item_24"
+                android:src="@drawable/icon_edit"
+                app:tint="@color/black"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tv_review_report"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_10"
+                android:text="신고"
+                android:fontFamily="@font/pretendard_semibold"
+                android:textStyle="normal"
+                android:textSize="15sp"
+                android:textColor="@color/black"
+                android:letterSpacing="-0.03"
+                android:lineSpacingExtra="7.5sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/iv_review_report"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
+</layout>

@@ -5,5 +5,6 @@ data class InfoReviewDetailReplyRVItem(
     var profileImage: String,
     var username: String,
     var time: String,
-    var reply: String
+    var reply: String,
+    var isMine: Boolean = false
 )

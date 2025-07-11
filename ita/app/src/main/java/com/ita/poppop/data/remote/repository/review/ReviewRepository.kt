@@ -6,7 +6,6 @@ import com.ita.poppop.data.remote.dto.reviews.GetReviewResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Response
-import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.Multipart
@@ -18,6 +17,7 @@ import retrofit2.http.Query
 interface ReviewRepository {
     @GET("/api/v1/popups/{popupId}/reviews")
     suspend fun getReviewList(
+        @Header("Authorization") accessToken: String,
         @Path("popupId") popupId: Int,
         @Query("page") page: Int,
         @Query("size") size: Int
@@ -28,12 +28,13 @@ interface ReviewRepository {
     suspend fun postReview(
         @Header("Authorization") accessToken: String,
         @Path("popupId") popupId: Int,
-        @Part("content") content: String,
+        @Part("content") content: RequestBody,
         @Part images: List<MultipartBody.Part>
     ): Response<PostReviewResponse>
 
     @GET("/api/v1/popups/{popupId}/reviews/{reviewId}")
     suspend fun getReview(
+        @Header("Authorization") accessToken: String,
         @Path("popupId") popupId: Int,
         @Path("reviewId") reviewId: Int,
     ): Response<GetReviewResponse>

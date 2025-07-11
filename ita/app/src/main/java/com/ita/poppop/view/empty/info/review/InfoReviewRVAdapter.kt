@@ -26,7 +26,7 @@ InfoReviewDiffutillCallback()
         infoReviewItemClickListener = itemClickListener
     }
 
-    class InfoReviewViewHolder(val binding: ItemInfoReviewBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class InfoReviewViewHolder(val binding: ItemInfoReviewBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: InfoReviewRVItem) {
             binding.apply {
                 Glide.with(ivReviewProfile.context)
@@ -43,6 +43,9 @@ InfoReviewDiffutillCallback()
                 tvReviewContent.text = item.content
 
                 // rvadapter 연결
+                ivReviewHeart.setImageResource(
+                    if (item.likedByUser) R.drawable.info_review_heart_icon_filled else R.drawable.info_review_heart_icon_outlined
+                )
                 // 이미지 리스트 비어 있을시 hide
                 if (item.reviewImage.isNullOrEmpty()) {
                     rvReviewImage.visibility = View.GONE
@@ -54,6 +57,13 @@ InfoReviewDiffutillCallback()
                         layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
                         adapter = imgAdapter
                     }
+
+                    // 이미지 클릭 리스너 연결
+                    imgAdapter.setInfoReviewImageItemClickListener(object : InfoReviewImageRVAdapter.InfoReviewImageItemClickListener {
+                        override fun onItemClick(position: Int) {
+                            infoReviewItemClickListener.onItemClick(bindingAdapterPosition)
+                        }
+                    })
                 }
             }
         }

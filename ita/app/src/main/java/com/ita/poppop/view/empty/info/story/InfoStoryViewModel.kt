@@ -4,66 +4,49 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.ita.poppop.R
+import androidx.lifecycle.viewModelScope
+import com.ita.poppop.data.remote.dto.story.StoryData
+import com.ita.poppop.data.remote.repository.story.StoryRepository
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
-class InfoStoryViewModel: ViewModel() {
+class InfoStoryViewModel(
+    private val accessToken: String,
+    private val repository: StoryRepository
+) : ViewModel() {
 
     private val _infostoryList = MutableLiveData<MutableList<InfoStoryRVItem>>()
     val infostoryList: LiveData<MutableList<InfoStoryRVItem>> = _infostoryList
 
-    fun getInfoStory(){
-        val list = mutableListOf<InfoStoryRVItem>()
-        /*list.clear()*/
-        list.add(
-            InfoStoryRVItem(
-                1,
-                R.drawable.main_btn_favorites_icon,
-                "jessica.mart"
-            )
+    fun getInfoStory(popupId: Int){
+        viewModelScope.launch {
+            try {
+                val response = withContext(Dispatchers.IO) {
+                    repository.getStory(accessToken, popupId, 1,30)
+                }
+                if (response.isSuccessful) {
+                    response.body()?.let { body ->
+                        val StoryListItems = body.data?.map { InfoStoryListDtoToAdapterItem(it) }?.toMutableList()
+                        _infostoryList.value = StoryListItems
+                        Log.d("StoryListApi_SUCCESS", "LocationPopupList: $StoryListItems")
+                    }
+                } else {
+                    Log.e("StoryListApi_ERROR", "API error: ${response.message()} (${response.code()})")
+                }
+            } catch (e: Exception) {
+                Log.e("StoryListApi_ERROR", "Exception: ${e.message}", e)
+            }
+        }
+    }
+
+    private fun InfoStoryListDtoToAdapterItem(data: StoryData): InfoStoryRVItem {
+
+        return InfoStoryRVItem(
+            itemId = data.storyId,
+            imageUrl = data.photoUrl,
+            name = data.writerName,
+            isRead = data.isRead
         )
-        list.add(
-            InfoStoryRVItem(
-                2,
-                R.drawable.main_btn_favorites_icon,
-                "wild_zeal"
-            )
-        )
-        list.add(
-            InfoStoryRVItem(
-                3,
-                R.drawable.main_btn_favorites_icon,
-                "jessica.mart"
-            )
-        )
-        list.add(
-            InfoStoryRVItem(
-                4,
-                R.drawable.main_btn_favorites_icon,
-                "wild_zeal"
-            )
-        )
-        list.add(
-            InfoStoryRVItem(
-                5,
-                R.drawable.main_btn_favorites_icon,
-                "jessica.mart"
-            )
-        )
-        list.add(
-            InfoStoryRVItem(
-                6,
-                R.drawable.main_btn_favorites_icon,
-                "wild_zeal"
-            )
-        )
-        list.add(
-            InfoStoryRVItem(
-                7,
-                R.drawable.main_btn_favorites_icon,
-                "wild_zeal"
-            )
-        )
-        _infostoryList.value = list
-        Log.d("InfoStoryViewModel", "getInfoStory called, list size: ${list.size}")
     }
 }

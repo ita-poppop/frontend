@@ -2,6 +2,7 @@ package com.ita.poppop.view.empty.info.story
 
 data class InfoStoryRVItem(
     var itemId: Int,
-    var imageUrl: Int,
-    var name: String
+    var imageUrl: String,
+    var name: String,
+    val isRead: Boolean
 )

@@ -1,67 +1,57 @@
 package com.ita.poppop.view.main.map
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.ita.poppop.R
+import androidx.lifecycle.viewModelScope
+import com.ita.poppop.data.remote.dto.popups.LocationData
+import com.ita.poppop.data.remote.repository.popups.PopupsRepository
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
-class MapViewModel: ViewModel() {
+class MapViewModel(
+    private val repository: PopupsRepository
+) : ViewModel() {
 
     private val _mapList = MutableLiveData<List<MapRVItem>>()
     val mapList: LiveData<List<MapRVItem>> = _mapList
 
-    fun getMap(){
-        val list = mutableListOf<MapRVItem>()
-        list.add(
-            MapRVItem(
-                1,
-                37.5670,
-                126.9780,
-                R.drawable.main_btn_favorites_icon,
-                "TV 애니메이션 [최애의 아이]",
-                "25.03.22 - 25.06.08"
-            )
+    fun getLocationPopup(longitude: Double, latitude: Double){
+        viewModelScope.launch {
+            try {
+                val response = withContext(Dispatchers.IO) {
+                    repository.getLocationPopup(longitude, latitude, 1,30)
+                }
+                if (response.isSuccessful) {
+                    response.body()?.let { body ->
+                        val locationPopupItems = body.data.map { locationPopupListDtoToAdapterItem(it) }.toMutableList()
+                        _mapList.value = locationPopupItems
+                        Log.d("LocationPopupApi_SUCCESS", "LocationPopupList: $locationPopupItems")
+                    }
+                } else {
+                    Log.e("LocationPopupApi_ERROR", "API error: ${response.message()} (${response.code()})")
+                }
+            } catch (e: Exception) {
+                Log.e("LocationPopupApi_ERROR", "Exception: ${e.message}", e)
+            }
+        }
+    }
+
+    private fun locationPopupListDtoToAdapterItem(data: LocationData): MapRVItem {
+
+        val newDate = data.date
+            .replace("-", ".")
+            .replace("~", "-")
+
+        return MapRVItem(
+            itemId = data.id,
+            lat = data.latitude,
+            lng = data.longitude,
+            imageUrl = data.imageUrl,
+            title = data.title,
+            period = newDate,
         )
-        list.add(
-            MapRVItem(
-                2,
-                37.5680,
-                126.9790,
-                R.drawable.app_logo,
-                "곽철이 X 더 닐라이 팝업스토어",
-                "25.03.31 - 25.03.31"
-            )
-        )
-        list.add(
-            MapRVItem(
-                3,
-                37.5660,
-                126.9770,
-                R.drawable.map_dummy_img,
-                "블리치전 애니메이션 20주년 기념 서울 전시",
-                "25.01.25 - 25.04.03"
-            )
-        )
-        list.add(
-            MapRVItem(
-                4,
-                37.5660,
-                126.9800,
-                R.drawable.map_dummy_img,
-                "블리치전 애니메이션 20주년 기념 서울 전시",
-                "25.01.25 - 25.04.03"
-            )
-        )
-        list.add(
-            MapRVItem(
-                5,
-                37.5660,
-                126.9810,
-                R.drawable.map_dummy_img,
-                "블리치전 애니메이션 20주년 기념 서울 전시",
-                "25.01.25 - 25.04.03"
-            )
-        )
-        _mapList.value = list
     }
 }

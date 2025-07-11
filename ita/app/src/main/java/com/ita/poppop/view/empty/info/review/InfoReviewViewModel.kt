@@ -6,7 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ita.poppop.data.remote.dto.reviews.ReviewListData
-import com.ita.poppop.data.remote.repository.popup.ReviewRepository
+import com.ita.poppop.data.remote.repository.popups.ReviewRepository
 import com.ita.poppop.util.ConvertTimeUtil
 import com.ita.poppop.view.empty.info.review.image.InfoReviewImageRVItem
 import kotlinx.coroutines.Dispatchers
@@ -14,16 +14,17 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class InfoReviewViewModel(
+    private val accessToken: String,
     private val repository: ReviewRepository
 ) : ViewModel() {
     private val _inforeviewList = MutableLiveData<MutableList<InfoReviewRVItem>>()
     val inforeviewList: LiveData<MutableList<InfoReviewRVItem>> = _inforeviewList
 
-    fun getInfoReview() {
+    fun getInfoReview(popupId: Int) {
         viewModelScope.launch {
             try {
                 val response = withContext(Dispatchers.IO) {
-                    repository.getReviewList(1325, 1, 20)
+                    repository.getReviewList(accessToken, popupId, 1, 20)
                 }
                 if (response.isSuccessful) {
                     response.body()?.let { body ->
@@ -42,7 +43,6 @@ class InfoReviewViewModel(
 
     // 데이터 변환
     private fun reviewListDtoToAdapterItem(data: ReviewListData): InfoReviewRVItem {
-        val profileImage = "R.drawable._profile_load_icon" // 기본 이미지
 
         val convertTimeUtil = ConvertTimeUtil()
 
@@ -58,13 +58,14 @@ class InfoReviewViewModel(
 
         return InfoReviewRVItem(
             itemId = data.reviewId,
-            profileImage = profileImage, // API X -> 일단 기본이미지로
+            profileImage = data.writerProfileUrl,
             username = data.writerName,
             time = relativeTime,
             hearts = data.likeCount,
             comments = data.commentCount,
             content = data.content,
-            reviewImage = reviewImages
+            reviewImage = reviewImages,
+            likedByUser = data.likedByUser
         )
     }
 }

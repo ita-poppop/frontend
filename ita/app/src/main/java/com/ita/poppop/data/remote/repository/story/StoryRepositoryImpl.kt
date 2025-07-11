@@ -15,12 +15,13 @@ class StoryRepositoryImpl(
 ) : StoryRepository {
 
     override suspend fun getStory(
+        accessToken: String,
         popupId: Int,
         page: Int,
         size: Int
     ): Response<GetStoryResponse> {
         try {
-            val response = api.getStory(popupId,page, size)
+            val response = api.getStory("Bearer $accessToken", popupId, page, size)
 
             if (response.code() == 200) {
                 return response

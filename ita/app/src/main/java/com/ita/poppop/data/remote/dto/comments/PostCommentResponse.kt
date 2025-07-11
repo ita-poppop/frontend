@@ -8,6 +8,6 @@ data class PostCommentResponse(
 
 data class PostCommentRequest(
     val content: String,
-    val parentId: Int
+    val parentId: Int? = null
 )
 

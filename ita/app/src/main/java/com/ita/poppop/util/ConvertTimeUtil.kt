@@ -9,7 +9,7 @@ class ConvertTimeUtil {
     fun convertRelativeTime(isoString: String): String {
         return try {
             val formatter = DateTimeFormatter.ISO_DATE_TIME
-            val createdTime = LocalDateTime.parse(isoString, formatter)
+            val createdTime = LocalDateTime.parse(isoString, formatter).plusHours(9)
             val now = LocalDateTime.now(ZoneId.systemDefault())
 
             val minutes = ChronoUnit.MINUTES.between(createdTime, now)

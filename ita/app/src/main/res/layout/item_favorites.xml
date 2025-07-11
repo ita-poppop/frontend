@@ -65,18 +65,21 @@
 
                     <TextView
                         android:id="@+id/tv_favorites_location"
-                        android:text="장소"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin_14"
                         android:fontFamily="@font/pretendard_medium"
-                        android:textStyle="normal"
-                        android:textSize="12sp"
-                        android:textColor="@color/gray_600"
                         android:letterSpacing="-0.03"
                         android:lineSpacingExtra="6sp"
+                        android:text="장소"
+                        android:maxLines="1"
+                        android:ellipsize="end"
+                        android:textColor="@color/gray_600"
+                        android:textSize="12sp"
+                        android:textStyle="normal"
+                        app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@id/iv_favorites"
-                        app:layout_constraintTop_toTopOf="@id/iv_favorites"
-                        android:layout_marginStart="@dimen/margin_14" />
+                        app:layout_constraintTop_toTopOf="@id/iv_favorites" />
 
                     <TextView
                         android:id="@+id/tv_favorites_title"
@@ -97,16 +100,17 @@
 
                     <TextView
                         android:id="@+id/tv_favorites_period"
-                        android:text="기간"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/item_4"
                         android:fontFamily="@font/pretendard_semibold"
-                        android:textStyle="normal"
-                        android:textSize="13sp"
-                        android:textColor="@color/gray_800"
                         android:letterSpacing="-0.02"
                         android:lineSpacingExtra="6.5sp"
+                        android:text="기간"
+                        android:textColor="@color/gray_800"
+                        android:textSize="13sp"
+                        android:textStyle="normal"
+                        app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="@id/tv_favorites_location"
                         app:layout_constraintTop_toBottomOf="@id/tv_favorites_title" />
 
