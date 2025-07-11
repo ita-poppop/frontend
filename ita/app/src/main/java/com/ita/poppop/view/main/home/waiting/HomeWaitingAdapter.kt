@@ -21,6 +21,8 @@ class HomeWaitingAdapter(
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     init {
         setHasStableIds(true)
+        items = items.sortedBy { it.isRead }
+
     }
 
     inner class HomeWaitingViewHolder(
@@ -30,6 +32,7 @@ class HomeWaitingAdapter(
             binding.mcvStory.setOnClickListener {
                 onclick(item.storyId)
             }
+
             if (item.isRead) {
                 binding.mcvStory.strokeWidth = 0
             } else {
@@ -41,7 +44,6 @@ class HomeWaitingAdapter(
 
                 binding.mcvStory.strokeWidth = strokeWidthInPx
             }
-
 
 
             Glide.with(binding.root)
@@ -66,6 +68,11 @@ class HomeWaitingAdapter(
 
     }
 
+    fun setItems(newItems: List<StoryData>) {
+        items = newItems.sortedBy { it.isRead }
+        notifyDataSetChanged()
+    }
+
     // 아이템 반환 메서드
     private fun getItem(position: Int): StoryData {
         return items[position]
@@ -73,14 +80,9 @@ class HomeWaitingAdapter(
 
     // 아이템 개수 반환 메서
     override fun getItemCount(): Int = items.size
-//
-//    // 아이템 고유 ID 반환 메서드
-//    override fun getItemId(position: Int): Long {
-//        return if (position in items.indices) {
-//            items[position].hashCode().toLong()
-//        } else {
-//            -1L // 아이디를 찾지 못했을 때 반환되는 기본값
-//        }
-//
-//    }
+
+    override fun getItemId(position: Int): Long {
+        return items[position].storyId.toLong()  // 고유한 ID여야 함!
+    }
+
 }

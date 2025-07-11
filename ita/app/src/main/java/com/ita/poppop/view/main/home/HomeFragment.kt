@@ -72,8 +72,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
 
     private fun setViewModel(){
         mainViewModel = ViewModelProvider(requireActivity())[MainViewModel::class.java]
-        mainViewModel.storyList.observe(this, Observer {
-            binding.rvWaiting.adapter?.notifyDataSetChanged()
+        mainViewModel.storyList.observe(this, Observer { list ->
+//            setupWaitingRecycler(list)
         })
     }
 
@@ -106,7 +106,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
                                 mainAViewModel.tokenPair.value.first.toString(),
                                 1,
                                 10
-                            ).body()?.data?.sortedBy { it.isRead }
+                            ).body()?.data
+
                         } catch (e: Exception) {
                             Log.e("Home", "Waiting 에러: ${e.message}")
                             null

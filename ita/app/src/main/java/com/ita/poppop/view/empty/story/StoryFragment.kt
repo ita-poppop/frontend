@@ -34,11 +34,11 @@ class StoryFragment : BaseFragment<FragmentStoryBinding>(R.layout.fragment_story
     //args.location
 
     override fun initView() {
-
         mainViewModel = ViewModelProvider(requireActivity())[MainViewModel::class.java]
-        var waitingList = mainViewModel.getStoriesFromStoryIdInOrder(args.reviewId)
-
-        setupViewPager(waitingList)
+        Log.d("StoryFragment", "waitingList:\n" + mainViewModel.storyList.value.joinToString("\n") {
+            "writerName: ${it.writerName}, estimatedWaitCount: ${it.estimatedWaitCount}"
+        })
+        setupViewPager(getStoriesFromStoryIdInOrder(args.reviewId,mainViewModel.storyList.value!!))
     }
 
     private fun setupViewPager(list: List<StoryData>) {
@@ -56,6 +56,16 @@ class StoryFragment : BaseFragment<FragmentStoryBinding>(R.layout.fragment_story
         ).apply {
             isAppearanceLightStatusBars = isLight
             isAppearanceLightNavigationBars = isLight
+        }
+    }
+
+    fun getStoriesFromStoryIdInOrder(storyId: Int,waitingList: List<StoryData>): List<StoryData> {
+        val index = waitingList.indexOfFirst { it.storyId == storyId }
+
+        return if (index != -1) {
+            waitingList.subList(index, waitingList.size)
+        } else {
+            emptyList()
         }
     }
 
