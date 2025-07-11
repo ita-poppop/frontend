@@ -16,6 +16,7 @@ import com.ita.poppop.base.BaseFragment
 import com.ita.poppop.data.remote.repository.popup.BookmarkRepositoryImpl
 import com.ita.poppop.databinding.FragmentFavoritesBinding
 import com.ita.poppop.databinding.ToastMessageBinding
+import com.ita.poppop.model.empty.search.SearchMode
 import com.ita.poppop.util.SwipeHelper
 import com.ita.poppop.util.ViewModelFactory
 import com.ita.poppop.util.remote.RetrofitClient
@@ -61,6 +62,11 @@ class FavoritesFragment: BaseFragment<FragmentFavoritesBinding>(R.layout.fragmen
                 favoritesRVAdapter.submitList(favoritesList)
 
                 emptyStateLayout.root.run { if(favoritesList.isNullOrEmpty()) show() else hide()}
+                emptyStateLayout.acbGotoSearch.setOnClickListener {
+                    val parentNavController = requireActivity().findNavController(R.id.fcv_main_activity_container)
+                    val action = MainFragmentDirections.actionMainFragmentToNaviHomeSearch(SearchMode.RETURN_TO_DETAIL)
+                    parentNavController.navigate(action)
+                }
             })
 
             favoritesRVAdapter.setFavoritesItemClickListener(object : FavoritesRVAdapter.FavoritesItemClickListener{

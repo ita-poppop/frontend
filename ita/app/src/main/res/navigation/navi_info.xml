@@ -27,6 +27,13 @@
         <action
             android:id="@+id/action_infoFragment_to_uploadFragment"
             app:destination="@id/uploadFragment" />
+        <action
+            android:id="@+id/action_infoFragment_to_storyViewFragment"
+            app:destination="@id/storyViewFragment">
+            <argument
+                android:name="storyId"
+                app:argType="integer" />
+        </action>
     </fragment>
 
     <fragment
@@ -105,6 +112,17 @@
             app:argType="string[]"/>
         <argument
             android:name="reviewId"
+            app:argType="integer" />
+    </fragment>
+    <fragment
+        android:id="@+id/storyViewFragment"
+        android:name="com.ita.poppop.view.empty.story.sub.StoryViewFragment"
+        android:label="StoryViewFragment">
+        <argument
+            android:name="storyId"
+            app:argType="integer" />
+        <argument
+            android:name="popupId"
             app:argType="integer" />
     </fragment>
 </navigation>

@@ -10,266 +10,280 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <!--상단 제목-->
-        <androidx.cardview.widget.CardView
-            android:id="@+id/cv_info_topbar"
+        <com.facebook.shimmer.ShimmerFrameLayout
+            android:id="@+id/sfl_info"
             android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:backgroundTint="#f3ffffff"
-            android:elevation="10dp"
-            android:alpha="0"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            android:layout_height="match_parent">
 
-            <TextView
-                android:id="@+id/tv_info_top_title"
+            <include layout="@layout/fragment_info_shimmer" />
+
+        </com.facebook.shimmer.ShimmerFrameLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_info"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <!--상단 제목-->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cv_info_topbar"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:backgroundTint="#f3ffffff"
+                android:elevation="10dp"
+                android:alpha="0"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <TextView
+                    android:id="@+id/tv_info_top_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:paddingTop="30dp"
+                    android:paddingHorizontal="60dp"
+                    android:text="TV 애니메이션 【최애의 아이】展 거짓말과 아이 / 빛과 그림자"
+                    android:fontFamily="@font/pretendard_semibold"
+                    android:textStyle="normal"
+                    android:textSize="16sp"
+                    android:textColor="@color/gray_900"
+                    android:letterSpacing="-0.02"
+                    android:lineSpacingExtra="8sp"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:gravity="center"/>
+
+            </androidx.cardview.widget.CardView>
+
+                <androidx.appcompat.widget.AppCompatImageButton
+                    android:id="@+id/ib_info_back"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="41dp"
+                    android:background="@drawable/info_back_btn_background"
+                    android:contentDescription="backbtn"
+                    android:elevation="5dp"
+                    android:src="@drawable/chevron_left"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            <ScrollView
+                android:id="@+id/sv_info"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:paddingTop="30dp"
-                android:paddingHorizontal="60dp"
-                android:text="TV 애니메이션 【최애의 아이】展 거짓말과 아이 / 빛과 그림자"
-                android:fontFamily="@font/pretendard_semibold"
-                android:textStyle="normal"
-                android:textSize="16sp"
-                android:textColor="@color/gray_900"
-                android:letterSpacing="-0.02"
-                android:lineSpacingExtra="8sp"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:gravity="center"/>
+                android:scrollbars="none">
 
-        </androidx.cardview.widget.CardView>
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/cl_info_whole"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
 
-            <androidx.appcompat.widget.AppCompatImageButton
-                android:id="@+id/ib_info_back"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="41dp"
-                android:background="@drawable/info_back_btn_background"
-                android:contentDescription="backbtn"
-                android:elevation="5dp"
-                android:src="@drawable/chevron_left"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                    <!-- 이미지 화면 -->
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/cl_info_image"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
 
-        <ScrollView
-            android:id="@+id/sv_info"
+                        <com.ita.poppop.util.StatusBarSpaceView
+                            android:id="@+id/sbsv"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/shape_story_gradient"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <ImageView
+                            android:id="@+id/iv_info_image"
+                            android:layout_width="match_parent"
+                            android:layout_height="343dp"
+                            android:contentDescription="info_img"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/acb_favorites"
+                            android:layout_width="wrap_content"
+                            android:layout_height="40dp"
+                            android:layout_marginRight="@dimen/margin_16"
+                            android:layout_marginBottom="@dimen/margin_20"
+                            android:background="@drawable/info_back_btn_background"
+                            android:drawableStart="@drawable/info_favorites_star_icon_outlined"
+                            android:drawablePadding="6dp"
+                            android:paddingHorizontal="@dimen/padding_13"
+                            android:paddingVertical="4dp"
+                            android:text="@string/main_btn_favorites_title"
+                            android:gravity="center"
+                            android:fontFamily="@font/pretendard_medium"
+                            android:textStyle="normal"
+                            android:textSize="15sp"
+                            android:textColor="@color/gray_900"
+                            android:letterSpacing="-0.03"
+                            android:lineSpacingExtra="7.5sp"
+                            app:layout_constraintBottom_toBottomOf="@+id/cl_info_image"
+                            app:layout_constraintEnd_toEndOf="@+id/cl_info_image" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <!-- 내용 화면 -->
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/cl_info_content"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="20dp"
+                        android:paddingHorizontal="16dp"
+                        app:layout_constraintTop_toBottomOf="@+id/cl_info_image">
+
+                        <TextView
+                            android:id="@+id/tv_info_title"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:text="TV 애니메이션 [최애의 아이]展 거짓말과 아이 / 빛과 그림자"
+                            android:textColor="@color/black"
+                            android:fontFamily="@font/pretendard_semibold"
+                            android:textStyle="normal"
+                            android:textSize="20sp"
+                            android:letterSpacing="-0.03"
+                            android:lineSpacingExtra="10sp"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent" />
+
+                        <ImageView
+                            android:id="@+id/iv_info_location"
+                            android:layout_width="@dimen/item_13"
+                            android:layout_height="@dimen/item_16"
+                            android:layout_marginTop="12dp"
+                            android:layout_marginLeft="3dp"
+                            android:layout_marginRight="3dp"
+                            android:src="@drawable/info_location_icon"
+                            app:layout_constraintTop_toBottomOf="@id/tv_info_title"
+                            app:layout_constraintStart_toStartOf="parent" />
+
+                        <TextView
+                            android:id="@+id/tv_info_location"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="9dp"
+                            android:layout_marginTop="-3dp"
+                            android:layout_marginBottom="6dp"
+                            android:letterSpacing="-0.03"
+                            android:lineSpacingExtra="7sp"
+                            android:text="서울 마포구 양화로 186 덕스(DUEX) 홍대 2관"
+                            android:textColor="@color/gray_600"
+                            android:textSize="@dimen/text_14"
+                            app:layout_constraintBottom_toTopOf="@+id/tv_info_date"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@id/iv_info_location"
+                            app:layout_constraintTop_toTopOf="@id/iv_info_location" />
+
+                        <ImageView
+                            android:id="@+id/iv_info_date"
+                            android:layout_width="@dimen/item_16"
+                            android:layout_height="@dimen/item_16"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginLeft="2dp"
+                            android:paddingTop="3dp"
+                            android:src="@drawable/info_date_icon"
+                            app:layout_constraintTop_toBottomOf="@+id/tv_info_location"
+                            app:layout_constraintStart_toStartOf="parent" />
+
+                        <!-- 날짜 텍스트 -->
+                        <TextView
+                            android:id="@+id/tv_info_date"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="7dp"
+                            android:layout_marginTop="-2dp"
+                            android:letterSpacing="-0.03"
+                            android:lineSpacingExtra="7.5sp"
+                            android:text="25.03.22 - 25.06.08"
+                            android:textColor="@color/gray_900"
+                            android:textSize="15sp"
+                            android:textStyle="bold"
+                            app:layout_constraintStart_toEndOf="@id/iv_info_date"
+                            app:layout_constraintTop_toTopOf="@id/iv_info_date" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rv_info_story"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_20"
+                        android:paddingStart="16dp"
+                        android:paddingBottom="28dp"
+                        android:clipToPadding="false"
+                        android:layout_marginRight="-16dp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/cl_info_content" />
+
+                    <View
+                        android:id="@+id/view1"
+                        android:layout_width="match_parent"
+                        android:layout_height="6dp"
+                        android:background="@color/gray_300"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/rv_info_story" />
+
+                    <!-- 탭 레이아웃 -->
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/cl_info_tablayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintTop_toBottomOf="@+id/view1">
+
+                        <include
+                            android:id="@+id/ic_info_tablayout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            layout="@layout/info_tab_layout"/>
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </ScrollView>
+
+        <!-- 리뷰 등록 버튼 -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_info_upload_review"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scrollbars="none">
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:paddingBottom="22dp"
+            app:layout_constraintBottom_toBottomOf="parent">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/cl_info_whole"
+            <View
+                android:id="@+id/view"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="1dp"
+                android:background="@color/gray_300"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/cl_info_upload_review" />
 
-                <!-- 이미지 화면 -->
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/cl_info_image"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
-
-                    <com.ita.poppop.util.StatusBarSpaceView
-                        android:id="@+id/sbsv"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/shape_story_gradient"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <ImageView
-                        android:id="@+id/iv_info_image"
-                        android:layout_width="match_parent"
-                        android:layout_height="343dp"
-                        android:contentDescription="info_img"
-                        android:src="@drawable/main_btn_favorites_icon"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <androidx.appcompat.widget.AppCompatButton
-                        android:id="@+id/acb_favorites"
-                        android:layout_width="wrap_content"
-                        android:layout_height="40dp"
-                        android:layout_marginRight="@dimen/margin_16"
-                        android:layout_marginBottom="@dimen/margin_20"
-                        android:background="@drawable/info_back_btn_background"
-                        android:drawableStart="@drawable/info_favorites_star_icon_outlined"
-                        android:drawablePadding="6dp"
-                        android:paddingHorizontal="@dimen/padding_13"
-                        android:paddingVertical="4dp"
-                        android:text="@string/main_btn_favorites_title"
-                        android:gravity="center"
-                        android:fontFamily="@font/pretendard_medium"
-                        android:textStyle="normal"
-                        android:textSize="15sp"
-                        android:textColor="@color/gray_900"
-                        android:letterSpacing="-0.03"
-                        android:lineSpacingExtra="7.5sp"
-                        app:layout_constraintBottom_toBottomOf="@+id/cl_info_image"
-                        app:layout_constraintEnd_toEndOf="@+id/cl_info_image" />
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
-                <!-- 내용 화면 -->
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/cl_info_content"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingTop="20dp"
-                    android:paddingHorizontal="16dp"
-                    app:layout_constraintTop_toBottomOf="@+id/cl_info_image">
-
-                    <TextView
-                        android:id="@+id/tv_info_title"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:text="TV 애니메이션 [최애의 아이]展 거짓말과 아이 / 빛과 그림자"
-                        android:textColor="@color/black"
-                        android:fontFamily="@font/pretendard_semibold"
-                        android:textStyle="normal"
-                        android:textSize="20sp"
-                        android:letterSpacing="-0.03"
-                        android:lineSpacingExtra="10sp"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent" />
-
-                    <ImageView
-                        android:id="@+id/iv_info_location"
-                        android:layout_width="@dimen/item_13"
-                        android:layout_height="@dimen/item_16"
-                        android:layout_marginTop="12dp"
-                        android:layout_marginLeft="3dp"
-                        android:layout_marginRight="3dp"
-                        android:src="@drawable/info_location_icon"
-                        app:layout_constraintTop_toBottomOf="@id/tv_info_title"
-                        app:layout_constraintStart_toStartOf="parent" />
-
-                    <TextView
-                        android:id="@+id/tv_info_location"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="9dp"
-                        android:layout_marginTop="-3dp"
-                        android:layout_marginBottom="6dp"
-                        android:letterSpacing="-0.03"
-                        android:lineSpacingExtra="7sp"
-                        android:text="서울 마포구 양화로 186 덕스(DUEX) 홍대 2관"
-                        android:textColor="@color/gray_600"
-                        android:textSize="@dimen/text_14"
-                        app:layout_constraintBottom_toTopOf="@+id/tv_info_date"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toEndOf="@id/iv_info_location"
-                        app:layout_constraintTop_toTopOf="@id/iv_info_location" />
-
-                    <ImageView
-                        android:id="@+id/iv_info_date"
-                        android:layout_width="@dimen/item_16"
-                        android:layout_height="@dimen/item_16"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginLeft="2dp"
-                        android:paddingTop="3dp"
-                        android:src="@drawable/info_date_icon"
-                        app:layout_constraintTop_toBottomOf="@+id/tv_info_location"
-                        app:layout_constraintStart_toStartOf="parent" />
-
-                    <!-- 날짜 텍스트 -->
-                    <TextView
-                        android:id="@+id/tv_info_date"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="7dp"
-                        android:layout_marginTop="-2dp"
-                        android:letterSpacing="-0.03"
-                        android:lineSpacingExtra="7.5sp"
-                        android:text="25.03.22 - 25.06.08"
-                        android:textColor="@color/gray_900"
-                        android:textSize="15sp"
-                        android:textStyle="bold"
-                        app:layout_constraintStart_toEndOf="@id/iv_info_date"
-                        app:layout_constraintTop_toTopOf="@id/iv_info_date" />
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rv_info_story"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/margin_20"
-                    android:paddingStart="16dp"
-                    android:paddingBottom="28dp"
-                    android:clipToPadding="false"
-                    android:layout_marginRight="-16dp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/cl_info_content" />
-
-                <View
-                    android:id="@+id/view1"
-                    android:layout_width="match_parent"
-                    android:layout_height="6dp"
-                    android:background="@color/gray_300"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/rv_info_story" />
-
-                <!-- 탭 레이아웃 -->
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/cl_info_tablayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintTop_toBottomOf="@+id/view1">
-
-                    <include
-                        android:id="@+id/ic_info_tablayout"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        layout="@layout/info_tab_layout"/>
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-        </ScrollView>
-
-    <!-- 리뷰 등록 버튼 -->
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/cl_info_upload_review"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white"
-        android:paddingBottom="22dp"
-        app:layout_constraintBottom_toBottomOf="parent">
-
-        <View
-            android:id="@+id/view"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/gray_300"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/cl_info_upload_review" />
-
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/acb_upload_review"
-            android:layout_width="328dp"
-            android:layout_height="40dp"
-            android:layout_marginTop="12dp"
-            android:text="리뷰 올리기"
-            android:textSize="14sp"
-            android:textColor="@color/white"
-            android:letterSpacing="-0.03"
-            android:lineSpacingExtra="7sp"
-            android:gravity="center"
-            android:background="@drawable/info_upload_review_btn_background"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/view"/>
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/acb_upload_review"
+                android:layout_width="328dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="12dp"
+                android:text="리뷰 올리기"
+                android:textSize="14sp"
+                android:textColor="@color/white"
+                android:letterSpacing="-0.03"
+                android:lineSpacingExtra="7sp"
+                android:gravity="center"
+                android:background="@drawable/info_upload_review_btn_background"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/view"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -15,6 +15,15 @@ class InfoStoryRVAdapter: ListAdapter<InfoStoryRVItem, InfoStoryRVAdapter.InfoSt
     InfoStoryDiffutillCallback()
 ) {
 
+    interface InfoStoryItemClickListener{
+        fun onItemClick(position: Int)
+    }
+    private lateinit var infoStoryItemClickListener : InfoStoryItemClickListener
+
+    fun setInfoStoryItemClickListener(itemClickListener: InfoStoryItemClickListener){
+        infoStoryItemClickListener = itemClickListener
+    }
+
     class InfoStoryViewHolder(val binding: ItemInfoStoryBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: InfoStoryRVItem) {
             binding.apply {
@@ -36,6 +45,13 @@ class InfoStoryRVAdapter: ListAdapter<InfoStoryRVItem, InfoStoryRVAdapter.InfoSt
                 }
                 ibStoryProfile.setBackgroundResource(profileBackground)
                 tvStoryName.setTextColor(ContextCompat.getColor(itemView.context, usernameColor))
+            }
+        }
+        fun bindClickListeners(
+            onItemClick: (Int) -> Unit
+        ) {
+            binding.clItemInfoStory.setOnClickListener {
+                onItemClick(adapterPosition)
             }
         }
     }
@@ -63,6 +79,9 @@ class InfoStoryRVAdapter: ListAdapter<InfoStoryRVItem, InfoStoryRVAdapter.InfoSt
     override fun onBindViewHolder(holder: InfoStoryViewHolder, position: Int) {
         val item = getItem(position)
         holder.bind(item)
+        holder.bindClickListeners(
+            onItemClick = { infoStoryItemClickListener.onItemClick(it) },
+            )
     }
 }
 

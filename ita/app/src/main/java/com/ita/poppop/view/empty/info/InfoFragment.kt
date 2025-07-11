@@ -25,6 +25,7 @@ import com.ita.poppop.view.empty.info.detail.InfoDetailFragment
 import com.ita.poppop.view.empty.info.review.InfoReviewFragment
 import com.ita.poppop.view.empty.info.story.InfoStoryRVAdapter
 import com.ita.poppop.view.empty.info.story.InfoStoryViewModel
+import com.ita.poppop.view.main.favorites.FavoritesRVAdapter
 import com.ita.poppop.viewmodel.MainAViewModel
 
 
@@ -109,8 +110,12 @@ class InfoFragment: BaseFragment<FragmentInfoBinding>(R.layout.fragment_info) {
 
             infoViewModel.getInfo(popupId)
 
+            infoViewModel.isLoading.observe(viewLifecycleOwner, Observer { isLoading ->
+                showSampleData(isLoading)
+            })
 
             infoViewModel.infoData.observe(viewLifecycleOwner, Observer { info ->
+
                 infoViewHolder.bind(info, infoViewModel)
                 popupItem = info
 
@@ -142,6 +147,12 @@ class InfoFragment: BaseFragment<FragmentInfoBinding>(R.layout.fragment_info) {
                 infoStoryRVAdapter.submitList(response)
 
                 //binding.emptyStateLayout.root.run { if(response.isNullOrEmpty()) show() else hide()}
+            })
+
+            infoStoryRVAdapter.setInfoStoryItemClickListener(object : InfoStoryRVAdapter.InfoStoryItemClickListener{
+                override fun onItemClick(position: Int) {
+                    TODO("Not yet implemented")
+                }
             })
 
             // 탭 화면
@@ -195,5 +206,17 @@ class InfoFragment: BaseFragment<FragmentInfoBinding>(R.layout.fragment_info) {
             .replace(R.id.fl_info_tab, fragment)
             .commit()
         return true
+    }
+
+    private fun showSampleData(isLoading: Boolean) {
+        if (isLoading) {
+            binding.sflInfo.startShimmer()
+            binding.sflInfo.visibility = View.VISIBLE
+            binding.clInfo.visibility = View.GONE
+        } else {
+            binding.sflInfo.stopShimmer()
+            binding.sflInfo.visibility = View.GONE
+            binding.clInfo.visibility = View.VISIBLE
+        }
     }
 }

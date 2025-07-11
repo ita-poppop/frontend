@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/sh_cl_info_detail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="24dp"
+        android:paddingBottom="38dp">
+
+
+        <View
+            android:id="@+id/sh_tv_info_introduce"
+            android:layout_width="120dp"
+            android:layout_height="20dp"
+            android:layout_marginStart="16dp"
+            android:background="#dedede"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!-- 설명 카드 -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/sh_mcv_info_detail"
+            android:layout_width="match_parent"
+            android:layout_height="250dp"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="10dp"
+            app:cardBackgroundColor="#D9D9D9"
+            app:cardCornerRadius="0dp"
+            app:strokeWidth="0dp"
+            app:layout_constraintTop_toBottomOf="@id/sh_tv_info_introduce"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <View
+            android:id="@+id/sh_view2"
+            android:layout_width="match_parent"
+            android:layout_height="6dp"
+            android:layout_marginTop="38dp"
+            android:background="@color/gray_300"
+            app:layout_constraintTop_toBottomOf="@id/sh_mcv_info_detail"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <View
+            android:id="@+id/sh_tv_info_recommend"
+            android:layout_width="120dp"
+            android:layout_height="20dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginStart="16dp"
+            android:background="#dedede"
+            app:layout_constraintTop_toBottomOf="@id/sh_view2"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/sh_rv_trend"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="@dimen/item_240"
+            android:layout_marginTop="@dimen/margin_12"
+            android:clipToPadding="false"
+            android:orientation="horizontal"
+            android:paddingHorizontal="@dimen/padding_16"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/sh_tv_info_recommend" >
+
+            <include layout="@layout/item_home_trend_shimmer" />
+
+            <Space
+                android:layout_width="@dimen/item_10"
+                android:layout_height="match_parent"/>
+
+            <include layout="@layout/item_home_trend_shimmer" />
+
+            <Space
+                android:layout_width="@dimen/item_10"
+                android:layout_height="match_parent"/>
+            <include layout="@layout/item_home_trend_shimmer" />
+
+            <Space
+                android:layout_width="@dimen/item_10"
+                android:layout_height="match_parent"/>
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
