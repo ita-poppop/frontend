@@ -98,12 +98,12 @@ class MainActivity: BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
                         // 메인 화면으로 이동
 
                         moveToMain()
-                        Toast.makeText(this@MainActivity,"moveToMain",Toast.LENGTH_SHORT).show()
+//                        Toast.makeText(this@MainActivity,"moveToMain",Toast.LENGTH_SHORT).show()
                     }
                     is MainAViewModel.LoginState.LoggedOut -> {
                         // 로그인 화면으로 이동
                         moveToLogin()
-                        Toast.makeText(this@MainActivity,"moveToLogin",Toast.LENGTH_SHORT).show()
+//                        Toast.makeText(this@MainActivity,"moveToLogin",Toast.LENGTH_SHORT).show()
                     }
                     is MainAViewModel.LoginState.Error -> {
                         // 에러 처리

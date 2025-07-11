@@ -9,7 +9,7 @@
 
         <!-- splash -->
         <item name="android:windowSplashScreenBackground" tools:targetApi="S">@color/white</item>
-        <item name="android:windowSplashScreenAnimatedIcon" tools:targetApi="S">@drawable/app_logo_splash</item>
+        <item name="android:windowSplashScreenAnimatedIcon" tools:targetApi="S">@drawable/app_splash_logo</item>
 
 
 <!--        <item name="colorSurfaceContainerLow">@color/white</item>-->
