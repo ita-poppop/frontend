@@ -52,7 +52,7 @@
                             android:layout_height="@dimen/item_52"
                             android:layout_marginVertical="@dimen/margin_8"
                             android:layout_marginStart="@dimen/margin_16"
-                            android:src="@drawable/_home_searchbar_icon"
+                            android:src="@drawable/logo_color"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />

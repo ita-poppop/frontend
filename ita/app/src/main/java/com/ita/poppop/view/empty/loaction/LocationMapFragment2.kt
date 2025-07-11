@@ -27,11 +27,8 @@ import com.google.android.gms.location.LocationServices
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.ita.poppop.R
 import com.ita.poppop.base.BaseFragment
-import com.ita.poppop.data.remote.repository.popups.PopupsRepositoryImpl
 import com.ita.poppop.databinding.FragmentLocationMapBinding
 import com.ita.poppop.databinding.ItemMapCustomMarkerBinding
-import com.ita.poppop.util.ViewModelFactory
-import com.ita.poppop.util.remote.RetrofitClient
 import com.ita.poppop.view.main.map.MapRVAdapter
 import com.ita.poppop.view.main.map.MapRVItem
 import com.ita.poppop.view.main.map.MapViewModel
@@ -45,11 +42,9 @@ import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.overlay.OverlayImage
 import com.naver.maps.map.util.FusedLocationSource
 
-class LocationMapFragment: BaseFragment<FragmentLocationMapBinding>(R.layout.fragment_location_map), OnMapReadyCallback {
+class LocationMapFragment2: BaseFragment<FragmentLocationMapBinding>(R.layout.fragment_location_map), OnMapReadyCallback {
     private val args: LocationMapFragmentArgs by navArgs()
 
-    //    observeMapData
-    //    handleExistingMapData
     // Constants
     companion object {
         private const val LOCATION_PERMISSION_REQUEST_CODE = 1000
@@ -111,7 +106,7 @@ class LocationMapFragment: BaseFragment<FragmentLocationMapBinding>(R.layout.fra
     }
 
     override fun initView() {
-
+        initializeViewModel()
         setclick()
         val location = args.location
         val latitude = args.latitude.toDouble()
@@ -121,7 +116,7 @@ class LocationMapFragment: BaseFragment<FragmentLocationMapBinding>(R.layout.fra
 
         Toast.makeText(requireContext(),"위치는 $latitude,$longitude",Toast.LENGTH_SHORT).show()
         setupWindowInsets()
-        initializeViewModel()
+
         setupRecyclerView()
         setupLocationSource()
         setupMapFragment()
@@ -132,9 +127,7 @@ class LocationMapFragment: BaseFragment<FragmentLocationMapBinding>(R.layout.fra
 
     // Initialization Methods
     private fun initializeViewModel() {
-        val mapRepository = PopupsRepositoryImpl(RetrofitClient.popupApi)
-        val mapFactory = ViewModelFactory { MapViewModel(mapRepository) }
-        mapViewModel = ViewModelProvider(this, mapFactory)[MapViewModel::class.java]
+        mapViewModel = ViewModelProvider(this)[MapViewModel::class.java]
     }
 
     private fun setupRecyclerView() {
@@ -221,7 +214,6 @@ class LocationMapFragment: BaseFragment<FragmentLocationMapBinding>(R.layout.fra
     }
 
     private fun handleExistingMapData() {
-        initializeViewModel()
         mapViewModel.mapList.value?.let { items ->
             Log.d(TAG, "기존 list 호출")
             addCustomMarkers(items)

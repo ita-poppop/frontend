@@ -72,7 +72,7 @@
                                 android:layout_height="@dimen/item_52"
                                 android:layout_marginVertical="@dimen/margin_8"
                                 android:layout_marginStart="@dimen/margin_16"
-                                android:src="@drawable/_home_searchbar_icon"
+                                android:src="@drawable/logo_color"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintStart_toStartOf="parent"
                                 app:layout_constraintTop_toTopOf="parent" />
@@ -333,7 +333,7 @@
                 android:layout_marginBottom="@dimen/margin_20"
                 android:elevation="-4dp"
                 android:background="@drawable/shape_fab_background"
-                app:backgroundTint="#E8EEF9"
+                app:backgroundTint="#E9F6F2"
                 android:src="@drawable/edit_icon"
                 app:layout_constraintBottom_toTopOf="@+id/fab_1"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -364,7 +364,7 @@
                 android:background="@drawable/shape_fab_background"
                 android:elevation="-4dp"
                 android:src="@drawable/user_icon"
-                app:backgroundTint="#E8EEF9"
+                app:backgroundTint="#E9F6F2"
                 app:layout_constraintBottom_toTopOf="@+id/cv_fab"
                 app:layout_constraintEnd_toEndOf="parent" />
             <androidx.cardview.widget.CardView
