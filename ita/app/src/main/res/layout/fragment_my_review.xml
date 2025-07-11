@@ -55,5 +55,22 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/mt_my_review" />
 
+        <com.facebook.shimmer.ShimmerFrameLayout
+            android:id="@+id/sfl_my_review"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:paddingHorizontal="@dimen/padding_16"
+            android:paddingTop="@dimen/padding_12"
+            android:scrollbars="none"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/mt_my_review" >
+
+            <include layout="@layout/fragment_my_review_shimmer" />
+
+        </com.facebook.shimmer.ShimmerFrameLayout>
+
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

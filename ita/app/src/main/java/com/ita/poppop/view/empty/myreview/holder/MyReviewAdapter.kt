@@ -12,6 +12,7 @@ import com.ita.poppop.view.empty.upcoming.holder.UpcomingViewHolder
 
 
 class MyReviewAdapter(
+    private val onClick: (Int) -> Unit,
     private var items : List<ReviewItem>,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     init {
@@ -22,6 +23,10 @@ class MyReviewAdapter(
         private val binding: ItemMyReviewLayoutBinding,
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: ReviewItem) {
+            binding.root.setOnClickListener {
+                onClick(item.popupId)
+            }
+
             Glide.with(binding.root)
                 .load(item.popupImageUrl)
                 .centerCrop()

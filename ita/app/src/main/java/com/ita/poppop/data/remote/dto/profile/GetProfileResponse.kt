@@ -34,6 +34,9 @@ data class ReviewItem(
     @SerializedName("reviewId")
     val reviewId: Int,
 
+    @SerializedName("popupId")
+    val popupId: Int,
+
     @SerializedName("popupImageUrl")
     val popupImageUrl: String,
 

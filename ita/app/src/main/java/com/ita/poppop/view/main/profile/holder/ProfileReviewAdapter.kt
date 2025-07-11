@@ -9,6 +9,7 @@ import com.ita.poppop.databinding.ItemProfileReviewLayoutBinding
 
 
 class ProfileReviewAdapter(
+    private val onClick: (Int) -> Unit,
     private var items : List<ReviewItem>,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     init {
@@ -19,6 +20,11 @@ class ProfileReviewAdapter(
         private val binding: ItemProfileReviewLayoutBinding,
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: ReviewItem) {
+            binding.root.setOnClickListener {
+                onClick(item.popupId)
+            }
+
+
             Glide.with(binding.root)
                 .load(item.popupImageUrl)
                 .centerCrop()

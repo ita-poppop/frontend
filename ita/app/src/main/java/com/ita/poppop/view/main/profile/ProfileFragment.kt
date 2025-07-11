@@ -1,11 +1,13 @@
 package com.ita.poppop.view.main.profile
 
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavDirections
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -27,6 +29,7 @@ import com.ita.poppop.viewmodel.MainAViewModel
 import com.ita.poppop.viewmodel.main.MainViewModel
 import com.ita.poppop.viewmodel.main.UserProfile
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import retrofit2.HttpException
@@ -37,13 +40,16 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(R.layout.fragment_p
     val mainAViewModel: MainAViewModel by activityViewModels()
     private lateinit var mainViewModel: MainViewModel
     override fun initView() {
-        mainViewModel = ViewModelProvider(requireActivity())[MainViewModel::class.java]
-        setipPorfile()
-        setData()
+
+        setViewModel()
+
+        loadData()
+
         setupClickListeners()
 
     }
-    private fun setData(){
+    private fun setViewModel(){
+        mainViewModel = ViewModelProvider(requireActivity())[MainViewModel::class.java]
         mainViewModel.userData.observe(this,Observer{
             Glide.with(binding.root)
                 .load(mainViewModel.userData.value?.userProfileImage)
@@ -57,71 +63,88 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(R.layout.fragment_p
         })
     }
 
-    private fun setipPorfile() {
+
+    private fun loadData() {
         lifecycleScope.launch {
             try {
-                val result = withContext(Dispatchers.IO) {
-                    repository.getProfile(mainAViewModel.tokenPair.value.first.toString(),1,10)
+                showSampleData(isLoading = true)
+
+                // 1. 병렬 요청 시작
+                val profileDeferred = async {
+                    try {
+                        repository.getProfile(mainAViewModel.tokenPair.value.first.toString(),1,10)
+                    } catch (e: Exception) {
+                        Log.e("Profile", "Reviews 에러: ${e.message}")
+                        null
+                    }
                 }
 
-                if (result.isSuccessful) {
-                    Log.d("checkUserEx","user : ${result.body()}")
+                // 2. 두 요청의 결과를 기다림 (await)
+                val profileResult = profileDeferred.await()
+                val reviewsList = profileResult?.body()?.data?.reviews ?: emptyList()
+                val profileUser = UserProfile(
+                    userName = profileResult?.body()?.data?.userName.toString(),
+                    userProfileImage = profileResult?.body()?.data?.profileUrl,
+                    userLikesCount = profileResult?.body()?.data?.totalLikeCount,
+                    userReviewCount = profileResult?.body()?.data?.reviewCount
+                )
 
+                // 3. 요청 모두 완료된 상태
+                setupReviewsRecycler(reviewsList)
+                mainViewModel.setUser(profileUser)
 
+                showSampleData(isLoading = false)
 
-                    mainViewModel.setUser(UserProfile(
-                        userName = result.body()?.data?.userName.toString(),
-                        userProfileImage = result.body()?.data?.profileUrl,
-                        userLikesCount = result.body()?.data?.totalLikeCount,
-                        userReviewCount = result.body()?.data?.reviewCount
-
-                    ))
-
-
-                    setupProfileReviewRecyclerView(result.body()?.data?.reviews!!)
-                }
             } catch (e: HttpException) {
-                // HTTP 에러 상세 정보
+                // 예외가 catch 안에서 잡히지 않은 경우 여기에 걸림
                 Log.e("API_ERROR", "HTTP ${e.code()}: ${e.response()?.errorBody()?.string()}")
             } catch (e: Exception) {
+                // 기타 예외
                 Log.e("API_ERROR", "Exception: ${e.message}", e)
             }
         }
     }
 
+    private fun setupReviewsRecycler(reviewsList:  List<ReviewItem>) = with(binding.rvProfileMyReview) {
+        adapter = ProfileReviewAdapter(
+            onClick = {itemId ->
+                val parentNavController = requireActivity().findNavController(R.id.fcv_main_activity_container)
+                val action = MainFragmentDirections.actionMainFragmentToNaviInfo(itemId)
+                parentNavController.navigate(action)
+            },reviewsList
+        )
+        layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        addItemDecoration(ProfileReviewItemDecoration(context,reviewsList))
+        ItemTouchHelper(SwipeHelper()).attachToRecyclerView(this)
+    }
+
     private fun setupClickListeners() = with(binding) {
-        txEditProfile.setOnClickListener { navigateToEditProfile() }
-        ibSetting.setOnClickListener { navigateToSettings() }
-        ibMyReview.setOnClickListener { navigateToMyReview() }
-    }
-
-    private fun navigateToEditProfile() {
-        val navController = requireActivity().findNavController(R.id.fcv_main_activity_container)
-        val action = MainFragmentDirections.actionMainFragmentToNaviProfileEdit()
-        navController.navigate(action)
-    }
-
-    private fun navigateToSettings() {
-        val navController = requireActivity().findNavController(R.id.fcv_main_activity_container)
-        val action = MainFragmentDirections.actionMainFragmentToNaviSetting()
-        navController.navigate(action)
-    }
-
-    private fun navigateToMyReview() {
-        val navController = requireActivity().findNavController(R.id.fcv_main_activity_container)
-        val action = MainFragmentDirections.actionMainFragmentToNaviProfileMyReview()
-        navController.navigate(action)
-    }
-
-    private fun setupProfileReviewRecyclerView(list: List<ReviewItem>) {
-        val adapter = ProfileReviewAdapter(list)
-
-        with(binding.rvProfileMyReview) {
-            layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-            this.adapter = adapter
-            addItemDecoration(ProfileReviewItemDecoration(context,list))
-
-            ItemTouchHelper(SwipeHelper()).attachToRecyclerView(this)
+        txEditProfile.setOnClickListener {
+            navigateTo(MainFragmentDirections.actionMainFragmentToNaviProfileEdit())
+        }
+        ibSetting.setOnClickListener {
+            navigateTo(MainFragmentDirections.actionMainFragmentToNaviSetting())
+        }
+        ibMyReview.setOnClickListener {
+            navigateTo(MainFragmentDirections.actionMainFragmentToNaviProfileMyReview())
         }
     }
+
+    private fun navigateTo(action: NavDirections) {
+        val navController = requireActivity().findNavController(R.id.fcv_main_activity_container)
+        navController.navigate(action)
+    }
+
+    private fun showSampleData(isLoading: Boolean) {
+        if (isLoading) {
+            binding.sflProfile.startShimmer()
+            binding.sflProfile.visibility = View.VISIBLE
+            binding.clProfile.visibility = View.GONE
+        } else {
+            binding.sflProfile.stopShimmer()
+            binding.sflProfile.visibility = View.GONE
+            binding.clProfile.visibility = View.VISIBLE
+        }
+    }
+
 }

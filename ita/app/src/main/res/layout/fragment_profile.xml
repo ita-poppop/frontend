@@ -8,277 +8,291 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <com.ita.poppop.util.StatusBarSpaceView
-            android:id="@+id/statusBarSpaceView"
+        <com.facebook.shimmer.ShimmerFrameLayout
+            android:id="@+id/sfl_profile"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            tools:layout_height="24dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:layout_height="match_parent">
 
-        <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/materialToolbar"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/item_52"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/statusBarSpaceView">
+            <include layout="@layout/fragment_profile_shimmer" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="@dimen/margin_14"
-                android:fontFamily="@font/pretendard_semibold"
-                android:letterSpacing="-0.02"
-                android:lineSpacingExtra="@dimen/text_8"
-                android:text="@string/profile_frag_title"
-                android:textColor="@color/gray_900"
-                android:textSize="@dimen/text_16" />
-
-            <ImageButton
-                android:id="@+id/ib_setting"
-                android:layout_width="@dimen/item_24"
-                android:layout_height="@dimen/item_24"
-                android:layout_gravity="end"
-                android:layout_marginTop="@dimen/margin_14"
-                android:layout_marginEnd="@dimen/margin_16"
-                android:background="@color/transparent"
-                android:src="@drawable/_profile_setting_icon"/>
-
-        </com.google.android.material.appbar.MaterialToolbar>
+        </com.facebook.shimmer.ShimmerFrameLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/constraintLayout"
+            android:id="@+id/cl_profile"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/item_82"
-            android:layout_marginTop="@dimen/margin_10"
-            android:layout_marginHorizontal="@dimen/margin_16"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/materialToolbar">
-            <androidx.cardview.widget.CardView
-                android:id="@+id/cv_profile"
-                android:layout_width="@dimen/item_72"
-                android:layout_height="@dimen/item_72"
-                app:cardCornerRadius="@dimen/item_36"
-                app:cardElevation="0dp"
-                app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_height="match_parent">
+            <com.ita.poppop.util.StatusBarSpaceView
+                android:id="@+id/statusBarSpaceView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:layout_height="24dp"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                app:layout_constraintTop_toTopOf="parent" />
 
-                <ImageView
-                    android:id="@+id/iv_profile"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    app:srcCompat="@drawable/_profile_load_icon"/>
-            </androidx.cardview.widget.CardView>
+            <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/materialToolbar"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/item_52"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/statusBarSpaceView">
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="@dimen/margin_14"
+                    android:fontFamily="@font/pretendard_semibold"
+                    android:letterSpacing="-0.02"
+                    android:lineSpacingExtra="@dimen/text_8"
+                    android:text="@string/profile_frag_title"
+                    android:textColor="@color/gray_900"
+                    android:textSize="@dimen/text_16" />
+
+                <ImageButton
+                    android:id="@+id/ib_setting"
+                    android:layout_width="@dimen/item_24"
+                    android:layout_height="@dimen/item_24"
+                    android:layout_gravity="end"
+                    android:layout_marginTop="@dimen/margin_14"
+                    android:layout_marginEnd="@dimen/margin_16"
+                    android:background="@color/transparent"
+                    android:src="@drawable/_profile_setting_icon"/>
+
+            </com.google.android.material.appbar.MaterialToolbar>
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_marginVertical="@dimen/margin_11"
-                android:layout_marginStart="@dimen/margin_20"
-                app:layout_constraintBottom_toBottomOf="parent"
+                android:id="@+id/constraintLayout"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/item_82"
+                android:layout_marginTop="@dimen/margin_10"
+                android:layout_marginHorizontal="@dimen/margin_16"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/cv_profile"
-                app:layout_constraintTop_toTopOf="parent">
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/linearLayout2"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:orientation="horizontal"
-                    app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/materialToolbar">
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cv_profile"
+                    android:layout_width="@dimen/item_72"
+                    android:layout_height="@dimen/item_72"
+                    app:cardCornerRadius="@dimen/item_36"
+                    app:cardElevation="0dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
 
-                    <TextView
-                        android:id="@+id/tv_user_name"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal|start"
-                        android:text="김수지"
-                        android:fontFamily="@font/pretendard_bold"
-                        android:textStyle="bold"
-                        android:textColor="#2a2a2a"
-                        android:letterSpacing="-0.03"
-                        android:lineSpacingExtra="9.5sp"
-                        android:textSize="@dimen/text_19"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                    <ImageView
+                        android:id="@+id/iv_profile"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        app:srcCompat="@drawable/_profile_load_icon"/>
+                </androidx.cardview.widget.CardView>
 
-                    <TextView
-                        android:id="@+id/tx_edit_profile"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/_profile_edit_bt"
-                        android:paddingVertical="@dimen/padding_4"
-                        android:paddingHorizontal="@dimen/padding_20"
-                        android:layout_gravity="center_horizontal|end"
-
-                        android:text="@string/profile_edit_profile_bt"
-                        android:textSize="@dimen/text_14"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_marginVertical="@dimen/margin_11"
+                    android:layout_marginStart="@dimen/margin_20"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/linearLayout2">
+                    app:layout_constraintStart_toEndOf="@+id/cv_profile"
+                    app:layout_constraintTop_toTopOf="parent">
 
-                    <TextView
-                        android:id="@+id/textView2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal|start"
-                        android:text="리뷰수"
-                        android:fontFamily="@font/pretendard_medium"
-                        android:textStyle="normal"
-                        android:textColor="@color/black"
-                        android:letterSpacing="-0.03"
-                        android:lineSpacingExtra="7.5sp"
-                        android:textSize="@dimen/text_15"
-                        app:layout_constraintBottom_toBottomOf="parent"
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/linearLayout2"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:orientation="horizontal"
+                        app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toTopOf="parent">
 
-                    <TextView
-                        android:id="@+id/tv_user_review_count"
-                        android:layout_width="wrap_content"
+                        <TextView
+                            android:id="@+id/tv_user_name"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal|start"
+                            android:text="김수지"
+                            android:fontFamily="@font/pretendard_bold"
+                            android:textStyle="bold"
+                            android:textColor="#2a2a2a"
+                            android:letterSpacing="-0.03"
+                            android:lineSpacingExtra="9.5sp"
+                            android:textSize="@dimen/text_19"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:id="@+id/tx_edit_profile"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/_profile_edit_bt"
+                            android:paddingVertical="@dimen/padding_4"
+                            android:paddingHorizontal="@dimen/padding_20"
+                            android:layout_gravity="center_horizontal|end"
+
+                            android:text="@string/profile_edit_profile_bt"
+                            android:textSize="@dimen/text_14"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal|start"
-                        android:layout_marginStart="@dimen/margin_4"
-                        android:text="4"
-                        android:fontFamily="@font/pretendard_semibold"
-                        android:textStyle="normal"
-                        android:textColor="@color/black"
-                        android:letterSpacing="-0.03"
-                        android:lineSpacingExtra="7.5sp"
-                        android:textSize="@dimen/text_15"
                         app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintStart_toEndOf="@+id/textView2"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/linearLayout2">
+
+                        <TextView
+                            android:id="@+id/textView2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal|start"
+                            android:text="리뷰수"
+                            android:fontFamily="@font/pretendard_medium"
+                            android:textStyle="normal"
+                            android:textColor="@color/black"
+                            android:letterSpacing="-0.03"
+                            android:lineSpacingExtra="7.5sp"
+                            android:textSize="@dimen/text_15"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:id="@+id/tv_user_review_count"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal|start"
+                            android:layout_marginStart="@dimen/margin_4"
+                            android:text="4"
+                            android:fontFamily="@font/pretendard_semibold"
+                            android:textStyle="normal"
+                            android:textColor="@color/black"
+                            android:letterSpacing="-0.03"
+                            android:lineSpacingExtra="7.5sp"
+                            android:textSize="@dimen/text_15"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/textView2"
+                            app:layout_constraintTop_toTopOf="parent" />
 
 
-                    <TextView
-                        android:id="@+id/textView4"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal|start"
-                        android:layout_marginStart="@dimen/margin_20"
-                        android:text="좋아요"
-                        android:fontFamily="@font/pretendard_medium"
-                        android:textStyle="normal"
-                        android:textColor="@color/black"
-                        android:letterSpacing="-0.03"
-                        android:lineSpacingExtra="7.5sp"
-                        android:textSize="@dimen/text_15"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintStart_toEndOf="@+id/tv_user_review_count"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        <TextView
+                            android:id="@+id/textView4"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal|start"
+                            android:layout_marginStart="@dimen/margin_20"
+                            android:text="좋아요"
+                            android:fontFamily="@font/pretendard_medium"
+                            android:textStyle="normal"
+                            android:textColor="@color/black"
+                            android:letterSpacing="-0.03"
+                            android:lineSpacingExtra="7.5sp"
+                            android:textSize="@dimen/text_15"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/tv_user_review_count"
+                            app:layout_constraintTop_toTopOf="parent" />
 
-                    <TextView
-                        android:id="@+id/tv_user_likes_count"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal|start"
-                        android:text="4"
-                        android:fontFamily="@font/pretendard_semibold"
-                        android:textStyle="normal"
-                        android:textColor="@color/black"
-                        android:letterSpacing="-0.03"
-                        android:lineSpacingExtra="7.5sp"
-                        android:textSize="@dimen/text_15"
-                        android:layout_marginStart="@dimen/margin_4"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintStart_toEndOf="@+id/textView4"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        <TextView
+                            android:id="@+id/tv_user_likes_count"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal|start"
+                            android:text="4"
+                            android:fontFamily="@font/pretendard_semibold"
+                            android:textStyle="normal"
+                            android:textColor="@color/black"
+                            android:letterSpacing="-0.03"
+                            android:lineSpacingExtra="7.5sp"
+                            android:textSize="@dimen/text_15"
+                            android:layout_marginStart="@dimen/margin_4"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/textView4"
+                            app:layout_constraintTop_toTopOf="parent" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
                 </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-
-
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <LinearLayout
-            android:id="@+id/linearLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:orientation="vertical"
-            android:paddingHorizontal="@dimen/padding_16"
-            android:paddingVertical="@dimen/padding_10"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/constraintLayout">
-
-            <View
+            <LinearLayout
+                android:id="@+id/linearLayout"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/item_1"
-                android:background="@color/gray_400"/>
-        </LinearLayout>
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/constraintLayout2"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/item_36"
-            android:layout_marginHorizontal="@dimen/margin_16"
-            android:layout_marginTop="@dimen/margin_10"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayout">
-
-            <TextView
-                android:id="@+id/textView"
-                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/profile_my_review_title"
-                android:textSize="@dimen/text_17"
-                android:fontFamily="@font/pretendard_semibold"
-                android:textStyle="normal"
-                android:textColor="#3c3c3c"
-                android:letterSpacing="-0.02"
-                android:lineSpacingExtra="8.5sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <ImageButton
-                android:id="@+id/ib_my_review"
-                android:layout_width="@dimen/item_24"
-                android:layout_height="@dimen/item_24"
-                android:src="@drawable/chevron_right"
-                android:background="@color/transparent"
-                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginTop="10dp"
+                android:orientation="vertical"
+                android:paddingHorizontal="@dimen/padding_16"
+                android:paddingVertical="@dimen/padding_10"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/constraintLayout">
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/item_1"
+                    android:background="@color/gray_400"/>
+            </LinearLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/constraintLayout2"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/item_36"
+                android:layout_marginHorizontal="@dimen/margin_16"
+                android:layout_marginTop="@dimen/margin_10"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/linearLayout">
+
+                <TextView
+                    android:id="@+id/textView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/profile_my_review_title"
+                    android:textSize="@dimen/text_17"
+                    android:fontFamily="@font/pretendard_semibold"
+                    android:textStyle="normal"
+                    android:textColor="#3c3c3c"
+                    android:letterSpacing="-0.02"
+                    android:lineSpacingExtra="8.5sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageButton
+                    android:id="@+id/ib_my_review"
+                    android:layout_width="@dimen/item_24"
+                    android:layout_height="@dimen/item_24"
+                    android:src="@drawable/chevron_right"
+                    android:background="@color/transparent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_profile_my_review"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="@dimen/item_148"
+                android:layout_marginTop="@dimen/margin_2"
+                android:paddingHorizontal="@dimen/padding_16"
+                android:paddingTop="@dimen/padding_14"
+                android:clipToPadding="false"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/constraintLayout2" />
+
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_profile_my_review"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:minHeight="@dimen/item_148"
-            android:layout_marginTop="@dimen/margin_2"
-            android:paddingHorizontal="@dimen/padding_16"
-            android:paddingTop="@dimen/padding_14"
-            android:clipToPadding="false"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/constraintLayout2" />
-
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
