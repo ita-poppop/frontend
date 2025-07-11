@@ -110,7 +110,7 @@ class StoryViewFragment : BaseFragment<FragmentStoryViewBinding>(R.layout.fragme
 
         ibStory3dot.setOnClickListener {
             cancelProgressTimer()
-            WaitingBottomSheet().show(parentFragmentManager, "WaitingBottomSheet")
+            WaitingBottomSheet(storyData!!.popupId,storyData!!.storyId).show(parentFragmentManager, "WaitingBottomSheet")
         }
     }
 
