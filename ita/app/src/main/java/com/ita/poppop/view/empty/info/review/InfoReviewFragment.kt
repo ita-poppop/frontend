@@ -1,6 +1,8 @@
 package com.ita.poppop.view.empty.info.review
 
+import android.view.View
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -48,6 +50,10 @@ class InfoReviewFragment: BaseFragment<FragmentInfoReviewBinding>(R.layout.fragm
                 val dividerItemDecoration = DividerItemDecoration(context, layoutmanager.orientation)
                 addItemDecoration(dividerItemDecoration)
 
+                infoReviewViewModel.isLoading.observe(viewLifecycleOwner, Observer { isLoading ->
+                    showSampleData(isLoading)
+                })
+
                 infoReviewViewModel.inforeviewList.observe(viewLifecycleOwner) { reviewList ->
                     infoReviewRVAdapter.submitList(reviewList.toList()) // List 변환 후 submitList 호출
                     emptyStateLayout.root.run { if(reviewList.isNullOrEmpty()) show() else hide()}
@@ -72,6 +78,18 @@ class InfoReviewFragment: BaseFragment<FragmentInfoReviewBinding>(R.layout.fragm
 
                 }
             })
+        }
+
+    }
+    private fun showSampleData(isLoading: Boolean) {
+        if (isLoading) {
+            binding.sflInfoReview.startShimmer()
+            binding.sflInfoReview.visibility = View.VISIBLE
+            binding.clInfoReview.visibility = View.GONE
+        } else {
+            binding.sflInfoReview.stopShimmer()
+            binding.sflInfoReview.visibility = View.GONE
+            binding.clInfoReview.visibility = View.VISIBLE
         }
     }
 }

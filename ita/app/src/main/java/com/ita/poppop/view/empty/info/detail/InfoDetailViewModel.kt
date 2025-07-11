@@ -6,6 +6,7 @@ import android.text.Spanned
 import android.text.style.RelativeSizeSpan
 import android.text.style.StyleSpan
 import android.util.Log
+import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -24,8 +25,12 @@ class InfoDetailViewModel(
     private val _infoDetail = MutableLiveData<Spanned>()
     val infoDetail: LiveData<Spanned> = _infoDetail
 
+    private val _isLoading = MutableLiveData<Boolean>()
+    val isLoading: LiveData<Boolean> = _isLoading
+
     fun getInfoDetail(popupId: Int) {
         viewModelScope.launch {
+            _isLoading.value = true
             try {
                 val result = withContext(Dispatchers.IO) {
                     repository.getDetailPopups(accessToken, popupId)
@@ -55,7 +60,10 @@ class InfoDetailViewModel(
                 Log.e("InfoDetailAPI_ERROR", "HTTP ${e.code()}: ${e.response()?.errorBody()?.string()}")
             } catch (e: Exception) {
                 Log.e("InfoDetailAPI_ERROR", "Exception: ${e.message}", e)
+            } finally {
+                _isLoading.value = false
             }
         }
     }
+
 }

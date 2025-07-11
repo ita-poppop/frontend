@@ -3,6 +3,7 @@ package com.ita.poppop.view.empty.info.review.detail.reply
 
 import android.graphics.Rect
 import android.util.Log
+import android.view.View
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -46,11 +47,17 @@ class InfoReviewDetailReplyFragment : BaseFragment<FragmentInfoReviewDetailReply
                 showInfoReviewCommentDeleteBottomSheet(infoReviewDetailReplyArgs.comment.itemId, commentUserName)
             }
 
+
+
             // 댓글 상세
             val repository = CommentRepositoryImpl(RetrofitClient.commentApi)
             val factory = ViewModelFactory { InfoReviewDetailReplyViewModel(mainViewModel.tokenPair.value.first.toString(),repository) }
             infoReviewDetailReplyViewModel = ViewModelProvider(this@InfoReviewDetailReplyFragment, factory)[InfoReviewDetailReplyViewModel::class.java]
             infoReviewCommentDetailViewHolder = InfoReviewCommentDetailViewHolder(binding)
+
+            infoReviewDetailReplyViewModel.isLoading.observe(viewLifecycleOwner, Observer { isLoading ->
+                showSampleData(isLoading)
+            })
 
             // 댓글 상세 요청
             val reviewId = infoReviewDetailReplyArgs.review
@@ -58,6 +65,7 @@ class InfoReviewDetailReplyFragment : BaseFragment<FragmentInfoReviewDetailReply
             infoReviewDetailReplyViewModel.getInfoCommentDetail(reviewId, commentId)
             infoReviewDetailReplyViewModel.infocommentdetail.observe(viewLifecycleOwner) { comment ->
                 infoReviewCommentDetailViewHolder.bind(comment)
+
             }
 
             // 리뷰 대댓글
@@ -163,6 +171,18 @@ class InfoReviewDetailReplyFragment : BaseFragment<FragmentInfoReviewDetailReply
             } else {
                 0f
             }
+        }
+    }
+
+    private fun showSampleData(isLoading: Boolean) {
+        if (isLoading) {
+            binding.sflInfoReviewDetailReply.startShimmer()
+            binding.sflInfoReviewDetailReply.visibility = View.VISIBLE
+            binding.clInfoReviewDetailReplyWhole.visibility = View.GONE
+        } else {
+            binding.sflInfoReviewDetailReply.stopShimmer()
+            binding.sflInfoReviewDetailReply.visibility = View.GONE
+            binding.clInfoReviewDetailReplyWhole.visibility = View.VISIBLE
         }
     }
 }

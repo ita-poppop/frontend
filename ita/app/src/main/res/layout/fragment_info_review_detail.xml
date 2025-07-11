@@ -6,252 +6,267 @@
     <data>
 
     </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/cl_info_review_detail_whole"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.ita.poppop.util.StatusBarSpaceView
-            android:id="@+id/statusBarSpaceView2"
+        <com.facebook.shimmer.ShimmerFrameLayout
+            android:id="@+id/sfl_info_review_detail"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            tools:layout_height="24dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:layout_height="match_parent">
 
-        <ImageView
-            android:id="@+id/iv_review_detail_back"
-            android:layout_width="22dp"
-            android:layout_height="22dp"
-            android:layout_marginTop="15dp"
-            android:layout_marginStart="25dp"
-            android:src="@drawable/chevron_left"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/statusBarSpaceView2" />
+            <include layout="@layout/fragment_info_review_detail_shimmer" />
 
-        <!--리뷰 화면-->
+        </com.facebook.shimmer.ShimmerFrameLayout>
+
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/cl_info_review_detail_content"
+            android:id="@+id/cl_info_review_detail_whole"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/iv_review_detail_back">
+            android:layout_height="match_parent">
 
-            <ImageView
-                android:id="@+id/iv_review_detail_profile"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_marginStart="16dp"
-                android:background="@drawable/info_story_profile_background"
-                android:scaleType="centerCrop"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:id="@+id/tv_review_detail_username"
-                android:layout_width="wrap_content"
+            <com.ita.poppop.util.StatusBarSpaceView
+                android:id="@+id/statusBarSpaceView2"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="6dp"
-                android:fontFamily="@font/pretendard_semibold"
-                android:textStyle="normal"
-                android:textSize="16sp"
-                android:textColor="#1c1c1c"
-                android:letterSpacing="-0.02"
-                android:lineSpacingExtra="8sp"
-                android:text="wild_zeal"
-                app:layout_constraintStart_toEndOf="@id/iv_review_detail_profile"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:id="@+id/tv_review_detail_time"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/pretendard_medium"
-                android:textStyle="normal"
-                android:textSize="13sp"
-                android:textColor="@color/gray_600"
-                android:lineSpacingExtra="6.5sp"
-                android:text="2시간 전"
-                app:layout_constraintStart_toStartOf="@id/tv_review_detail_username"
-                app:layout_constraintTop_toBottomOf="@id/tv_review_detail_username" />
-
-            <ImageView
-                android:id="@+id/iv_info_review_detail_dot"
-                android:layout_width="wrap_content"
-                android:layout_height="15dp"
-                android:layout_marginTop="3dp"
-                android:layout_marginEnd="16dp"
-                android:src="@drawable/info_review_comment_dot_icon"
+                tools:layout_height="24dp"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rv_review_detail_image"
+            <ImageView
+                android:id="@+id/iv_review_detail_back"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginStart="25dp"
+                android:src="@drawable/chevron_left"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/statusBarSpaceView2" />
+
+            <!--리뷰 화면-->
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cl_info_review_detail_content"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_20"
+                android:layout_marginTop="15dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/iv_review_detail_back">
+
+                <ImageView
+                    android:id="@+id/iv_review_detail_profile"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginStart="16dp"
+                    android:background="@drawable/info_story_profile_background"
+                    android:scaleType="centerCrop"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/tv_review_detail_username"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="6dp"
+                    android:fontFamily="@font/pretendard_semibold"
+                    android:textStyle="normal"
+                    android:textSize="16sp"
+                    android:textColor="#1c1c1c"
+                    android:letterSpacing="-0.02"
+                    android:lineSpacingExtra="8sp"
+                    android:text="wild_zeal"
+                    app:layout_constraintStart_toEndOf="@id/iv_review_detail_profile"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/tv_review_detail_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/pretendard_medium"
+                    android:textStyle="normal"
+                    android:textSize="13sp"
+                    android:textColor="@color/gray_600"
+                    android:lineSpacingExtra="6.5sp"
+                    android:text="2시간 전"
+                    app:layout_constraintStart_toStartOf="@id/tv_review_detail_username"
+                    app:layout_constraintTop_toBottomOf="@id/tv_review_detail_username" />
+
+                <ImageView
+                    android:id="@+id/iv_info_review_detail_dot"
+                    android:layout_width="wrap_content"
+                    android:layout_height="15dp"
+                    android:layout_marginTop="3dp"
+                    android:layout_marginEnd="16dp"
+                    android:src="@drawable/info_review_comment_dot_icon"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_review_detail_image"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_20"
+                    android:paddingHorizontal="16dp"
+                    android:clipToPadding="false"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_review_detail_time" />
+
+                <TextView
+                    android:id="@+id/tv_review_detail_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:text="전시가 애니 속 장면들을 잘 살려놔서 보는 내내 몰입감 장난 아니었어요. ‘거짓말과 아이’, '빛과 그림자’ 같은 테같은 테마도 은근 생각하게 만들더라구요."
+                    android:textSize="14sp"
+                    android:textColor="#505050"
+                    android:layout_marginTop="10dp"
+                    android:lineSpacingExtra="7sp"
+                    android:breakStrategy="high_quality"
+                    app:layout_constraintTop_toBottomOf="@id/rv_review_detail_image"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"/>
+
+                <ImageView
+                    android:id="@+id/iv_review_detail_heart"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginTop="13dp"
+                    android:layout_marginStart="16dp"
+                    android:src="@drawable/info_review_heart_icon_outlined"
+                    app:layout_constraintTop_toBottomOf="@id/tv_review_detail_content"
+                    app:layout_constraintStart_toStartOf="parent"/>
+
+                <TextView
+                    android:id="@+id/tv_review_detail_heart"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="8dp"
+                    android:fontFamily="@font/pretendard_medium"
+                    android:text="12"
+                    android:textStyle="normal"
+                    android:textSize="15sp"
+                    android:textColor="@color/gray_700"
+                    android:lineSpacingExtra="7sp"
+                    app:layout_constraintTop_toTopOf="@id/iv_review_detail_heart"
+                    app:layout_constraintStart_toEndOf="@id/iv_review_detail_heart"/>
+
+                <ImageView
+                    android:id="@+id/iv_reivew_detail_comment"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginStart="16dp"
+                    android:src="@drawable/info_review_comment_icon"
+                    app:layout_constraintTop_toTopOf="@id/iv_review_detail_heart"
+                    app:layout_constraintStart_toEndOf="@id/tv_review_detail_heart"/>
+
+                <TextView
+                    android:id="@+id/tv_review_detail_comment"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="6dp"
+                    android:text="4"
+                    android:fontFamily="@font/pretendard_medium"
+                    android:textStyle="normal"
+                    android:textSize="15sp"
+                    android:textColor="@color/gray_700"
+                    android:lineSpacingExtra="7sp"
+                    app:layout_constraintTop_toTopOf="@id/iv_review_detail_heart"
+                    app:layout_constraintStart_toEndOf="@id/iv_reivew_detail_comment"/>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <!--댓글-->
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cl_info_review_detail_comment"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
                 android:paddingHorizontal="16dp"
-                android:clipToPadding="false"
+                android:paddingTop="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_review_detail_time" />
+                app:layout_constraintBottom_toTopOf="@+id/cl_info_review_upload_comment"
+                app:layout_constraintTop_toBottomOf="@+id/cl_info_review_detail_content">
 
-            <TextView
-                android:id="@+id/tv_review_detail_content"
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_review_comment"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="27dp"
+                    android:clipToPadding="false"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <!-- 댓글 입력 창 -->
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cl_info_review_upload_comment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:text="전시가 애니 속 장면들을 잘 살려놔서 보는 내내 몰입감 장난 아니었어요. ‘거짓말과 아이’, '빛과 그림자’ 같은 테같은 테마도 은근 생각하게 만들더라구요."
-                android:textSize="14sp"
-                android:textColor="#505050"
-                android:layout_marginTop="10dp"
-                android:lineSpacingExtra="7sp"
-                android:breakStrategy="high_quality"
-                app:layout_constraintTop_toBottomOf="@id/rv_review_detail_image"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"/>
-
-            <ImageView
-                android:id="@+id/iv_review_detail_heart"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_marginTop="13dp"
-                android:layout_marginStart="16dp"
-                android:src="@drawable/info_review_heart_icon_outlined"
-                app:layout_constraintTop_toBottomOf="@id/tv_review_detail_content"
-                app:layout_constraintStart_toStartOf="parent"/>
-
-            <TextView
-                android:id="@+id/tv_review_detail_heart"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="8dp"
-                android:fontFamily="@font/pretendard_medium"
-                android:text="12"
-                android:textStyle="normal"
-                android:textSize="15sp"
-                android:textColor="@color/gray_700"
-                android:lineSpacingExtra="7sp"
-                app:layout_constraintTop_toTopOf="@id/iv_review_detail_heart"
-                app:layout_constraintStart_toEndOf="@id/iv_review_detail_heart"/>
-
-            <ImageView
-                android:id="@+id/iv_reivew_detail_comment"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_marginStart="16dp"
-                android:src="@drawable/info_review_comment_icon"
-                app:layout_constraintTop_toTopOf="@id/iv_review_detail_heart"
-                app:layout_constraintStart_toEndOf="@id/tv_review_detail_heart"/>
-
-            <TextView
-                android:id="@+id/tv_review_detail_comment"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="6dp"
-                android:text="4"
-                android:fontFamily="@font/pretendard_medium"
-                android:textStyle="normal"
-                android:textSize="15sp"
-                android:textColor="@color/gray_700"
-                android:lineSpacingExtra="7sp"
-                app:layout_constraintTop_toTopOf="@id/iv_review_detail_heart"
-                app:layout_constraintStart_toEndOf="@id/iv_reivew_detail_comment"/>
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <!--댓글-->
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/cl_info_review_detail_comment"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:paddingHorizontal="16dp"
-            android:paddingTop="16dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toTopOf="@+id/cl_info_review_upload_comment"
-            app:layout_constraintTop_toBottomOf="@+id/cl_info_review_detail_content">
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rv_review_comment"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginBottom="27dp"
-                android:clipToPadding="false"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <!-- 댓글 입력 창 -->
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/cl_info_review_upload_comment"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/white"
-            android:paddingVertical="10dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent">
-
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/mcv_info_review_upload_comment"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="16dp"
-                android:layout_marginVertical="23dp"
-                app:cardBackgroundColor="@android:color/white"
-                app:cardCornerRadius="10dp"
+                android:background="@color/white"
+                android:paddingVertical="10dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent">
 
-                <androidx.constraintlayout.widget.ConstraintLayout
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/mcv_info_review_upload_comment"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingHorizontal="@dimen/padding_16"
-                    android:paddingVertical="@dimen/item_8">
+                    android:layout_marginHorizontal="16dp"
+                    android:layout_marginVertical="23dp"
+                    app:cardBackgroundColor="@android:color/white"
+                    app:cardCornerRadius="10dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent">
 
-                    <EditText
-                        android:id="@+id/edit_upload_comment"
-                        android:layout_width="0dp"
-                        android:layout_height="@dimen/item_24"
-                        android:background="@android:color/transparent"
-                        android:ellipsize="start"
-                        android:fontFamily="@font/pretendard_medium"
-                        android:hint="댓글을 입력해주세요"
-                        android:inputType="text"
-                        android:letterSpacing="-0.02"
-                        android:lineSpacingExtra="8sp"
-                        android:maxLines="1"
-                        android:singleLine="true"
-                        android:textColor="@android:color/black"
-                        android:textColorHint="@color/gray_500"
-                        android:textSize="16sp"
-                        android:textStyle="normal"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toStartOf="@+id/tv_upload_comment"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <TextView
-                        android:id="@+id/tv_upload_comment"
-                        android:layout_width="wrap_content"
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/pretendard_semibold"
-                        android:letterSpacing="-0.02"
-                        android:lineSpacingExtra="8sp"
-                        android:text="게시"
-                        android:textColor="@color/primary_blue"
-                        android:textSize="16sp"
-                        android:textStyle="normal"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        android:paddingHorizontal="@dimen/padding_16"
+                        android:paddingVertical="@dimen/item_8">
 
-                </androidx.constraintlayout.widget.ConstraintLayout>
-            </com.google.android.material.card.MaterialCardView>
+                        <EditText
+                            android:id="@+id/edit_upload_comment"
+                            android:layout_width="0dp"
+                            android:layout_height="@dimen/item_24"
+                            android:background="@android:color/transparent"
+                            android:ellipsize="start"
+                            android:fontFamily="@font/pretendard_medium"
+                            android:hint="댓글을 입력해주세요"
+                            android:inputType="text"
+                            android:letterSpacing="-0.02"
+                            android:lineSpacingExtra="8sp"
+                            android:maxLines="1"
+                            android:singleLine="true"
+                            android:textColor="@android:color/black"
+                            android:textColorHint="@color/gray_500"
+                            android:textSize="16sp"
+                            android:textStyle="normal"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toStartOf="@+id/tv_upload_comment"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:id="@+id/tv_upload_comment"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/pretendard_semibold"
+                            android:letterSpacing="-0.02"
+                            android:lineSpacingExtra="8sp"
+                            android:text="게시"
+                            android:textColor="@color/primary_blue"
+                            android:textSize="16sp"
+                            android:textStyle="normal"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                </com.google.android.material.card.MaterialCardView>
+            </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -20,8 +20,12 @@ class InfoViewModel(
     private val _infoData = MutableLiveData<PopupDetailData>()
     val infoData: LiveData<PopupDetailData> = _infoData
 
+    private val _isLoading = MutableLiveData<Boolean>()
+    val isLoading: LiveData<Boolean> = _isLoading
+
     fun getInfo(popupId: Int) {
         viewModelScope.launch {
+            _isLoading.value = true
             try {
                 val response = withContext(Dispatchers.IO) {
                     repository.getDetailPopups(accessToken, popupId)
@@ -36,6 +40,8 @@ class InfoViewModel(
                 }
             } catch (e: Exception) {
                 Log.e("InfoApi_ERROR", "Exception: ${e.message}", e)
+            } finally {
+                _isLoading.value = false
             }
         }
     }

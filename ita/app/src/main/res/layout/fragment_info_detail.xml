@@ -5,109 +5,124 @@
 
     <data>
     </data>
-
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/cl_info_detail"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="24dp"
-        android:paddingBottom="38dp">
+        android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/tv_info_introduce"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingHorizontal="16dp"
-            android:letterSpacing="-0.02"
-            android:lineSpacingExtra="8.5sp"
-            android:text="팝업스토어 소개"
-            android:textColor="@color/black"
-            android:textSize="17sp"
-            android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/cl_info_detail" />
-
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/mcv_info_detail"
+        <com.facebook.shimmer.ShimmerFrameLayout
+            android:id="@+id/sfl_info_detail"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="16dp"
-            android:layout_marginTop="10dp"
-            app:cardBackgroundColor="@color/gray_300"
-            app:cardCornerRadius="10dp"
-            app:strokeWidth="0dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_info_introduce">
+            android:layout_height="match_parent">
 
-            <TextView
-                android:id="@+id/tv_info_detail"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="12dp"
-                android:layout_marginVertical="24dp"
-                android:letterSpacing="-0.03"
-                android:lineSpacingExtra="7sp"
-                android:text="‘TV 애니메이션 【최애의 아이】展 거짓말과 아이’,
-                ‘TV 애니메이션 【최애의 아이】展 빛과 그림자’
-                드디어 한국 최초, 전시 개최!!
-                 
-                1기와 2기 시리즈를 망라한 특별한 전시로 여러분을 TV 애니메이션 ‘【최애의 아이】’ 세계 속으로 안내합니다.
-                 
-                ‘TV 애니메이션 【최애의 아이】展 거짓말과 아이 / 빛과 그림자’
-                ✨️ 2025. 3. 22 (토) ~ 6. 8 (일)
-                ✨️ 덕스(DUEX) 홍대 2관
-                 
-                월-금 13:00-20:00 (입장마감 19:00)
-                토-일, 공휴일 11:00-20:00 (입장마감 19:00)"
-                android:textSize="14sp"
-                android:textColor="@color/gray_900"/>
+            <include layout="@layout/fragment_info_detail_shimmer" />
 
-        </com.google.android.material.card.MaterialCardView>
+        </com.facebook.shimmer.ShimmerFrameLayout>
 
-        <View
-            android:id="@+id/view2"
-            android:layout_width="match_parent"
-            android:layout_height="6dp"
-            android:layout_marginTop="38dp"
-            android:background="@color/gray_300"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/mcv_info_detail" />
-
-        <!-- 추천 화면 -->
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/cl_info_recommend"
+            android:id="@+id/cl_info_detail"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="@dimen/margin_24"
-            android:paddingBottom="160dp"
-            app:layout_constraintTop_toBottomOf="@+id/view2">
+            android:layout_height="wrap_content"
+            android:paddingTop="24dp"
+            android:paddingBottom="38dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
             <TextView
-                android:id="@+id/tv_info_recommend"
-                android:layout_width="match_parent"
+                android:id="@+id/tv_info_introduce"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:letterSpacing="-0.02"
+                android:lineSpacingExtra="8.5sp"
                 android:paddingHorizontal="16dp"
-                android:letterSpacing="-0.03"
-                android:lineSpacingExtra="9sp"
-                android:text="이런 팝업은 어때요?"
+                android:text="팝업스토어 소개"
                 android:textColor="@color/black"
-                android:textSize="18sp"
+                android:textSize="17sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="@id/cl_info_detail" />
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rv_info_recommend"
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/mcv_info_detail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingHorizontal="16dp"
-                android:layout_marginTop="@dimen/margin_20"
-                android:layout_marginRight="-16dp"
-                android:clipToPadding="false"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="10dp"
+                app:cardBackgroundColor="@color/gray_300"
+                app:cardCornerRadius="10dp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_info_recommend" />
+                app:layout_constraintTop_toBottomOf="@id/tv_info_introduce"
+                app:strokeWidth="0dp">
 
+                <TextView
+                    android:id="@+id/tv_info_detail"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="12dp"
+                    android:layout_marginVertical="24dp"
+                    android:letterSpacing="-0.03"
+                    android:lineSpacingExtra="7sp"
+                    android:text="‘TV 애니메이션 【최애의 아이】展 거짓말과 아이’,
+                    ‘TV 애니메이션 【최애의 아이】展 빛과 그림자’
+                    드디어 한국 최초, 전시 개최!!
+                     
+                    1기와 2기 시리즈를 망라한 특별한 전시로 여러분을 TV 애니메이션 ‘【최애의 아이】’ 세계 속으로 안내합니다.
+                     
+                    ‘TV 애니메이션 【최애의 아이】展 거짓말과 아이 / 빛과 그림자’
+                    ✨️ 2025. 3. 22 (토) ~ 6. 8 (일)
+                    ✨️ 덕스(DUEX) 홍대 2관
+                     
+                    월-금 13:00-20:00 (입장마감 19:00)
+                    토-일, 공휴일 11:00-20:00 (입장마감 19:00)"
+                    android:textColor="@color/gray_900"
+                    android:textSize="14sp" />
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <View
+                android:id="@+id/view2"
+                android:layout_width="match_parent"
+                android:layout_height="6dp"
+                android:layout_marginTop="38dp"
+                android:background="@color/gray_300"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/mcv_info_detail" />
+
+            <!-- 추천 화면 -->
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cl_info_recommend"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="@dimen/margin_24"
+                android:paddingBottom="160dp"
+                app:layout_constraintTop_toBottomOf="@+id/view2">
+
+                <TextView
+                    android:id="@+id/tv_info_recommend"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:letterSpacing="-0.03"
+                    android:lineSpacingExtra="9sp"
+                    android:paddingHorizontal="16dp"
+                    android:text="이런 팝업은 어때요?"
+                    android:textColor="@color/black"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_info_recommend"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_20"
+                    android:layout_marginRight="-16dp"
+                    android:clipToPadding="false"
+                    android:paddingHorizontal="16dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_info_recommend" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

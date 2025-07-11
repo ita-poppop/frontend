@@ -20,8 +20,12 @@ class InfoReviewViewModel(
     private val _inforeviewList = MutableLiveData<MutableList<InfoReviewRVItem>>()
     val inforeviewList: LiveData<MutableList<InfoReviewRVItem>> = _inforeviewList
 
+    private val _isLoading = MutableLiveData<Boolean>()
+    val isLoading: LiveData<Boolean> = _isLoading
+
     fun getInfoReview(popupId: Int) {
         viewModelScope.launch {
+            _isLoading.value = true
             try {
                 val response = withContext(Dispatchers.IO) {
                     repository.getReviewList(accessToken, popupId, 1, 20)
@@ -37,6 +41,8 @@ class InfoReviewViewModel(
                 }
             } catch (e: Exception) {
                 Log.e("ReviewApi_ERROR", "Exception: ${e.message}", e)
+            } finally {
+                _isLoading.value = false
             }
         }
     }

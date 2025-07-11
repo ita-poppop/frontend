@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/sh_cl_info_review_detail_whole"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.ita.poppop.util.StatusBarSpaceView
+            android:id="@+id/sh_sbsv"
+            android:layout_width="match_parent"
+            android:layout_height="24dp"
+            android:background="@drawable/shape_story_gradient"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/sh_cl_review"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="55dp"
+        android:paddingHorizontal="16dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/sh_sbsv">
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/sh_iv_profile"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="5dp"
+            app:cardBackgroundColor="#D9D9D9"
+            app:cardCornerRadius="72dp"
+            app:cardElevation="0dp"
+            app:layout_constraintStart_toStartOf="@+id/sh_cl_review"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/_profile_load_icon"
+            app:strokeColor="@color/transparent" />
+
+        <View
+            android:id="@+id/sh_tv_view4"
+            android:layout_width="70dp"
+            android:layout_height="20dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="10dp"
+            android:background="#dedede"
+            app:layout_constraintStart_toEndOf="@+id/sh_iv_profile"
+            app:layout_constraintTop_toTopOf="@+id/sh_iv_profile" />
+
+        <View
+            android:id="@+id/sh_tv_time"
+            android:layout_width="60dp"
+            android:layout_height="14dp"
+            android:layout_marginTop="6dp"
+            android:background="#dedede"
+            app:layout_constraintTop_toBottomOf="@id/sh_tv_view4"
+            app:layout_constraintStart_toStartOf="@id/sh_tv_view4" />
+
+        <View
+            android:id="@+id/sh_tv_view44"
+            android:layout_width="270dp"
+            android:layout_height="20dp"
+            android:layout_marginTop="20dp"
+            android:background="#dedede"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/sh_tv_time" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

@@ -22,6 +22,9 @@ class InfoReviewDetailReplyViewModel(
     private val _infocommentdetail = MutableLiveData<InfoReviewCommentRVItem>()
     val infocommentdetail: LiveData<InfoReviewCommentRVItem> = _infocommentdetail
 
+    private val _isLoading = MutableLiveData<Boolean>()
+    val isLoading: LiveData<Boolean> = _isLoading
+
     private val _inforeviewdetailreplyList =
         MutableLiveData<MutableList<InfoReviewDetailReplyRVItem>>()
     val inforeviewdetailreplyList: LiveData<MutableList<InfoReviewDetailReplyRVItem>> =
@@ -80,6 +83,7 @@ class InfoReviewDetailReplyViewModel(
 
     fun getInfoCommentDetail(reviewId: Int, commentId: Int) {
         viewModelScope.launch {
+            _isLoading.value = true
             try {
                 val response = withContext(Dispatchers.IO) {
                     repository.getComment(reviewId, commentId)
@@ -110,6 +114,8 @@ class InfoReviewDetailReplyViewModel(
                 }
             } catch (e: Exception) {
                 Log.e("CommentDetailApi_ERROR", "Exception: ${e.message}", e)
+            } finally {
+                _isLoading.value = false
             }
         }
     }

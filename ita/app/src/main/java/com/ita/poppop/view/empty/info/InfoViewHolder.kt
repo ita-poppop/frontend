@@ -23,7 +23,6 @@ class InfoViewHolder(
 
             Glide.with(ivInfoImage.context)
                 .load(info.imageUrl)
-                .placeholder(R.drawable.app_logo)
                 .centerCrop()
                 .into(ivInfoImage)
         }

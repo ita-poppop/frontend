@@ -1,5 +1,6 @@
 package com.ita.poppop.view.empty.info.detail
 
+import android.view.View
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -39,6 +40,10 @@ class InfoDetailFragment: BaseFragment<FragmentInfoDetailBinding>(R.layout.fragm
 
             infoDetailViewModel.getInfoDetail(popupId)
 
+            infoDetailViewModel.isLoading.observe(viewLifecycleOwner, Observer { isLoading ->
+                showSampleData(isLoading)
+            })
+
             infoDetailViewModel.infoDetail.observe(viewLifecycleOwner) { combinedText ->
                 tvInfoDetail.text = combinedText
                 //tvInfoDetailComment.text = response.comment
@@ -74,5 +79,16 @@ class InfoDetailFragment: BaseFragment<FragmentInfoDetailBinding>(R.layout.fragm
     }
     fun updatePopup(popupId: Int) {
         infoDetailViewModel.getInfoDetail(popupId)
+    }
+    private fun showSampleData(isLoading: Boolean) {
+        if (isLoading) {
+            binding.sflInfoDetail.startShimmer()
+            binding.sflInfoDetail.visibility = View.VISIBLE
+            binding.clInfoDetail.visibility = View.GONE
+        } else {
+            binding.sflInfoDetail.stopShimmer()
+            binding.sflInfoDetail.visibility = View.GONE
+            binding.clInfoDetail.visibility = View.VISIBLE
+        }
     }
 }

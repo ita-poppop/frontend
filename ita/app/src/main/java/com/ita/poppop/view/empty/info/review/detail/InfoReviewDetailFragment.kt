@@ -2,8 +2,10 @@ package com.ita.poppop.view.empty.info.review.detail
 
 import android.graphics.Rect
 import android.util.Log
+import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -58,12 +60,17 @@ class InfoReviewDetailFragment : BaseFragment<FragmentInfoReviewDetailBinding>(R
                 findNavController().popBackStack()
             }
 
+
             // 리뷰 상세
             val reviewRepository = ReviewRepositoryImpl(RetrofitClient.reviewApi)
             val reviewFactory = ViewModelFactory { InfoReviewDetailViewModel(mainViewModel.tokenPair.value.first.toString(), reviewRepository) }
             infoReviewDetailViewModel = ViewModelProvider(this@InfoReviewDetailFragment, reviewFactory)[InfoReviewDetailViewModel::class.java]
             infoReviewDetailViewHolder = InfoReviewDetailViewHolder(binding, infoReviewImageRVAdapter)
             val popupId = infoReviewDetailArgs.popupId
+
+            infoReviewDetailViewModel.isLoading.observe(viewLifecycleOwner, Observer { isLoading ->
+                showSampleData(isLoading)
+            })
             // 리뷰 상세 요청
             infoReviewDetailViewModel.getInfoReviewDetail(popupId,infoReviewDetailArgs.review.itemId)
 
@@ -278,6 +285,18 @@ class InfoReviewDetailFragment : BaseFragment<FragmentInfoReviewDetailBinding>(R
                     }
                 }
             }
+        }
+    }
+
+    private fun showSampleData(isLoading: Boolean) {
+        if (isLoading) {
+            binding.sflInfoReviewDetail.startShimmer()
+            binding.sflInfoReviewDetail.visibility = View.VISIBLE
+            binding.clInfoReviewDetailWhole.visibility = View.GONE
+        } else {
+            binding.sflInfoReviewDetail.stopShimmer()
+            binding.sflInfoReviewDetail.visibility = View.GONE
+            binding.clInfoReviewDetailWhole.visibility = View.VISIBLE
         }
     }
 }
