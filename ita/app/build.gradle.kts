@@ -91,6 +91,9 @@ dependencies {
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
 
+    // 스켈레톤
+    implementation("com.facebook.shimmer:shimmer:0.5.0")
+
     // 카카오 로그인
     val kakaoSdkVersion = "2.21.4"
 
@@ -104,8 +107,6 @@ dependencies {
 
 
     //구글 로그인
-
-
 
     // Also add the dependencies for the Credential Manager libraries and specify their versions
     implementation("com.google.android.gms:play-services-auth:20.1.0")

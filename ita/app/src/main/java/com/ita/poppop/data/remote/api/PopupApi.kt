@@ -28,7 +28,7 @@ interface PopupApi {
 
     @GET("/api/v1/popups/search")
     suspend fun getSearch(
-        @Query("title") title: String,
+        @Query("content") content: String,
         @Query("page") page: Int,
         @Query("size") size: Int
     ): Response<GetSearchResponse>

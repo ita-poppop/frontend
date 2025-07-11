@@ -148,7 +148,7 @@ class UploadViewModel: ViewModel() {
 //                    popupItem.value != null &&
 //                    !reviewContent.value.isNullOrBlank()
             value = !imageList.value.isNullOrEmpty() &&
-                    true &&
+                    popupItem.value != null &&
                     !reviewContent.value.isNullOrBlank()
         }
         addSource(imageList) { validator() }

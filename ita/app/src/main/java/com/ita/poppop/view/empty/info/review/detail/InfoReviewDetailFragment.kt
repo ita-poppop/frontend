@@ -178,12 +178,16 @@ class InfoReviewDetailFragment : BaseFragment<FragmentInfoReviewDetailBinding>(R
         }
 
         val convertedPopupItem = popupItem?.let {
-            val searchData = SearchData(
-                id = it.id,
-                title = it.title,
-                image = it.imageUrl,
-                location = it.location
-            )
+            val searchData =
+                SearchData(
+                    latitude = null,
+                    longitude= null,
+                    id = it.id,
+                    imageUrl = it.imageUrl ?: "",
+                    title = it.title ?: "",
+                    date = null,
+                    location = it.location ?: "",
+                )
             searchData
         }
 

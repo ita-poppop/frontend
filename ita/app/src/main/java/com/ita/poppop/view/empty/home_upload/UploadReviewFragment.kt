@@ -1,6 +1,7 @@
 package com.ita.poppop.view.empty.home_upload
 
 import android.net.Uri
+import android.os.Bundle
 import android.util.Log
 import androidx.core.os.BundleCompat
 import androidx.fragment.app.activityViewModels
@@ -15,6 +16,7 @@ import com.ita.poppop.base.BaseFragment
 import com.ita.poppop.data.remote.repository.review.ReviewRepository
 import com.ita.poppop.data.remote.repository.review.ReviewRepositoryImpl
 import com.ita.poppop.databinding.FragmentUploadReviewBinding
+import com.ita.poppop.model.empty.search.SearchMode
 import com.ita.poppop.util.bottomsheet.UploadBottomSheet
 import com.ita.poppop.util.remote.RetrofitClient
 import com.ita.poppop.view.empty.home_upload.sub.ImageItem
@@ -38,12 +40,13 @@ class UploadReviewFragment : BaseFragment<FragmentUploadReviewBinding>(R.layout.
     val mainAViewModel: MainAViewModel by activityViewModels()
     private val repository: ReviewRepository = ReviewRepositoryImpl(RetrofitClient.reviewApi)
     override fun initView() {
+        setViewModel()
         setupWindowInsets()
         setupToolbar()
         setupUploadRecycler()
         setFragmentResult()
         setClickListener()
-        setViewModel()
+
     }
 
 
@@ -57,11 +60,11 @@ class UploadReviewFragment : BaseFragment<FragmentUploadReviewBinding>(R.layout.
         uploadViewModel.uploadList.observe(viewLifecycleOwner) { uploadItemList ->
             uploadImageAdapter.submitList(uploadItemList)
         }
-        uploadViewModel.popupItem.observe(viewLifecycleOwner) { seleteItem ->
-            binding.tvUploadLocation.text = seleteItem?.title ?: ""
+        uploadViewModel.popupItem.observe(viewLifecycleOwner) { selectedItem ->
+            binding.tvUploadLocation.text = selectedItem?.title ?: "팝업스토어 / 전시를 검색하세요"
         }
-        mainViewModel.selectItem.observe(viewLifecycleOwner) { seleteItem ->
-            uploadViewModel.setPopupItem(seleteItem)
+        mainViewModel.selectItem.observe(viewLifecycleOwner) { selectItem ->
+            uploadViewModel.setPopupItem(selectItem)
         }
         uploadViewModel.isAllValid.observe(viewLifecycleOwner) { valid ->
             binding.btUploadReview.isEnabled = valid
@@ -113,7 +116,8 @@ class UploadReviewFragment : BaseFragment<FragmentUploadReviewBinding>(R.layout.
 
     private fun setClickListener() {
         binding.mcvSearchArea.setOnClickListener {
-            navigateTo(UploadReviewFragmentDirections.actionUploadReviewFragmentToSearchFragment())
+            navigateTo(UploadReviewFragmentDirections.actionUploadReviewFragmentToSearchFragment(
+                SearchMode.RETURN_TO_UPLOAD))
         }
         binding.btUploadReview.setOnClickListener{
             lifecycleScope.launch {
@@ -123,7 +127,8 @@ class UploadReviewFragment : BaseFragment<FragmentUploadReviewBinding>(R.layout.
 
                         repository.postReview(
                             mainAViewModel.tokenPair.value.first.toString(),
-                            2310,
+
+                            mainViewModel.selectItem.value!!.id,
                             contentBody,
                             uploadViewModel.createMultipartListFromUris(requireContext())
                         )
@@ -132,6 +137,7 @@ class UploadReviewFragment : BaseFragment<FragmentUploadReviewBinding>(R.layout.
                     if (result.isSuccessful) {
                         Log.d("checkUploadData","result : ${result.body()}")
                         handleBackNavigation()
+                        mainViewModel.setSelectItem(null)
                     }
                 } catch (e: HttpException) {
                     // HTTP 에러 상세 정보
@@ -163,5 +169,17 @@ class UploadReviewFragment : BaseFragment<FragmentUploadReviewBinding>(R.layout.
         }else{
             UploadBottomSheet(uploadViewModel.getRemainingSlots()).show(parentFragmentManager, "upload_sheet")
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.d("UploadReviewFragment","onDestroy")
+        mainViewModel.setSelectItem(null)
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        Log.d("UploadReviewFragment","onDetach")
+        mainViewModel.setSelectItem(null)
     }
 }

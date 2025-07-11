@@ -1,6 +1,8 @@
 package com.ita.poppop.data.remote.dto.stories
 
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import kotlinx.parcelize.Parcelize
 
 data class GetStoriesResponse(
     @SerializedName("code")
@@ -12,10 +14,13 @@ data class GetStoriesResponse(
     @SerializedName("data")
     val data: List<StoryData>?
 )
-
+@Parcelize
 data class StoryData(
     @SerializedName("storyId")
     val storyId: Int,
+
+    @SerializedName("popupId")
+    val popupId: Int,
 
     @SerializedName("photoUrl")
     val photoUrl: String,
@@ -43,4 +48,4 @@ data class StoryData(
 
     @SerializedName("createdAt")
     val createdAt: String
-)
+): Parcelable

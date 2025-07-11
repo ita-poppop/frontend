@@ -7,5 +7,9 @@
     <fragment
         android:id="@+id/storyFragment"
         android:name="com.ita.poppop.view.empty.story.StoryFragment"
-        android:label="StoryFragment" />
+        android:label="StoryFragment" >
+        <argument
+            android:name="reviewId"
+            app:argType="integer" />
+    </fragment>
 </navigation>

@@ -1,5 +1,6 @@
 package com.ita.poppop.data.remote.api
 
+import com.google.gson.annotations.SerializedName
 import com.ita.poppop.data.remote.dto.reviews.GetReviewListResponse
 import com.ita.poppop.data.remote.dto.reviews.GetReviewResponse
 import com.ita.poppop.data.remote.dto.reviews.PostReviewLikesResponse
@@ -7,9 +8,12 @@ import com.ita.poppop.data.remote.dto.reviews.PostReviewLikesResponse
 import com.ita.poppop.data.remote.dto.review.PostReviewResponse
 import com.ita.poppop.data.remote.dto.reviews.DeleteReviewResponse
 import com.ita.poppop.data.remote.dto.reviews.ModifyReviewResponse
+import com.ita.poppop.data.remote.dto.reviews.PostDeleteReviewResponse
+import com.ita.poppop.data.remote.dto.reviews.PostEditReviewResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Response
+import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
@@ -38,6 +42,19 @@ interface ReviewApi {
 
         ): Response<PostReviewResponse>
 
+    @POST("/api/v1/popups/{popupId}/reviews/{reviewId}/patch")
+    suspend fun postEditReview(
+        @Header("Authorization") accessToken: String,
+        @Path("reviewId") reviewId: Int,
+        @Body editRequest: EditRequest
+
+        ): Response<PostEditReviewResponse>
+
+    @POST("/api/v1/popups/{popupId}/reviews/{reviewId}/delete")
+    suspend fun postDeleteReview(
+        @Header("Authorization") accessToken: String,
+        @Path("reviewId") reviewId: Int,
+        ): Response<PostDeleteReviewResponse>
 
     @GET("/api/v1/popups/{popupId}/reviews/{reviewId}")
     suspend fun getReview(
@@ -68,10 +85,11 @@ interface ReviewApi {
 
     ): Response<ModifyReviewResponse>
 
-
-
-
-
-
-
 }
+
+// 요청 데이터 클래스
+data class EditRequest(
+    @SerializedName("content")
+    val content: String
+)
+

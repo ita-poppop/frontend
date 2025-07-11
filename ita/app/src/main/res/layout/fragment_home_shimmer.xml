@@ -1,0 +1,377 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white">
+
+
+            <com.ita.poppop.util.StatusBarSpaceView
+                android:id="@+id/sh_statusBarSpaceView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:layout_height="24dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.core.widget.NestedScrollView
+                android:id="@+id/sh_scrollView2"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:scrollbars="none"
+                app:layout_constraintTop_toBottomOf="@+id/sh_statusBarSpaceView"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <!-- 검색바 -->
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/sh_cl_search_bar"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/item_68"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <ImageView
+                            android:id="@+id/sh_imageView2"
+                            android:layout_width="@dimen/item_52"
+                            android:layout_height="@dimen/item_52"
+                            android:layout_marginVertical="@dimen/margin_8"
+                            android:layout_marginStart="@dimen/margin_16"
+                            android:src="@drawable/_home_searchbar_icon"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/sh_cl_search_area"
+                            android:layout_width="0dp"
+                            android:layout_height="@dimen/item_38"
+                            android:layout_marginHorizontal="@dimen/margin_8"
+                            android:background="@drawable/_home_search_bar"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toStartOf="@+id/sh_ib_notification"
+                            app:layout_constraintStart_toEndOf="@+id/sh_imageView2"
+                            app:layout_constraintTop_toTopOf="parent">
+
+                            <ImageView
+                                android:id="@+id/sh_imageView3"
+                                android:layout_width="wrap_content"
+                                android:layout_height="0dp"
+                                android:layout_marginVertical="@dimen/margin_7"
+                                android:layout_marginStart="@dimen/margin_10"
+                                android:src="@drawable/_home_search_icon"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintDimensionRatio="1:1"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:tint="@color/gray_500" />
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginHorizontal="@dimen/margin_10"
+                                android:fontFamily="@font/pretendard_semibold"
+                                android:letterSpacing="-0.03"
+                                android:lineSpacingExtra="@dimen/text_4"
+                                android:text="@string/home_searchbar_hint"
+                                android:textColor="@color/gray_500"
+                                android:textSize="@dimen/text_12"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toEndOf="@+id/sh_imageView3"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:layout_constraintVertical_bias="0.523" />
+
+
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/item_1"
+                            android:background="@color/gray_300"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent" />
+
+                        <ImageButton
+                            android:id="@+id/sh_ib_notification"
+                            android:layout_width="@dimen/item_28"
+                            android:layout_height="@dimen/item_28"
+                            android:layout_marginVertical="@dimen/margin_16"
+                            android:layout_marginEnd="@dimen/margin_16"
+                            android:background="@color/transparent"
+                            android:src="@drawable/ic_notification_icon"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/sh_cl_trend"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_10"
+                        app:layout_constraintTop_toBottomOf="@+id/sh_cl_search_bar">
+
+                        <View
+                            android:id="@+id/sh_tv_trend_title"
+                            android:layout_width="100dp"
+                            android:layout_height="24dp"
+                            android:background="#dedede"
+                            android:layout_marginStart="@dimen/margin_16"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <androidx.appcompat.widget.LinearLayoutCompat
+                            android:id="@+id/sh_rv_trend"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:minHeight="@dimen/item_240"
+                            android:layout_marginTop="@dimen/margin_12"
+                            android:clipToPadding="false"
+                            android:orientation="horizontal"
+                            android:paddingHorizontal="@dimen/padding_16"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/sh_tv_trend_title" >
+
+                            <include layout="@layout/item_home_trend_shimmer" />
+
+                            <Space
+                                android:layout_width="@dimen/item_10"
+                                android:layout_height="match_parent"/>
+
+                            <include layout="@layout/item_home_trend_shimmer" />
+
+                            <Space
+                                android:layout_width="@dimen/item_10"
+                                android:layout_height="match_parent"/>
+
+                            <include layout="@layout/item_home_trend_shimmer" />
+
+                        </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/sh_cl_direction"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_36"
+                        app:layout_constraintTop_toBottomOf="@+id/sh_cl_trend">
+
+                        <View
+                            android:id="@+id/sh_tv_direction_title"
+                            android:layout_width="100dp"
+                            android:layout_height="24dp"
+                            android:background="#dedede"
+                            android:layout_marginStart="@dimen/margin_16"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <androidx.appcompat.widget.LinearLayoutCompat
+                            android:id="@+id/sh_rv_direction"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/item_72"
+                            android:layout_marginTop="@dimen/margin_12"
+                            android:clipToPadding="false"
+                            android:paddingHorizontal="@dimen/padding_16"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/sh_tv_direction_title" >
+
+                            <include layout="@layout/item_home_direction_shimmer" />
+
+                            <Space
+                                android:layout_width="@dimen/item_8"
+                                android:layout_height="match_parent"/>
+
+                            <include layout="@layout/item_home_direction_shimmer" />
+
+                            <Space
+                                android:layout_width="@dimen/item_8"
+                                android:layout_height="match_parent"/>
+
+                            <include layout="@layout/item_home_direction_shimmer" />
+
+                            <Space
+                                android:layout_width="@dimen/item_8"
+                                android:layout_height="match_parent"/>
+
+                            <include layout="@layout/item_home_direction_shimmer" />
+
+                            <Space
+                                android:layout_width="@dimen/item_8"
+                                android:layout_height="match_parent"/>
+
+                            <include layout="@layout/item_home_direction_shimmer" />
+
+                        </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/sh_cl_waiting"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_36"
+                        app:layout_constraintTop_toBottomOf="@+id/sh_cl_direction">
+
+                        <View
+                            android:id="@+id/sh_tv_waiting_title"
+                            android:layout_width="100dp"
+                            android:layout_height="24dp"
+                            android:background="#dedede"
+                            android:layout_marginStart="@dimen/margin_16"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <androidx.appcompat.widget.LinearLayoutCompat
+                            android:id="@+id/sh_rv_waiting"
+                            android:layout_width="match_parent"
+                            android:layout_height="223dp"
+                            android:layout_marginTop="@dimen/margin_12"
+                            android:clipToPadding="false"
+                            android:orientation="horizontal"
+                            android:paddingHorizontal="@dimen/padding_16"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/sh_tv_waiting_title">
+
+                            <include layout="@layout/item_home_waiting_shimmer" />
+
+                            <Space
+                                android:layout_width="@dimen/item_10"
+                                android:layout_height="match_parent" />
+
+                            <include layout="@layout/item_home_waiting_shimmer" />
+
+                            <Space
+                                android:layout_width="@dimen/item_10"
+                                android:layout_height="match_parent" />
+
+                            <include layout="@layout/item_home_waiting_shimmer" />
+
+                        </androidx.appcompat.widget.LinearLayoutCompat>
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <View
+                        android:id="@+id/sh_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/item_8"
+                        android:layout_marginTop="@dimen/margin_36"
+                        android:background="#f0f0f0"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/sh_cl_waiting" />
+
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/sh_cl_upcoming"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_24"
+                        app:layout_constraintTop_toBottomOf="@+id/sh_view">
+
+                        <View
+                            android:id="@+id/sh_tv_upcoming_title"
+                            android:layout_width="100dp"
+                            android:layout_height="24dp"
+                            android:background="#dedede"
+                            android:layout_marginStart="@dimen/margin_16"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+
+
+                        <GridLayout
+                            android:id="@+id/sh_rv_upcoming1"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/margin_12"
+                            android:clipToPadding="false"
+                            android:columnCount="2"
+                            android:useDefaultMargins="true"
+                            android:orientation="horizontal"
+                            android:nestedScrollingEnabled="false"
+                            android:paddingHorizontal="@dimen/padding_16"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/sh_tv_upcoming_title" >
+
+
+                            <androidx.constraintlayout.widget.ConstraintLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_columnWeight="1">
+
+                                <include layout="@layout/item_home_upcoming_shimmer" />
+
+                            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                            <androidx.constraintlayout.widget.ConstraintLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_columnWeight="1">
+
+                                <include layout="@layout/item_home_upcoming_shimmer" />
+
+                            </androidx.constraintlayout.widget.ConstraintLayout>
+
+                            <androidx.constraintlayout.widget.ConstraintLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_columnWeight="1">
+
+                                <include layout="@layout/item_home_upcoming_shimmer" />
+
+                            </androidx.constraintlayout.widget.ConstraintLayout>
+
+                            <androidx.constraintlayout.widget.ConstraintLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_columnWeight="1">
+
+                                <include layout="@layout/item_home_upcoming_shimmer" />
+
+                            </androidx.constraintlayout.widget.ConstraintLayout>
+                        </GridLayout>
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/item_100"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/sh_cl_upcoming" />
+
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.core.widget.NestedScrollView>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

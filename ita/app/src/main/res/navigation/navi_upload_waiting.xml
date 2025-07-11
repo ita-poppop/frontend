@@ -7,5 +7,22 @@
     <fragment
         android:id="@+id/uploadWaitingFragment"
         android:name="com.ita.poppop.view.empty.home_upload.UploadWaitingFragment"
-        android:label="UploadWaitingFragment" />
+        android:label="UploadWaitingFragment" >
+        <action
+            android:id="@+id/action_uploadWaitingFragment_to_searchFragment"
+            app:destination="@id/searchFragment" >
+            <argument
+                android:name="searchMode"
+                app:argType="com.ita.poppop.model.empty.search.SearchMode" />
+        </action>
+    </fragment>
+
+    <fragment
+        android:id="@+id/searchFragment"
+        android:name="com.ita.poppop.view.empty.search.SearchFragment"
+        android:label="SearchFragment" >
+        <argument
+            android:name="searchMode"
+            app:argType="com.ita.poppop.model.empty.search.SearchMode" />
+    </fragment>
 </navigation>

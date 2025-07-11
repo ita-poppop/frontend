@@ -82,10 +82,13 @@ class InfoFragment: BaseFragment<FragmentInfoBinding>(R.layout.fragment_info) {
             acbUploadReview.setOnClickListener{
                 val searchData = popupItem?.let {
                     SearchData(
+                        latitude = null,
+                        longitude= null,
                         id = it.id,
-                        image = it.imageUrl ?: "",
+                        imageUrl = it.imageUrl ?: "",
                         title = it.title ?: "",
-                        location = it.location ?: ""
+                        date = null,
+                        location = it.location ?: "",
                     )
                 }
 

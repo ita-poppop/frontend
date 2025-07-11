@@ -1,11 +1,14 @@
 package com.ita.poppop.view.main.home.waiting
 
+import android.graphics.Color
 import android.util.Log
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.navigation.NavDirections
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.ita.poppop.R
 import com.ita.poppop.data.remote.dto.stories.StoryData
 import com.ita.poppop.databinding.ItemHomeWaitingLayoutBinding
@@ -18,6 +21,8 @@ class HomeWaitingAdapter(
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     init {
         setHasStableIds(true)
+        items = items.sortedBy { it.isRead }
+
     }
 
     inner class HomeWaitingViewHolder(
@@ -25,9 +30,31 @@ class HomeWaitingAdapter(
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item : StoryData) {
             binding.mcvStory.setOnClickListener {
-                Log.d("checkClick","HomeWaitingViewHolder")
-                onclick(1)
+                onclick(item.storyId)
             }
+
+            if (item.isRead) {
+                binding.mcvStory.strokeWidth = 0
+            } else {
+                val strokeWidthInPx = TypedValue.applyDimension(
+                    TypedValue.COMPLEX_UNIT_DIP,
+                    3f,  // 원하는 dp
+                    binding.root.context.resources.displayMetrics
+                ).toInt()
+
+                binding.mcvStory.strokeWidth = strokeWidthInPx
+            }
+
+
+            Glide.with(binding.root)
+                .load(item.photoUrl)
+                .centerCrop()
+                .into(binding.ivWaitingImage)
+
+            binding.tvWaitingCount.text = item.estimatedWaitCount.toString()
+            binding.tvWaitingTitle.text = item.popupTitle
+            binding.tvWaitingLocation.text = item.popupLocation
+
         }
     }
 
@@ -41,6 +68,11 @@ class HomeWaitingAdapter(
 
     }
 
+    fun setItems(newItems: List<StoryData>) {
+        items = newItems.sortedBy { it.isRead }
+        notifyDataSetChanged()
+    }
+
     // 아이템 반환 메서드
     private fun getItem(position: Int): StoryData {
         return items[position]
@@ -49,13 +81,8 @@ class HomeWaitingAdapter(
     // 아이템 개수 반환 메서
     override fun getItemCount(): Int = items.size
 
-    // 아이템 고유 ID 반환 메서드
     override fun getItemId(position: Int): Long {
-        return if (position in items.indices) {
-            items[position].hashCode().toLong()
-        } else {
-            -1L // 아이디를 찾지 못했을 때 반환되는 기본값
-        }
-
+        return items[position].storyId.toLong()  // 고유한 ID여야 함!
     }
+
 }

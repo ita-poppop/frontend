@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <data>
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="154dp"
+        android:layout_height="@dimen/item_240">
+
+        <ImageView
+            android:id="@+id/sh_iv_trend_poster"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:src="#D9D9D9"
+            android:layout_marginBottom="@dimen/margin_10"
+            app:layout_constraintBottom_toTopOf="@+id/sh_tv_trend_title"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <View
+            android:id="@+id/sh_tv_trend_title"
+            android:layout_width="137dp"
+            android:layout_height="24dp"
+            android:layout_marginBottom="@dimen/margin_4"
+            android:background="#dedede"
+            app:layout_constraintBottom_toTopOf="@+id/sh_constraintLayout3"
+            app:layout_constraintStart_toStartOf="parent" />
+
+
+        <View
+            android:id="@+id/sh_constraintLayout3"
+            android:layout_width="110dp"
+            android:layout_height="24dp"
+            android:background="#dedede"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
+

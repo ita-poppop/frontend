@@ -17,14 +17,23 @@ data class GetSearchResponse(
 
 @Parcelize
 data class SearchData(
+    @SerializedName("latitude")
+    val latitude: Double?,
+
+    @SerializedName("longitude")
+    val longitude: Double?,
+
     @SerializedName("id")
     val id: Int,
 
-    @SerializedName("image")
-    val image: String,
+    @SerializedName("imageUrl")
+    val imageUrl: String,
 
     @SerializedName("title")
     val title: String,
+
+    @SerializedName("date")
+    val date: String?,
 
     @SerializedName("location")
     val location: String

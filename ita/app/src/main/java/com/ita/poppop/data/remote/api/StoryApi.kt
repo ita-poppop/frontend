@@ -42,7 +42,8 @@ interface StoryApi {
 
     @GET("/api/v1/popups/{popupId}/stories/{storyId}")
     suspend fun getStoryDetail(
-        @Query("popupId") popupId: Int,
-        @Query("storyId") storyId: Int
+        @Header("Authorization") accessToken: String,
+        @Path("popupId") popupId: Int,
+        @Path("storyId") storyId: Int
     ): Response<GetStoryDetailResponse>
 }

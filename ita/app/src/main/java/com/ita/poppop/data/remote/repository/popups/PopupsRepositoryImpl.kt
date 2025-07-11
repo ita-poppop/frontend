@@ -54,12 +54,12 @@ class PopupsRepositoryImpl(
     }
 
     override suspend fun getSearchPopups(
-        requestDto: String,
+        content: String,
         page: Int,
         size: Int
     ): Response<GetSearchResponse> {
         try {
-            val response = api.getSearch(requestDto,page, size)
+            val response = api.getSearch(content,page, size)
 
             if (response.code() == 200) {
                 return response

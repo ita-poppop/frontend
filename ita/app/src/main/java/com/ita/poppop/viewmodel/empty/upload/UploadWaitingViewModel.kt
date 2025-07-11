@@ -7,6 +7,7 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.map
+import com.ita.poppop.data.remote.dto.popups.SearchData
 import com.ita.poppop.view.empty.home_upload.sub.ImageItem
 import com.ita.poppop.view.empty.home_upload.sub.UploadItem
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -41,11 +42,12 @@ class UploadWaitingViewModel: ViewModel() {
 
 
 
-    private val _popupItem = MutableLiveData<String?>()
-    val popupItem: LiveData<String?> get() = _popupItem
+
+    private val _popupItem = MutableLiveData<SearchData?>()
+    val popupItem: LiveData<SearchData?> get() = _popupItem
 
     // set 함수
-    fun setPopupItem(item: String) {
+    fun setPopupItem(item: SearchData?) {
         _popupItem.value = item
     }
 
@@ -87,8 +89,8 @@ class UploadWaitingViewModel: ViewModel() {
 //                    waitingCount.value  != null &&
 //                    !popupItem.value.isNullOrBlank()
             value = waitingImage.value != null &&
-                    true &&
-                    !popupItem.value.isNullOrBlank()
+                    popupItem.value != null &&
+                    waitingCount.value != null
         }
         addSource(waitingImage) { validator() }
         addSource(popupItem) { validator() }
