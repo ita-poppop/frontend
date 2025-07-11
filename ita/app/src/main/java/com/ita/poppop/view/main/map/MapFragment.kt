@@ -1,6 +1,7 @@
 package com.ita.poppop.view.main.map
 
 import android.Manifest
+import android.app.ProgressDialog.show
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Canvas
@@ -33,6 +34,8 @@ import com.ita.poppop.databinding.ItemMapCustomMarkerBinding
 import com.ita.poppop.util.ViewModelFactory
 import com.ita.poppop.util.remote.RetrofitClient
 import com.ita.poppop.view.main.MainFragmentDirections
+import com.ita.poppop.view.main.hide
+import com.ita.poppop.view.main.show
 import com.ita.poppop.viewmodel.MainAViewModel
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.CameraAnimation
@@ -84,6 +87,7 @@ class MapFragment: BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnMa
                 mapRVAdapter.submitList(response)
                 if (::naverMap.isInitialized) {
                     Log.d("MapFragment", "맵 초기화 후 호출")
+                    emptyStateLayout.root.run { if(response.isNullOrEmpty()) show() else hide()}
                     addCustomMarkers(response)
                 } else {
 
@@ -166,7 +170,7 @@ class MapFragment: BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnMa
                 val bottomSheetBehavior = BottomSheetBehavior.from(binding.nsvBottomSheet)
 
                 // dp 값을 픽셀로 변환
-                val topMarginPx = dpToPx(55)
+                val topMarginPx = dpToPx(50)
                 val bottomMarginPx = dpToPx(48)
 
                 // 바텀시트 최소 높이

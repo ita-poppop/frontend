@@ -4,13 +4,8 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center_horizontal">
-
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="75dp"
-        android:src="@drawable/empty_state_icon"/>
+    android:gravity="center_horizontal"
+    android:paddingVertical="50dp">
 
     <ImageView
         android:layout_width="wrap_content"
@@ -21,35 +16,25 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/item_12"
-        android:text="찜한 팝업 정보가 없어요."
+        android:text="주변에 팝업이 없어요."
         android:fontFamily="@font/pretendard_semibold"
         android:textStyle="normal"
         android:textSize="18sp"
         android:textColor="#000000"
         android:letterSpacing="-0.03"
         android:lineSpacingExtra="9sp"/>
-
+<!--
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_6"
-        android:text="별 아이콘을 눌러 마음에 드는 팝업 정보를 찜해보세요."
+        android:text="원하는 장소를 검색해보세요."
         android:fontFamily="@font/pretendard_medium"
         android:textStyle="normal"
         android:textSize="14sp"
         android:textColor="@color/gray_700"
         android:letterSpacing="-0.03"
         android:lineSpacingExtra="7sp"
-        android:gravity="center_horizontal"/>
-
-    <androidx.appcompat.widget.AppCompatButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_24"
-        android:paddingHorizontal="@dimen/margin_36"
-        android:text="팝업 보러가기"
-        android:textSize="@dimen/text_16"
-        android:background="@drawable/favorites_empty_state_btn_background"
-        android:textColor="@color/white"/>
+        android:gravity="center_horizontal"/>-->
 
 </LinearLayout>

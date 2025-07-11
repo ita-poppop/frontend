@@ -32,13 +32,6 @@ interface PopupsRepository {
         @Query("size") size: Int
     ): Response<GetSearchResponse>
 
-    @GET("/api/v1/popups/search")
-    suspend fun getSearchMap(
-        @Query("content") content: String,
-        @Query("page") page: Int,
-        @Query("size") size: Int
-    ): Response<GetSearchMapResponse>
-
     @GET("/api/v1/popups/planned")
     suspend fun getPlannedPopups(
         @Query("page") page: Int,

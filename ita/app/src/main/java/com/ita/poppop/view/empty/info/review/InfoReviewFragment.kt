@@ -13,6 +13,8 @@ import com.ita.poppop.databinding.FragmentInfoReviewBinding
 import com.ita.poppop.util.remote.RetrofitClient
 import com.ita.poppop.util.ViewModelFactory
 import com.ita.poppop.view.empty.info.InfoFragmentDirections
+import com.ita.poppop.view.main.hide
+import com.ita.poppop.view.main.show
 import com.ita.poppop.viewmodel.MainAViewModel
 
 class InfoReviewFragment: BaseFragment<FragmentInfoReviewBinding>(R.layout.fragment_info_review) {
@@ -48,7 +50,7 @@ class InfoReviewFragment: BaseFragment<FragmentInfoReviewBinding>(R.layout.fragm
 
                 infoReviewViewModel.inforeviewList.observe(viewLifecycleOwner) { reviewList ->
                     infoReviewRVAdapter.submitList(reviewList.toList()) // List 변환 후 submitList 호출
-                    //emptyStateLayout.root.run { if(response.isNullOrEmpty()) show() else hide()}
+                    emptyStateLayout.root.run { if(reviewList.isNullOrEmpty()) show() else hide()}
                 }
             }
 

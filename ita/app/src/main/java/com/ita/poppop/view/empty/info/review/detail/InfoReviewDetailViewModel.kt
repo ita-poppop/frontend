@@ -144,7 +144,7 @@ class InfoReviewDetailViewModel(
         if (parts.size < 2) return null
         return try {
             val payloadJson = String(android.util.Base64.decode(parts[1], android.util.Base64.DEFAULT))
-            Log.d("TokenPayload", "payloadJson: $payloadJson")  // 이걸로 payload 확인
+            Log.d("TokenPayload", "payloadJson: $payloadJson")
             val jsonObj = org.json.JSONObject(payloadJson)
             val name = jsonObj.optString("sub").takeIf { it.isNotEmpty() }
                 ?: jsonObj.optString("nickName").takeIf { it.isNotEmpty() }

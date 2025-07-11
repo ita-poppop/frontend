@@ -3,7 +3,6 @@ package com.ita.poppop.data.remote.api
 import com.ita.poppop.data.remote.dto.popups.GetLocationPopupResponse
 import com.ita.poppop.data.remote.dto.popups.GetPopupDetailResponse
 import com.ita.poppop.data.remote.dto.popups.GetPlannedResponse
-import com.ita.poppop.data.remote.dto.popups.GetSearchMapResponse
 import com.ita.poppop.data.remote.dto.popups.GetSearchResponse
 import com.ita.poppop.data.remote.dto.popups.GetTrendResponse
 import retrofit2.Response
@@ -33,14 +32,6 @@ interface PopupApi {
         @Query("page") page: Int,
         @Query("size") size: Int
     ): Response<GetSearchResponse>
-
-    @GET("/api/v1/popups/search")
-    suspend fun getSearchMap(
-        @Query("content") content: String,
-        @Query("page") page: Int,
-        @Query("size") size: Int
-    ): Response<GetSearchMapResponse>
-
 
     @GET("/api/v1/popups/planned")
     suspend fun getPlanned(
